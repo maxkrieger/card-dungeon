@@ -1,22 +1,26 @@
 {
   "files": {
-    "main.css": "/card-dungeon/static/css/main.3683b4fc.chunk.css",
-    "main.js": "/card-dungeon/static/js/main.5cd4924e.chunk.js",
-    "main.js.map": "/card-dungeon/static/js/main.5cd4924e.chunk.js.map",
+    "main.css": "/card-dungeon/static/css/main.a1c6ae05.chunk.css",
+    "main.js": "/card-dungeon/static/js/main.a89bd3b2.chunk.js",
+    "main.js.map": "/card-dungeon/static/js/main.a89bd3b2.chunk.js.map",
     "runtime-main.js": "/card-dungeon/static/js/runtime-main.b40dd721.js",
     "runtime-main.js.map": "/card-dungeon/static/js/runtime-main.b40dd721.js.map",
-    "static/js/2.4781181f.chunk.js": "/card-dungeon/static/js/2.4781181f.chunk.js",
-    "static/js/2.4781181f.chunk.js.map": "/card-dungeon/static/js/2.4781181f.chunk.js.map",
+    "static/css/2.dcab9049.chunk.css": "/card-dungeon/static/css/2.dcab9049.chunk.css",
+    "static/js/2.3c6f6fde.chunk.js": "/card-dungeon/static/js/2.3c6f6fde.chunk.js",
+    "static/js/2.3c6f6fde.chunk.js.map": "/card-dungeon/static/js/2.3c6f6fde.chunk.js.map",
     "index.html": "/card-dungeon/index.html",
-    "precache-manifest.713714bf77ca902211206887ab3658c9.js": "/card-dungeon/precache-manifest.713714bf77ca902211206887ab3658c9.js",
+    "precache-manifest.29d98520a040227ae367c3d89ebf929c.js": "/card-dungeon/precache-manifest.29d98520a040227ae367c3d89ebf929c.js",
     "service-worker.js": "/card-dungeon/service-worker.js",
-    "static/css/main.3683b4fc.chunk.css.map": "/card-dungeon/static/css/main.3683b4fc.chunk.css.map",
-    "static/js/2.4781181f.chunk.js.LICENSE.txt": "/card-dungeon/static/js/2.4781181f.chunk.js.LICENSE.txt"
+    "static/css/2.dcab9049.chunk.css.map": "/card-dungeon/static/css/2.dcab9049.chunk.css.map",
+    "static/css/main.a1c6ae05.chunk.css.map": "/card-dungeon/static/css/main.a1c6ae05.chunk.css.map",
+    "static/js/2.3c6f6fde.chunk.js.LICENSE.txt": "/card-dungeon/static/js/2.3c6f6fde.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/card-dungeon/static/media/alagard.6faad178.ttf"
   },
   "entrypoints": [
     "static/js/runtime-main.b40dd721.js",
-    "static/js/2.4781181f.chunk.js",
-    "static/css/main.3683b4fc.chunk.css",
-    "static/js/main.5cd4924e.chunk.js"
+    "static/css/2.dcab9049.chunk.css",
+    "static/js/2.3c6f6fde.chunk.js",
+    "static/css/main.a1c6ae05.chunk.css",
+    "static/js/main.a89bd3b2.chunk.js"
   ]
 }
