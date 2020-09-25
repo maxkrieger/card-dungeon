@@ -42,6 +42,14 @@ export const YoutubeWizard: React.FC<PickerProps> = ({ dispatch, onClose }) => {
             volume: 1,
             muted: false,
           },
+          author: {
+            name: "",
+            id: "",
+          },
+          manager: {
+            name: "",
+            id: "",
+          },
         },
       });
       onClose();
@@ -169,12 +177,14 @@ const YoutubeCardComponent: React.FC<{
   card: YoutubeCard;
   dispatch: React.Dispatch<action>;
 }> = ({ card, dispatch }) => {
+  const [ready, setReady] = useState(false);
   const onReady = useCallback(
     (player: ReactPlayer) => {
       const activePlayer = player.getInternalPlayer() as any;
       const video_data = activePlayer.getVideoData();
       const title = video_data.title;
       dispatch({ kind: "update_card", card: { ...card, title } });
+      setReady(true);
     },
     [card, dispatch]
   );
@@ -206,6 +216,15 @@ const YoutubeCardComponent: React.FC<{
   }, [dispatch, card]);
   const onPause = useCallback(() => {
     const state = { ...card.state, playing: false };
+    dispatch({ kind: "video_action", card: { ...card, state } });
+  }, [dispatch, card]);
+  const onEnd = useCallback(() => {
+    const state = {
+      ...card.state,
+      playing: false,
+      playedProgress: 0,
+      playedSeconds: 0,
+    };
     dispatch({ kind: "video_action", card: { ...card, state } });
   }, [dispatch, card]);
   const togglePlay = useCallback(() => {
@@ -250,16 +269,19 @@ const YoutubeCardComponent: React.FC<{
           onProgress={onProgress}
           onPlay={onPlay}
           onPause={onPause}
+          onEnded={onEnd}
           progressInterval={500}
           config={{
             youtube: {
               playerVars: {
                 modestBranding: 1,
                 rel: 1,
+                start: card.state.playedSeconds,
               },
             },
           }}
         />
+        {!ready && <span>loading... (insert snail here)</span>}
       </div>
       <span>
         {hours !== "0" && hours + ":"}

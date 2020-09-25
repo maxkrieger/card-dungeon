@@ -14,11 +14,16 @@ import AvatarCardComponent, { AvatarCard } from "./AvatarCardComponent";
 import BackpackComponent from "./BackpackComponent";
 import { truncate } from "lodash";
 // import FrameBorder from "./assets/frame-border.png";
-
+interface UserInfo {
+  name: string;
+  id: string;
+}
 export interface AbstractCard {
   layout: GridLayout.Layout;
   title: string;
   icon: string;
+  author: UserInfo;
+  manager: UserInfo | null;
 }
 
 export type Card = YoutubeCard | AvatarCard;
@@ -75,6 +80,7 @@ export type action =
 export interface OverallState {
   cards: Card[];
   myBackpack: Card[];
+  me: UserInfo;
 }
 
 const saveBackpack = (backpack: Card[]) => {
@@ -132,6 +138,7 @@ const reducer = (state: OverallState, action: action): OverallState => {
       newBackpack = state.myBackpack.filter(
         (card) => card.layout.i !== action.cardID
       );
+      saveBackpack(newBackpack);
       return { ...state, cards: newCards, myBackpack: newBackpack };
     case "video_action":
       newCards = state.cards.map((card) =>
@@ -144,8 +151,14 @@ const reducer = (state: OverallState, action: action): OverallState => {
 export const BORDER_SECONDARY_COLOR = "#3A1915";
 export const BORDER_PRIMARY_COLOR = "#C39B77";
 
+const MECONST = {
+  id: "meme",
+  name: "me",
+};
+
 function App() {
   const [state, dispatch] = useReducer(reducer, {
+    me: MECONST,
     cards: [
       {
         kind: "avatar",
@@ -157,6 +170,14 @@ function App() {
           y: 0,
           w: 2,
           h: 2,
+        },
+        author: {
+          name: "",
+          id: "",
+        },
+        manager: {
+          name: "",
+          id: "",
         },
       },
     ],
@@ -176,7 +197,7 @@ function App() {
     (newLayout: Layout[]) => {
       dispatch({ kind: "batch_update_layouts", layouts: newLayout });
     },
-    [cards]
+    [dispatch]
   );
 
   return (
@@ -254,6 +275,7 @@ function App() {
         margin={[30, 30]}
         isResizable={true}
         resizeHandles={["se"]}
+        draggableHandle=".bar"
       >
         {cards.map((card: Card, key: number) => (
           <div
@@ -280,6 +302,7 @@ function App() {
                 display: "flex",
                 justifyContent: "space-between",
               }}
+              className="bar"
             >
               <div>
                 <img src={card.icon} height={12} />{" "}

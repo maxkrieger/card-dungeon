@@ -47,6 +47,7 @@ const BackpackComponent: React.FC<{
           display: "flex",
           flexDirection: "column",
         }}
+        aria-label="spell picker"
       >
         <div
           style={{

@@ -45,6 +45,7 @@ const SpellPicker: React.FC<{
           display: "flex",
           flexDirection: "column",
         }}
+        aria-label="spell picker"
       >
         <div
           style={{
