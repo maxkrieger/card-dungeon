@@ -1,26 +1,26 @@
 {
   "files": {
     "main.css": "/card-dungeon/static/css/main.a1c6ae05.chunk.css",
-    "main.js": "/card-dungeon/static/js/main.a89bd3b2.chunk.js",
-    "main.js.map": "/card-dungeon/static/js/main.a89bd3b2.chunk.js.map",
+    "main.js": "/card-dungeon/static/js/main.6d4612eb.chunk.js",
+    "main.js.map": "/card-dungeon/static/js/main.6d4612eb.chunk.js.map",
     "runtime-main.js": "/card-dungeon/static/js/runtime-main.b40dd721.js",
     "runtime-main.js.map": "/card-dungeon/static/js/runtime-main.b40dd721.js.map",
-    "static/css/2.dcab9049.chunk.css": "/card-dungeon/static/css/2.dcab9049.chunk.css",
-    "static/js/2.3c6f6fde.chunk.js": "/card-dungeon/static/js/2.3c6f6fde.chunk.js",
-    "static/js/2.3c6f6fde.chunk.js.map": "/card-dungeon/static/js/2.3c6f6fde.chunk.js.map",
+    "static/css/2.ebc11a36.chunk.css": "/card-dungeon/static/css/2.ebc11a36.chunk.css",
+    "static/js/2.67a17816.chunk.js": "/card-dungeon/static/js/2.67a17816.chunk.js",
+    "static/js/2.67a17816.chunk.js.map": "/card-dungeon/static/js/2.67a17816.chunk.js.map",
     "index.html": "/card-dungeon/index.html",
-    "precache-manifest.29d98520a040227ae367c3d89ebf929c.js": "/card-dungeon/precache-manifest.29d98520a040227ae367c3d89ebf929c.js",
+    "precache-manifest.311c1e737cce3d57b0795bb66960009d.js": "/card-dungeon/precache-manifest.311c1e737cce3d57b0795bb66960009d.js",
     "service-worker.js": "/card-dungeon/service-worker.js",
-    "static/css/2.dcab9049.chunk.css.map": "/card-dungeon/static/css/2.dcab9049.chunk.css.map",
+    "static/css/2.ebc11a36.chunk.css.map": "/card-dungeon/static/css/2.ebc11a36.chunk.css.map",
     "static/css/main.a1c6ae05.chunk.css.map": "/card-dungeon/static/css/main.a1c6ae05.chunk.css.map",
-    "static/js/2.3c6f6fde.chunk.js.LICENSE.txt": "/card-dungeon/static/js/2.3c6f6fde.chunk.js.LICENSE.txt",
+    "static/js/2.67a17816.chunk.js.LICENSE.txt": "/card-dungeon/static/js/2.67a17816.chunk.js.LICENSE.txt",
     "static/media/index.css": "/card-dungeon/static/media/alagard.6faad178.ttf"
   },
   "entrypoints": [
     "static/js/runtime-main.b40dd721.js",
-    "static/css/2.dcab9049.chunk.css",
-    "static/js/2.3c6f6fde.chunk.js",
+    "static/css/2.ebc11a36.chunk.css",
+    "static/js/2.67a17816.chunk.js",
     "static/css/main.a1c6ae05.chunk.css",
-    "static/js/main.a89bd3b2.chunk.js"
+    "static/js/main.6d4612eb.chunk.js"
   ]
 }

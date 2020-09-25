@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/card-dungeon/precache-manifest.29d98520a040227ae367c3d89ebf929c.js"
+  "/card-dungeon/precache-manifest.311c1e737cce3d57b0795bb66960009d.js"
 );
 
 self.addEventListener('message', (event) => {
