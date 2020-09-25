@@ -4,7 +4,7 @@ html {
 
 @font-face {
   font-family: "Alagard";
-  src: URL("/alagard.ttf") format("truetype");
+  src: url("assets/alagard.ttf") format("truetype");
 }
 
 body {
@@ -16,7 +16,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* background-color: #ffecb2; */
-  background-image: url("/sandy.png");
+  background-image: url("assets/sandy.png");
 }
 
 code {

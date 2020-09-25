@@ -4,6 +4,7 @@
   "homepage": "https://maxkrieger.github.io/card-dungeon/",
   "private": true,
   "dependencies": {
+    "@reach/dialog": "^0.11.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -42,6 +43,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-grid-layout": "^1.1.0"
+    "@types/react-grid-layout": "^1.1.0",
+    "gh-pages": "^3.1.0"
   }
 }
