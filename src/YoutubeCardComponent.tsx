@@ -1,11 +1,20 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { AbstractCard, action } from "./App";
 import { PickerProps } from "./SpellPicker";
 import YoutubeIcon from "./assets/youtube.png";
+
+export interface PlayerState {
+  playing: boolean;
+  playedProgress: number;
+  playedSeconds: number;
+  volume: number;
+  muted: boolean;
+}
 export interface YoutubeCard extends AbstractCard {
   kind: "youtube";
   uri: string;
+  state: PlayerState;
 }
 
 const regex = "https?://(www.)?youtube.com/watch?v=.+";
@@ -26,6 +35,13 @@ export const YoutubeWizard: React.FC<PickerProps> = ({ dispatch, onClose }) => {
           icon: YoutubeIcon,
           uri: url,
           layout: { x: 0, y: 0, i: Math.random().toString(), w: 2, h: 2 },
+          state: {
+            playing: false,
+            playedProgress: 0,
+            playedSeconds: 0,
+            volume: 1,
+            muted: false,
+          },
         },
       });
       onClose();
@@ -40,7 +56,7 @@ export const YoutubeWizard: React.FC<PickerProps> = ({ dispatch, onClose }) => {
         setUrlFieldVal("");
       }
     },
-    [dispatch, urlFieldVal, onClose]
+    [dispatchURL, urlFieldVal]
   );
   const onSearch = useCallback(
     async (e: any) => {
@@ -65,7 +81,7 @@ export const YoutubeWizard: React.FC<PickerProps> = ({ dispatch, onClose }) => {
         console.log(err);
       }
     },
-    [dispatch, searchFieldVal, onClose]
+    [searchFieldVal]
   );
   return (
     <div
@@ -162,15 +178,96 @@ const YoutubeCardComponent: React.FC<{
     },
     [card, dispatch]
   );
+  const playerRef = useRef<ReactPlayer>(null);
+
+  const onSeek = useCallback((seconds: number) => {
+    console.log(seconds, "seeked");
+  }, []);
+
+  const onProgress = useCallback(
+    (prog: {
+      played: number;
+      playedSeconds: number;
+      loaded: number;
+      loadedSeconds: number;
+    }) => {
+      const state = {
+        ...card.state,
+        playedProgress: prog.played,
+        playedSeconds: prog.playedSeconds,
+      };
+      dispatch({ kind: "video_action", card: { ...card, state } });
+    },
+    [card, dispatch]
+  );
+  const onPlay = useCallback(() => {
+    const state = { ...card.state, playing: true };
+    dispatch({ kind: "video_action", card: { ...card, state } });
+  }, [dispatch, card]);
+  const onPause = useCallback(() => {
+    const state = { ...card.state, playing: false };
+    dispatch({ kind: "video_action", card: { ...card, state } });
+  }, [dispatch, card]);
+  const togglePlay = useCallback(() => {
+    const state = { ...card.state, playing: !card.state.playing };
+    dispatch({ kind: "video_action", card: { ...card, state } });
+  }, [dispatch, card]);
+  useEffect(() => {
+    if (playerRef.current && playerRef.current.getCurrentTime() !== null) {
+      if (
+        Math.abs(
+          playerRef.current.getCurrentTime() - card.state.playedSeconds
+        ) >= 1.0
+      ) {
+        console.log(`Out of sync: ${playerRef.current.getCurrentTime()}`, card);
+        playerRef.current.seekTo(card.state.playedSeconds, "seconds");
+      }
+    }
+  }, [card]);
+  const { playedSeconds } = card.state;
+  // https://github.com/alexanderwallin/react-player-controls/blob/master/src/components/FormattedTime.js
+  const hours = Math.floor(playedSeconds / 3600).toString();
+  const minutes = Math.floor((playedSeconds % 3600) / 60)
+    .toString()
+    .padStart(2, "0");
+  const seconds = (Math.floor(playedSeconds) % 60).toString().padStart(2, "0");
   return (
-    <div style={{ position: "relative", paddingTop: "56.25%" }}>
-      <ReactPlayer
-        url={card.uri}
-        width={"100%"}
-        height={"100%"}
-        style={{ position: "absolute", top: 0, left: 0 }}
-        onReady={onReady}
-      />
+    <div>
+      <div style={{ position: "relative", paddingTop: "56.25%" }}>
+        <ReactPlayer
+          url={card.uri}
+          width={"100%"}
+          height={"100%"}
+          style={{ position: "absolute", top: 0, left: 0 }}
+          onReady={onReady}
+          ref={playerRef}
+          controls={false}
+          // loop={true}
+          playing={card.state.playing}
+          volume={card.state.volume}
+          muted={card.state.muted}
+          onSeek={onSeek}
+          onProgress={onProgress}
+          onPlay={onPlay}
+          onPause={onPause}
+          progressInterval={500}
+          config={{
+            youtube: {
+              playerVars: {
+                modestBranding: 1,
+                rel: 1,
+              },
+            },
+          }}
+        />
+      </div>
+      <span>
+        {hours !== "0" && hours + ":"}
+        {minutes}:{seconds}
+      </span>
+      <button onClick={togglePlay}>
+        {card.state.playing ? "pause" : "play"}
+      </button>
     </div>
   );
 };

@@ -22,10 +22,15 @@ const BackpackComponent: React.FC<{
   dispatch: React.Dispatch<action>;
 }> = ({ show, onClose, dispatch, backpack }) => {
   const [primaryOpen, setPrimaryOpen] = useState<Primaries>(Primaries.NONE);
-  const [mainFieldVal, setMainFieldVal] = useState("");
   const clearBackpack = useCallback(() => {
     dispatch({ kind: "clear_backpack" });
   }, [dispatch]);
+  const addFrom = useCallback(
+    (cardID: string) => {
+      dispatch({ kind: "add_from_backpack", cardID });
+    },
+    [dispatch]
+  );
   const youtubes = backpack.filter((card) => card.kind === "youtube");
   return (
     <DialogOverlay
@@ -80,7 +85,13 @@ const BackpackComponent: React.FC<{
             {primaryOpen === Primaries.YOUTUBE ? (
               <div>
                 {youtubes.map((card) => (
-                  <div>{card.title}</div>
+                  <div
+                    key={card.layout.i}
+                    style={{ cursor: "pointer", margin: "10px" }}
+                    onClick={() => addFrom(card.layout.i)}
+                  >
+                    {card.title}
+                  </div>
                 ))}
               </div>
             ) : (

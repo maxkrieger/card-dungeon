@@ -57,6 +57,11 @@ interface ClearBackpack {
   kind: "clear_backpack";
 }
 
+interface VideoAction {
+  kind: "video_action";
+  card: YoutubeCard;
+}
+
 export type action =
   | AddCard
   | UpdateCard
@@ -64,7 +69,8 @@ export type action =
   | LoadBackpack
   | AddToBackpack
   | AddFromBackpack
-  | ClearBackpack;
+  | ClearBackpack
+  | VideoAction;
 
 export interface OverallState {
   cards: Card[];
@@ -76,7 +82,9 @@ const saveBackpack = (backpack: Card[]) => {
 };
 
 const reducer = (state: OverallState, action: action): OverallState => {
-  const newCards = [...state.cards];
+  let newCards = [...state.cards];
+  let newBackpack;
+  let newState;
   switch (action.kind) {
     case "add_card":
       return { ...state, cards: [...state.cards, action.card] };
@@ -98,7 +106,11 @@ const reducer = (state: OverallState, action: action): OverallState => {
     case "load_backpack":
       return { ...state, myBackpack: action.backpack };
     case "add_to_backpack":
-      let newBackpack = [...state.myBackpack, action.card];
+      let newCard = { ...action.card };
+      if (newCard.kind === "youtube") {
+        newCard.state.playing = false;
+      }
+      newBackpack = [...state.myBackpack, newCard];
       saveBackpack(newBackpack);
       // remove card from env
       const filteredCards = state.cards.filter(
@@ -106,12 +118,26 @@ const reducer = (state: OverallState, action: action): OverallState => {
       );
       return { ...state, cards: filteredCards, myBackpack: newBackpack };
     case "clear_backpack":
-      let newState = { ...state, myBackpack: [] };
+      newState = { ...state, myBackpack: [] };
       saveBackpack([]);
       return newState;
     case "add_from_backpack":
-      // UNIMPL
-      return { ...state };
+      let addedCard = state.myBackpack.find(
+        (card) => card.layout.i === action.cardID
+      );
+      if (!addedCard) {
+        return state;
+      }
+      newCards = [...state.cards, addedCard];
+      newBackpack = state.myBackpack.filter(
+        (card) => card.layout.i !== action.cardID
+      );
+      return { ...state, cards: newCards, myBackpack: newBackpack };
+    case "video_action":
+      newCards = state.cards.map((card) =>
+        card.layout.i === action.card.layout.i ? action.card : card
+      );
+      return { ...state, cards: newCards };
   }
 };
 
