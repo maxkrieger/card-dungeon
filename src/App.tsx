@@ -166,6 +166,7 @@ function App() {
           padding: "5px 0px 0px 5px",
           borderBottom: "1px solid black",
           fontFamily: `"Alagard", serif`,
+          userSelect: "none",
         }}
       >
         <nav>

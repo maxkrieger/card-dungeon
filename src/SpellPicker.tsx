@@ -1,19 +1,25 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
 import { action, BORDER_PRIMARY_COLOR } from "./App";
-import YoutubeIcon from "./assets/youtube.png";
 import Orb from "./assets/orb.png";
+import YoutubeIcon from "./assets/youtube.png";
+import { YoutubeWizard } from "./YoutubeCardComponent";
 
 enum Primaries {
   YOUTUBE,
   NONE,
 }
 
+export interface PickerProps {
+  dispatch: React.Dispatch<action>;
+  onClose(): void;
+}
+
 const ColStyle = {
-  overflow: "scroll",
+  overflow: "auto",
   borderRight: "1px solid black",
-  maxWidth: "300px",
-  flexBasis: "200px",
+  maxWidth: "250px",
+  flexBasis: "250px",
 };
 
 const SpellPicker: React.FC<{
@@ -22,25 +28,6 @@ const SpellPicker: React.FC<{
   dispatch: React.Dispatch<action>;
 }> = ({ show, onClose, dispatch }) => {
   const [primaryOpen, setPrimaryOpen] = useState<Primaries>(Primaries.NONE);
-  const [mainFieldVal, setMainFieldVal] = useState("");
-  const dispatchYT = useCallback(
-    (e: any) => {
-      e.preventDefault();
-      dispatch({
-        kind: "add_card",
-        card: {
-          kind: "youtube",
-          title: "video",
-          icon: YoutubeIcon,
-          uri: mainFieldVal,
-          layout: { x: 0, y: 0, i: Math.random().toString(), w: 2, h: 2 },
-        },
-      });
-      onClose();
-      setMainFieldVal("");
-    },
-    [dispatch, mainFieldVal, onClose]
-  );
   return (
     <DialogOverlay
       style={{ background: "none" }}
@@ -52,7 +39,9 @@ const SpellPicker: React.FC<{
           boxShadow: "10px 10px hsla(0, 0%, 0%, 0.5)",
           fontFamily: `"Alagard"`,
           padding: 0,
-          minHeight: "300px",
+          height: "70vh",
+          maxWidth: "75vw",
+          minWidth: "500px",
           display: "flex",
           flexDirection: "column",
         }}
@@ -89,26 +78,9 @@ const SpellPicker: React.FC<{
               <img src={YoutubeIcon} width={30} /> youtube {">"}
             </div>
           </div>
-          <div style={ColStyle}>
-            {primaryOpen === Primaries.YOUTUBE ? (
-              <div>
-                <form onSubmit={dispatchYT}>
-                  <input
-                    type="url"
-                    value={mainFieldVal}
-                    onChange={(e: React.ChangeEvent<any>) => {
-                      setMainFieldVal(e.target.value);
-                    }}
-                    placeholder={"youtube url..."}
-                    autoFocus={true}
-                  />
-                  <input type="submit" value="cast!" />
-                </form>
-              </div>
-            ) : (
-              <div />
-            )}
-          </div>
+          {primaryOpen === Primaries.YOUTUBE && (
+            <YoutubeWizard onClose={onClose} dispatch={dispatch} />
+          )}
         </div>
       </DialogContent>
     </DialogOverlay>
