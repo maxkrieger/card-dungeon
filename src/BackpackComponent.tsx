@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
-import { action, BORDER_PRIMARY_COLOR } from "./App";
+import { action, BORDER_PRIMARY_COLOR, Card } from "./App";
 import YoutubeIcon from "./assets/youtube.png";
-import Orb from "./assets/orb.png";
 
 enum Primaries {
   YOUTUBE,
@@ -16,11 +15,12 @@ const ColStyle = {
   flexBasis: "200px",
 };
 
-const SpellPicker: React.FC<{
+const BackpackComponent: React.FC<{
+  backpack: Card[];
   show: boolean;
   onClose(): void;
   dispatch: React.Dispatch<action>;
-}> = ({ show, onClose, dispatch }) => {
+}> = ({ show, onClose, dispatch, backpack }) => {
   const [primaryOpen, setPrimaryOpen] = useState<Primaries>(Primaries.NONE);
   const [mainFieldVal, setMainFieldVal] = useState("");
   const dispatchYT = useCallback(
@@ -41,6 +41,7 @@ const SpellPicker: React.FC<{
     },
     [dispatch, mainFieldVal, onClose]
   );
+  const youtubes = backpack.filter((card) => card.kind === "youtube");
   return (
     <DialogOverlay
       style={{ background: "none" }}
@@ -64,9 +65,8 @@ const SpellPicker: React.FC<{
             userSelect: "none",
           }}
         >
-          <img src={Orb} width={25} />
           spells
-          {/* <button onClick={onClose}>x</button> */}
+          <button onClick={onClose}>x</button>
         </div>
         <div
           style={{
@@ -86,24 +86,16 @@ const SpellPicker: React.FC<{
               }
               onClick={() => setPrimaryOpen(Primaries.YOUTUBE)}
             >
-              <img src={YoutubeIcon} width={30} /> youtube {">"}
+              <img src={YoutubeIcon} width={30} /> youtube ({youtubes.length})
+              {" >"}
             </div>
           </div>
           <div style={ColStyle}>
             {primaryOpen === Primaries.YOUTUBE ? (
               <div>
-                <form onSubmit={dispatchYT}>
-                  <input
-                    type="url"
-                    value={mainFieldVal}
-                    onChange={(e: React.ChangeEvent<any>) => {
-                      setMainFieldVal(e.target.value);
-                    }}
-                    placeholder={"youtube url..."}
-                    autoFocus={true}
-                  />
-                  <input type="submit" value="cast!" />
-                </form>
+                {youtubes.map((card) => (
+                  <div>{card.title}</div>
+                ))}
               </div>
             ) : (
               <div />
@@ -115,4 +107,4 @@ const SpellPicker: React.FC<{
   );
 };
 
-export default SpellPicker;
+export default BackpackComponent;

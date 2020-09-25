@@ -7,9 +7,13 @@ import React, {
 } from "react";
 import GridLayout, { Layout } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
-import ReactPlayer from "react-player";
 import "@reach/dialog/styles.css";
 import SpellPicker from "./SpellPicker";
+import YoutubeCardComponent, { YoutubeCard } from "./YoutubeCardComponent";
+import AvatarCardComponent, { AvatarCard } from "./AvatarCardComponent";
+import BackpackComponent from "./BackpackComponent";
+import { truncate } from "lodash";
+// import FrameBorder from "./assets/frame-border.png";
 
 export interface AbstractCard {
   layout: GridLayout.Layout;
@@ -17,62 +21,7 @@ export interface AbstractCard {
   icon: string;
 }
 
-export interface YoutubeCard extends AbstractCard {
-  kind: "youtube";
-  uri: string;
-}
-
-export interface AvatarCard extends AbstractCard {
-  kind: "avatar";
-}
-
 export type Card = YoutubeCard | AvatarCard;
-
-const AvatarCardComponent: React.FC<{ card: AvatarCard }> = ({ card }) => {
-  const videoElement = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    if (!videoElement) {
-      return;
-    }
-    navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-      let video = videoElement.current;
-      if (!video) {
-        return;
-      }
-      video.srcObject = stream;
-      video.play();
-    });
-  }, [videoElement]);
-  return (
-    <video ref={videoElement} style={{ width: "100%", objectFit: "contain" }} />
-  );
-};
-
-const YoutubeCardComponent: React.FC<{
-  card: YoutubeCard;
-  updateData(card: YoutubeCard): void;
-}> = ({ card, updateData }) => {
-  const onReady = useCallback(
-    (player: ReactPlayer) => {
-      const activePlayer = player.getInternalPlayer() as any;
-      const video_data = activePlayer.getVideoData();
-      const title = video_data.title;
-      updateData({ ...card, title });
-    },
-    [card]
-  );
-  return (
-    <div style={{ position: "relative", paddingTop: "56.25%" }}>
-      <ReactPlayer
-        url={card.uri}
-        width={"100%"}
-        height={"100%"}
-        style={{ position: "absolute", top: 0, left: 0 }}
-        onReady={onReady}
-      />
-    </div>
-  );
-};
 
 interface AddCard {
   kind: "add_card";
@@ -89,45 +38,105 @@ interface BatchUpdateLayouts {
   layouts: Layout[];
 }
 
-export type action = AddCard | UpdateCard | BatchUpdateLayouts;
+interface LoadBackpack {
+  kind: "load_backpack";
+  backpack: Card[];
+}
 
-const reducer = (state: Card[], action: action): Card[] => {
-  const newCards = [...state];
+interface AddToBackpack {
+  kind: "add_to_backpack";
+  card: Card;
+}
+
+interface AddFromBackpack {
+  kind: "add_from_backpack";
+  cardID: string;
+}
+
+export type action =
+  | AddCard
+  | UpdateCard
+  | BatchUpdateLayouts
+  | LoadBackpack
+  | AddToBackpack
+  | AddFromBackpack;
+
+export interface OverallState {
+  cards: Card[];
+  myBackpack: Card[];
+}
+
+const saveBackpack = (backpack: Card[]) => {
+  localStorage.setItem("myBackpack", JSON.stringify(backpack));
+};
+
+const reducer = (state: OverallState, action: action): OverallState => {
+  const newCards = [...state.cards];
   switch (action.kind) {
     case "add_card":
-      return [...state, action.card];
+      return { ...state, cards: [...state.cards, action.card] };
     case "update_card":
       const idx = newCards.findIndex(
         (crd) => crd.layout.i === action.card.layout.i
       );
       newCards[idx] = action.card;
-      return newCards;
+      return { ...state, cards: newCards };
     case "batch_update_layouts":
-      return state.map((card) => ({
-        ...card,
-        layout:
-          action.layouts.find(({ i }) => i === card.layout.i) || card.layout,
-      }));
+      return {
+        ...state,
+        cards: state.cards.map((card) => ({
+          ...card,
+          layout:
+            action.layouts.find(({ i }) => i === card.layout.i) || card.layout,
+        })),
+      };
+    case "load_backpack":
+      return { ...state, myBackpack: action.backpack };
+    case "add_to_backpack":
+      const newBackpack = [...state.myBackpack, action.card];
+      saveBackpack(newBackpack);
+      // remove card from env
+      const filteredCards = state.cards.filter(
+        (card) => action.card.layout.i !== card.layout.i
+      );
+      return { ...state, cards: filteredCards, myBackpack: newBackpack };
+    case "add_from_backpack":
+      // UNIMPL
+      return { ...state };
   }
 };
 
+export const BORDER_SECONDARY_COLOR = "#3A1915";
+export const BORDER_PRIMARY_COLOR = "#C39B77";
+
 function App() {
-  // https://www.kirupa.com/html5/accessing_your_webcam_in_html5.htm
-  const [cards, dispatch] = useReducer(reducer, [
-    {
-      kind: "avatar",
-      title: "me",
-      icon: "camera",
-      layout: {
-        i: "1",
-        x: 0,
-        y: 0,
-        w: 2,
-        h: 2,
+  const [state, dispatch] = useReducer(reducer, {
+    cards: [
+      {
+        kind: "avatar",
+        title: "me",
+        icon: "camera",
+        layout: {
+          i: "1",
+          x: 0,
+          y: 0,
+          w: 2,
+          h: 2,
+        },
       },
-    },
-  ]);
+    ],
+    myBackpack: [],
+  });
+  useEffect(() => {
+    const backpackLoaded = localStorage.getItem("myBackpack");
+    if (backpackLoaded) {
+      dispatch({ kind: "load_backpack", backpack: JSON.parse(backpackLoaded) });
+    }
+  }, [dispatch]);
+
+  const { cards } = state;
   const [showSpellPicker, setShowSpellPicker] = useState(false);
+  const [showBackpack, setShowBackpack] = useState(false);
   const onLayoutChange = useCallback(
     (newLayout: Layout[]) => {
       dispatch({ kind: "batch_update_layouts", layouts: newLayout });
@@ -135,18 +144,12 @@ function App() {
     [cards]
   );
 
-  const updateCard = useCallback(
-    (card: Card) => {
-      dispatch({ kind: "update_card", card });
-    },
-    [cards]
-  );
   return (
     <div className="App">
       <header
         style={{
-          backgroundColor: "#C39B77",
-          color: "#3A1915",
+          backgroundColor: BORDER_PRIMARY_COLOR,
+          color: BORDER_SECONDARY_COLOR,
           height: "20px",
           display: "flex",
           justifyContent: "space-between",
@@ -157,7 +160,39 @@ function App() {
         }}
       >
         <nav>
-          <button onClick={() => setShowSpellPicker(true)}>spells</button>
+          <div
+            onClick={() => setShowSpellPicker(true)}
+            style={{
+              cursor: "pointer",
+              color: showSpellPicker
+                ? BORDER_PRIMARY_COLOR
+                : BORDER_SECONDARY_COLOR,
+              background: showSpellPicker
+                ? BORDER_SECONDARY_COLOR
+                : BORDER_PRIMARY_COLOR,
+              display: "inline-block",
+              marginLeft: "10px",
+            }}
+          >
+            spells
+          </div>
+          <div
+            onClick={() => setShowBackpack(true)}
+            style={{
+              cursor: "pointer",
+              color: showBackpack
+                ? BORDER_PRIMARY_COLOR
+                : BORDER_SECONDARY_COLOR,
+              background: showBackpack
+                ? BORDER_SECONDARY_COLOR
+                : BORDER_PRIMARY_COLOR,
+              display: "inline-block",
+              marginLeft: "10px",
+            }}
+          >
+            backpack{" "}
+            {state.myBackpack.length > 0 && `(${state.myBackpack.length})`}
+          </div>
         </nav>
         <nav>DungeonCard</nav>
       </header>
@@ -165,6 +200,12 @@ function App() {
         show={showSpellPicker}
         onClose={() => setShowSpellPicker(false)}
         dispatch={dispatch}
+      />
+      <BackpackComponent
+        show={showBackpack}
+        onClose={() => setShowBackpack(false)}
+        dispatch={dispatch}
+        backpack={state.myBackpack}
       />
       <GridLayout
         onLayoutChange={onLayoutChange}
@@ -184,9 +225,13 @@ function App() {
             data-grid={card.layout}
             style={{
               backgroundColor: "sandybrown",
-              padding: "10px",
               display: "flex",
               flexFlow: "column",
+              boxShadow: "5px 5px hsla(0, 0%, 0%, 0.5)",
+              // border: "10px solid transparent",
+              // borderImageSource: `url(${FrameBorder})`,
+              // borderImageRepeat: "stretch",
+              // borderImageSlice: "34 13 34 13",
             }}
           >
             <div
@@ -194,15 +239,31 @@ function App() {
                 flex: "0 1 auto",
                 fontFamily: `"Alagard"`,
                 fontSize: "18px",
+                backgroundColor: "#C39B77",
+                userSelect: "none",
+                display: "flex",
+                justifyContent: "space-between",
               }}
             >
-              <img src={card.icon} height={12} /> {card.title}
+              <div>
+                <img src={card.icon} height={12} />{" "}
+                {truncate(card.title, { length: 24 })}
+              </div>
+              <div>
+                {!(card.kind === "avatar") && (
+                  <button
+                    onClick={() => dispatch({ kind: "add_to_backpack", card })}
+                  >
+                    b
+                  </button>
+                )}
+              </div>
             </div>
             <div style={{ overflow: "hidden" }}>
               {card.kind === "avatar" ? (
                 <AvatarCardComponent card={card} />
               ) : (
-                <YoutubeCardComponent card={card} updateData={updateCard} />
+                <YoutubeCardComponent card={card} dispatch={dispatch} />
               )}
             </div>
           </div>
