@@ -123,7 +123,7 @@ function App() {
         x: 0,
         y: 0,
         w: 2,
-        h: 1,
+        h: 2,
       },
     },
   ]);
@@ -134,7 +134,6 @@ function App() {
     },
     [cards]
   );
-  // TODO: spaces/backpack
 
   const updateCard = useCallback(
     (card: Card) => {
@@ -170,11 +169,12 @@ function App() {
       <GridLayout
         onLayoutChange={onLayoutChange}
         cols={12}
-        rowHeight={300}
+        rowHeight={100}
         width={window.innerWidth}
         autoSize={true}
         compactType={null}
         // isBounded={true}
+        margin={[30, 30]}
         isResizable={true}
         resizeHandles={["se"]}
       >

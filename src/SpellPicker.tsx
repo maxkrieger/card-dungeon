@@ -32,7 +32,7 @@ const SpellPicker: React.FC<{
           title: "video",
           icon: YoutubeIcon,
           uri: mainFieldVal,
-          layout: { x: 0, y: 0, i: Math.random().toString(), w: 2, h: 1 },
+          layout: { x: 0, y: 0, i: Math.random().toString(), w: 2, h: 2 },
         },
       });
       onClose();
