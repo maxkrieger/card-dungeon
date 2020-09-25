@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1e215a4c6b275734299b56203ec1c567",
+    "revision": "4204ed0d08843e897beeee42f9467a57",
     "url": "/card-dungeon/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/card-dungeon/static/css/2.ebc11a36.chunk.css"
   },
   {
-    "revision": "3ce262d44768f31c1f4e",
+    "revision": "bf7ca3a7fe158defd75b",
     "url": "/card-dungeon/static/css/main.a1c6ae05.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/card-dungeon/static/js/2.67a17816.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "3ce262d44768f31c1f4e",
-    "url": "/card-dungeon/static/js/main.6d4612eb.chunk.js"
+    "revision": "bf7ca3a7fe158defd75b",
+    "url": "/card-dungeon/static/js/main.6b8aa96d.chunk.js"
   },
   {
     "revision": "5c7743d6d2f856949ca9",
