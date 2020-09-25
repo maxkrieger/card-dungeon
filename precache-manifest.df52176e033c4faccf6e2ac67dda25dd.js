@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "c1e79db0eff9d9c2cddf4de566e332be",
+    "revision": "1fa69cb36381582a390af36cd28d9e85",
     "url": "/card-dungeon/index.html"
   },
   {
