@@ -23,24 +23,9 @@ const BackpackComponent: React.FC<{
 }> = ({ show, onClose, dispatch, backpack }) => {
   const [primaryOpen, setPrimaryOpen] = useState<Primaries>(Primaries.NONE);
   const [mainFieldVal, setMainFieldVal] = useState("");
-  const dispatchYT = useCallback(
-    (e: any) => {
-      e.preventDefault();
-      dispatch({
-        kind: "add_card",
-        card: {
-          kind: "youtube",
-          title: "video",
-          icon: YoutubeIcon,
-          uri: mainFieldVal,
-          layout: { x: 0, y: 0, i: Math.random().toString(), w: 2, h: 2 },
-        },
-      });
-      onClose();
-      setMainFieldVal("");
-    },
-    [dispatch, mainFieldVal, onClose]
-  );
+  const clearBackpack = useCallback(() => {
+    dispatch({ kind: "clear_backpack" });
+  }, [dispatch]);
   const youtubes = backpack.filter((card) => card.kind === "youtube");
   return (
     <DialogOverlay
@@ -65,8 +50,9 @@ const BackpackComponent: React.FC<{
             userSelect: "none",
           }}
         >
-          spells
+          backpack
           <button onClick={onClose}>x</button>
+          <button onClick={clearBackpack}>clear</button>
         </div>
         <div
           style={{

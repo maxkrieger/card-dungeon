@@ -53,13 +53,18 @@ interface AddFromBackpack {
   cardID: string;
 }
 
+interface ClearBackpack {
+  kind: "clear_backpack";
+}
+
 export type action =
   | AddCard
   | UpdateCard
   | BatchUpdateLayouts
   | LoadBackpack
   | AddToBackpack
-  | AddFromBackpack;
+  | AddFromBackpack
+  | ClearBackpack;
 
 export interface OverallState {
   cards: Card[];
@@ -76,7 +81,7 @@ const reducer = (state: OverallState, action: action): OverallState => {
     case "add_card":
       return { ...state, cards: [...state.cards, action.card] };
     case "update_card":
-      const idx = newCards.findIndex(
+      let idx = newCards.findIndex(
         (crd) => crd.layout.i === action.card.layout.i
       );
       newCards[idx] = action.card;
@@ -93,13 +98,17 @@ const reducer = (state: OverallState, action: action): OverallState => {
     case "load_backpack":
       return { ...state, myBackpack: action.backpack };
     case "add_to_backpack":
-      const newBackpack = [...state.myBackpack, action.card];
+      let newBackpack = [...state.myBackpack, action.card];
       saveBackpack(newBackpack);
       // remove card from env
       const filteredCards = state.cards.filter(
         (card) => action.card.layout.i !== card.layout.i
       );
       return { ...state, cards: filteredCards, myBackpack: newBackpack };
+    case "clear_backpack":
+      let newState = { ...state, myBackpack: [] };
+      saveBackpack([]);
+      return newState;
     case "add_from_backpack":
       // UNIMPL
       return { ...state };
