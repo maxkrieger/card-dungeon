@@ -254,8 +254,6 @@ const YoutubeCardComponent: React.FC<{
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <div
         style={{
-          // position: "relative",
-          // paddingTop: "56.25%",
           flexGrow: 1,
           flexShrink: 0,
           flexBasis: "auto",

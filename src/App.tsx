@@ -14,6 +14,7 @@ import AvatarCardComponent, { AvatarCard } from "./AvatarCardComponent";
 import BackpackComponent from "./BackpackComponent";
 import { truncate } from "lodash";
 import BackpackIcon from "./assets/backpack.png";
+import OrbIcon from "./assets/orb.png";
 import EyeIcon from "./assets/eye.png";
 // import FrameBorder from "./assets/frame-border.png";
 interface UserInfo {
@@ -251,7 +252,12 @@ function App() {
               marginLeft: "10px",
             }}
           >
-            spells
+            <img
+              src={OrbIcon}
+              width={20}
+              style={{ verticalAlign: "middle", marginRight: "5px" }}
+            />
+            <span>spells</span>
           </div>
           <div
             onClick={() => setShowBackpack(true)}
@@ -267,7 +273,11 @@ function App() {
               marginLeft: "10px",
             }}
           >
-            <img src={BackpackIcon} width={20} />
+            <img
+              src={BackpackIcon}
+              width={20}
+              style={{ verticalAlign: "middle", marginRight: "5px" }}
+            />
             <span>
               backpack{" "}
               {state.myBackpack.length > 0 && `(${state.myBackpack.length})`}
