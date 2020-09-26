@@ -20,7 +20,10 @@ const AvatarCardComponent: React.FC<{ card: AvatarCard }> = ({ card }) => {
     });
   }, [videoElement]);
   return (
-    <video ref={videoElement} style={{ width: "100%", objectFit: "contain" }} />
+    <video
+      ref={videoElement}
+      style={{ width: "100%", height: "100%", objectFit: "contain" }}
+    />
   );
 };
 

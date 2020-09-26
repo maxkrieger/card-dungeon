@@ -289,7 +289,7 @@ function App() {
       <GridLayout
         onLayoutChange={onLayoutChange}
         cols={12}
-        rowHeight={50}
+        rowHeight={window.innerWidth / 12}
         width={window.innerWidth}
         autoSize={true}
         compactType={null}
@@ -303,7 +303,7 @@ function App() {
           <div
             key={card.layout.i}
             // this is naughty
-            data-grid={{ ...card.layout, minW: 2, minH: 2 }}
+            data-grid={{ ...card.layout, minW: 2, minH: 1 }}
             style={{
               backgroundColor: "sandybrown",
               display: "flex",
