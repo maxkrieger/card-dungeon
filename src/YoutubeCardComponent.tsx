@@ -17,7 +17,7 @@ export interface YoutubeCard extends AbstractCard {
   state: PlayerState;
 }
 
-const regex = "https?://(www.)?youtube.com/watch?v=.+";
+const regex = `https?:\\/\\/(www\\.)?youtube.com\\/watch\\?v=.+`;
 
 const api_key = process.env.REACT_APP_YOUTUBE_API_KEY || "";
 
