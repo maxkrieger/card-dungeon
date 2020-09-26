@@ -57,7 +57,11 @@ const BackpackComponent: React.FC<{
             userSelect: "none",
           }}
         >
-          <img src={BackpackIcon} width={30} />
+          <img
+            src={BackpackIcon}
+            width={30}
+            style={{ verticalAlign: "middle" }}
+          />
           <span>backpack</span>
           <button onClick={onClose}>x</button>
           <button onClick={clearBackpack}>clear</button>

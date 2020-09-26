@@ -14,6 +14,7 @@ import AvatarCardComponent, { AvatarCard } from "./AvatarCardComponent";
 import BackpackComponent from "./BackpackComponent";
 import { truncate } from "lodash";
 import BackpackIcon from "./assets/backpack.png";
+import EyeIcon from "./assets/eye.png";
 // import FrameBorder from "./assets/frame-border.png";
 interface UserInfo {
   name: string;
@@ -127,9 +128,15 @@ const reducer = (state: OverallState, action: action): OverallState => {
     case "add_to_backpack":
       let newCard = { ...action.card };
       if (newCard.kind === "youtube") {
-        newCard.state.playing = false;
+        newCard.state = { ...newCard.state, playing: false };
       }
-      newBackpack = [...state.myBackpack, newCard];
+      if (state.myBackpack.some((card) => card.layout.i === newCard.layout.i)) {
+        newBackpack = state.myBackpack.map((card) =>
+          card.layout.i === newCard.layout.i ? newCard : card
+        );
+      } else {
+        newBackpack = [...state.myBackpack, newCard];
+      }
       saveBackpack(newBackpack);
       return { ...state, myBackpack: newBackpack };
     case "clear_backpack":
@@ -175,7 +182,7 @@ function App() {
       {
         kind: "avatar",
         title: "me",
-        icon: "camera",
+        icon: EyeIcon,
         layout: {
           i: "1",
           x: 0,
@@ -295,7 +302,8 @@ function App() {
         {cards.map((card: Card, key: number) => (
           <div
             key={card.layout.i}
-            data-grid={card.layout}
+            // this is naughty
+            data-grid={{ ...card.layout, minW: 2, minH: 2 }}
             style={{
               backgroundColor: "sandybrown",
               display: "flex",
@@ -320,19 +328,24 @@ function App() {
               className="bar"
             >
               <div>
-                <img src={card.icon} height={12} />{" "}
-                {truncate(card.title, { length: 24 })}
+                <img
+                  src={card.icon}
+                  width={20}
+                  style={{ verticalAlign: "middle", marginLeft: "10px" }}
+                />{" "}
+                <span>{truncate(card.title, { length: 24 })}</span>
               </div>
               <div>
                 {!(card.kind === "avatar") && (
                   <button
                     onClick={() => dispatch({ kind: "add_to_backpack", card })}
-                    disabled={state.myBackpack.some(
-                      (crd: Card) => crd.layout.i === card.layout.i
-                    )}
                     style={{ border: "none", background: "none", padding: 0 }}
                   >
-                    <img width={20} src={BackpackIcon} />
+                    <img
+                      width={20}
+                      src={BackpackIcon}
+                      style={{ verticalAlign: "middle" }}
+                    />
                   </button>
                 )}
               </div>
