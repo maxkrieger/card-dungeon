@@ -169,6 +169,8 @@ const reducer = (state: OverallState, action: action): OverallState => {
   }
 };
 
+const NUM_COLS = 12;
+
 export const BORDER_SECONDARY_COLOR = "#3A1915";
 export const BORDER_PRIMARY_COLOR = "#C39B77";
 
@@ -299,8 +301,8 @@ function App() {
       />
       <GridLayout
         onLayoutChange={onLayoutChange}
-        cols={12}
-        rowHeight={window.innerWidth / 12}
+        cols={NUM_COLS}
+        rowHeight={window.innerWidth / NUM_COLS}
         width={window.innerWidth}
         autoSize={true}
         compactType={null}
