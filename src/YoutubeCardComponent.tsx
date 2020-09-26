@@ -94,7 +94,7 @@ export const YoutubeWizard: React.FC<PickerProps> = ({ dispatch, onClose }) => {
   return (
     <div
       style={{
-        maxHeight: "100%",
+        height: "100%",
         overflow: "hidden",
         display: "flex",
         flexGrow: 1,
@@ -251,13 +251,21 @@ const YoutubeCardComponent: React.FC<{
     .padStart(2, "0");
   const seconds = (Math.floor(playedSeconds) % 60).toString().padStart(2, "0");
   return (
-    <div>
-      <div style={{ position: "relative", paddingTop: "56.25%" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <div
+        style={{
+          // position: "relative",
+          // paddingTop: "56.25%",
+          flexGrow: 1,
+          flexShrink: 0,
+          flexBasis: "auto",
+        }}
+      >
         <ReactPlayer
           url={card.uri}
           width={"100%"}
           height={"100%"}
-          style={{ position: "absolute", top: 0, left: 0 }}
+          className="react-player"
           onReady={onReady}
           ref={playerRef}
           controls={false}
@@ -283,7 +291,13 @@ const YoutubeCardComponent: React.FC<{
         />
         {!ready && <span>loading... (insert snail here)</span>}
       </div>
-      <div>
+      <div
+        style={{
+          flexGrow: 0,
+          flexShrink: 0,
+          flexBasis: "auto",
+        }}
+      >
         <span>
           {hours !== "0" && hours + ":"}
           {minutes}:{seconds}

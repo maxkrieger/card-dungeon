@@ -23,3 +23,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.react-player {
+  /* position: absolute;
+  top: 0;
+  left: 0; */
+}

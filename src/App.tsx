@@ -112,9 +112,10 @@ const reducer = (state: OverallState, action: action): OverallState => {
         .map((card) => {
           const { layout } = card;
           const { w, h } = layout;
-          if (h > w) {
+          if (Math.abs(h - w) > 3) {
             // for some reason doesnt work immutably
-            card.layout.h = w;
+            card.layout.h = Math.min(w, h);
+            card.layout.w = Math.min(w, h);
             return card;
           }
           return card;
@@ -317,7 +318,7 @@ function App() {
           >
             <div
               style={{
-                flex: "0 1 auto",
+                flexShrink: 0,
                 fontFamily: `"Alagard"`,
                 fontSize: "18px",
                 backgroundColor: "#C39B77",
@@ -350,7 +351,7 @@ function App() {
                 )}
               </div>
             </div>
-            <div style={{ overflow: "hidden" }}>
+            <div style={{ overflow: "hidden", flexGrow: 1 }}>
               {card.kind === "avatar" ? (
                 <AvatarCardComponent card={card} />
               ) : (
