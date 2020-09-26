@@ -283,13 +283,15 @@ const YoutubeCardComponent: React.FC<{
         />
         {!ready && <span>loading... (insert snail here)</span>}
       </div>
-      <span>
-        {hours !== "0" && hours + ":"}
-        {minutes}:{seconds}
-      </span>
-      <button onClick={togglePlay}>
-        {card.state.playing ? "pause" : "play"}
-      </button>
+      <div>
+        <span>
+          {hours !== "0" && hours + ":"}
+          {minutes}:{seconds}
+        </span>
+        <button onClick={togglePlay} disabled={!ready}>
+          {card.state.playing ? "pause" : "play"}
+        </button>
+      </div>
     </div>
   );
 };

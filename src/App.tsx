@@ -13,6 +13,7 @@ import YoutubeCardComponent, { YoutubeCard } from "./YoutubeCardComponent";
 import AvatarCardComponent, { AvatarCard } from "./AvatarCardComponent";
 import BackpackComponent from "./BackpackComponent";
 import { truncate } from "lodash";
+import BackpackIcon from "./assets/backpack.png";
 // import FrameBorder from "./assets/frame-border.png";
 interface UserInfo {
   name: string;
@@ -101,13 +102,25 @@ const reducer = (state: OverallState, action: action): OverallState => {
       newCards[idx] = action.card;
       return { ...state, cards: newCards };
     case "batch_update_layouts":
-      return {
-        ...state,
-        cards: state.cards.map((card) => ({
+      let newLayouts = state.cards
+        .map((card) => ({
           ...card,
           layout:
             action.layouts.find(({ i }) => i === card.layout.i) || card.layout,
-        })),
+        }))
+        .map((card) => {
+          const { layout } = card;
+          const { w, h } = layout;
+          if (h > w) {
+            // for some reason doesnt work immutably
+            card.layout.h = w;
+            return card;
+          }
+          return card;
+        });
+      return {
+        ...state,
+        cards: newLayouts,
       };
     case "load_backpack":
       return { ...state, myBackpack: action.backpack };
@@ -118,11 +131,7 @@ const reducer = (state: OverallState, action: action): OverallState => {
       }
       newBackpack = [...state.myBackpack, newCard];
       saveBackpack(newBackpack);
-      // remove card from env
-      const filteredCards = state.cards.filter(
-        (card) => action.card.layout.i !== card.layout.i
-      );
-      return { ...state, cards: filteredCards, myBackpack: newBackpack };
+      return { ...state, myBackpack: newBackpack };
     case "clear_backpack":
       newState = { ...state, myBackpack: [] };
       saveBackpack([]);
@@ -132,6 +141,9 @@ const reducer = (state: OverallState, action: action): OverallState => {
         (card) => card.layout.i === action.cardID
       );
       if (!addedCard) {
+        return state;
+      }
+      if (state.cards.some((crd) => crd.layout.i === action.cardID)) {
         return state;
       }
       newCards = [...state.cards, addedCard];
@@ -247,11 +259,14 @@ function App() {
               marginLeft: "10px",
             }}
           >
-            backpack{" "}
-            {state.myBackpack.length > 0 && `(${state.myBackpack.length})`}
+            <img src={BackpackIcon} width={20} />
+            <span>
+              backpack{" "}
+              {state.myBackpack.length > 0 && `(${state.myBackpack.length})`}
+            </span>
           </div>
         </nav>
-        <nav>DungeonCard</nav>
+        <nav>Tavern Cards</nav>
       </header>
       <SpellPicker
         show={showSpellPicker}
@@ -267,7 +282,7 @@ function App() {
       <GridLayout
         onLayoutChange={onLayoutChange}
         cols={12}
-        rowHeight={100}
+        rowHeight={50}
         width={window.innerWidth}
         autoSize={true}
         compactType={null}
@@ -312,8 +327,12 @@ function App() {
                 {!(card.kind === "avatar") && (
                   <button
                     onClick={() => dispatch({ kind: "add_to_backpack", card })}
+                    disabled={state.myBackpack.some(
+                      (crd: Card) => crd.layout.i === card.layout.i
+                    )}
+                    style={{ border: "none", background: "none", padding: 0 }}
                   >
-                    b
+                    <img width={20} src={BackpackIcon} />
                   </button>
                 )}
               </div>

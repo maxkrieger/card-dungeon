@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
 import { action, BORDER_PRIMARY_COLOR, Card } from "./App";
 import YoutubeIcon from "./assets/youtube.png";
+import BackpackIcon from "./assets/backpack.png";
 
 enum Primaries {
   YOUTUBE,
@@ -56,7 +57,8 @@ const BackpackComponent: React.FC<{
             userSelect: "none",
           }}
         >
-          backpack
+          <img src={BackpackIcon} width={30} />
+          <span>backpack</span>
           <button onClick={onClose}>x</button>
           <button onClick={clearBackpack}>clear</button>
         </div>
