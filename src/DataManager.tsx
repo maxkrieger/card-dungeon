@@ -172,6 +172,7 @@ class DataManager {
     }
     const id = Math.random().toString();
     this.myAvatarID = id;
+    // TODO: prevent from adding it twice
     this.addCard({
       kind: "avatar",
       title: this.me.name,
@@ -299,7 +300,7 @@ class DataManager {
   };
 
   addFromBackpack = (card: Card) => {
-    if (!this.cardsY.has(card.layout.i) && this.dispatch) {
+    if (this.dispatch) {
       this.dispatch({ kind: "add_from_backpack", cardID: card.layout.i });
       this.cardsY.set(card.layout.i, card);
     }
