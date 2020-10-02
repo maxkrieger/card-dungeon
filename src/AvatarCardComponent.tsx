@@ -13,23 +13,29 @@ export interface AvatarCardProps {
 
 const AvatarCardComponent: React.FC<AvatarCardProps> = ({ card, ticker }) => {
   const videoElement = useRef<HTMLVideoElement>(null);
+  const stream =
+    card.author === dataManager.me.id
+      ? dataManager.myStream
+      : dataManager.peerMap[card.author]
+      ? dataManager.streamMap[dataManager.peerMap[card.author].peerId]
+      : undefined;
   const onRefReady = useCallback(() => {
     let video = videoElement.current;
     if (!video) {
       console.log("no video yet2", ticker);
       return;
     }
-    const stream = dataManager.streamMap[card.author];
+
     (async () => {
       if (video.paused && stream) {
         video.srcObject = stream;
         await video.play();
       }
-      if (card.author === dataManager.me.peerId) {
+      if (card.author === dataManager.me.id) {
         video.muted = true;
       }
     })();
-  }, [videoElement, card, ticker]);
+  }, [videoElement, card, ticker, stream]);
   useEffect(() => {
     if (!videoElement) {
       console.log("no video yet");
@@ -43,7 +49,7 @@ const AvatarCardComponent: React.FC<AvatarCardProps> = ({ card, ticker }) => {
         ref={videoElement}
         style={{ width: "100%", height: "100%", objectFit: "contain" }}
       />
-      {dataManager.streamMap[card.author] === undefined && "no stream"}
+      {stream === undefined && "no stream"}
     </div>
   );
 };

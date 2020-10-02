@@ -124,7 +124,8 @@ class DataManager {
       ],
       filterBcConns: false,
       maxConns: Number.POSITIVE_INFINITY,
-      peerOpts: { initiator: matched === null, objectMode: false, streams: [] },
+      //   peerOpts: { initiator: matched === null, objectMode: false, streams: [] },
+      peerOpts: { objectMode: false, streams: [] },
     } as any);
     this.setupStream();
   };
@@ -167,8 +168,8 @@ class DataManager {
       title: this.me.name,
       icon: EyeIcon,
       layout: { x: 0, y: 0, i: id, w: 2, h: 2 },
-      author: this.me.peerId,
-      manager: this.me.peerId,
+      author: this.me.id,
+      manager: this.me.id,
     });
   };
   setupStream = async () => {
@@ -176,7 +177,7 @@ class DataManager {
       this.provider!.on("peers", async (e: any) => {
         if (this.provider!.room && this.me.peerId === "" && this.dispatch) {
           this.me.peerId = this.provider!.room.peerId;
-          this.peerMap[this.me.peerId] = this.me;
+          this.peerMap[this.me.id] = this.me;
         }
         e.removed.forEach((peerId: string) => {
           console.log(`${peerId} left`);
@@ -196,13 +197,13 @@ class DataManager {
               if (stringified.length > 0 && stringified.match(/packetKind/)) {
                 const parsed = JSON.parse(stringified);
                 const id = parsed.docID.toString();
-                if (!this.peerMap[peerId]) {
+                if (!this.peerMap[id]) {
                   const newPeer = {
                     name: parsed.myName,
                     id,
                     peerId,
                   };
-                  this.peerMap[peerId] = newPeer;
+                  this.peerMap[id] = newPeer;
                   this.dispatch!({ kind: "add_peer", peer: newPeer });
                   peer.send(
                     JSON.stringify({
