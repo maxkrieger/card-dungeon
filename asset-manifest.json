@@ -1,26 +1,26 @@
 {
   "files": {
     "main.css": "/card-dungeon/static/css/main.a1c6ae05.chunk.css",
-    "main.js": "/card-dungeon/static/js/main.32d64cd3.chunk.js",
-    "main.js.map": "/card-dungeon/static/js/main.32d64cd3.chunk.js.map",
+    "main.js": "/card-dungeon/static/js/main.6737940d.chunk.js",
+    "main.js.map": "/card-dungeon/static/js/main.6737940d.chunk.js.map",
     "runtime-main.js": "/card-dungeon/static/js/runtime-main.b40dd721.js",
     "runtime-main.js.map": "/card-dungeon/static/js/runtime-main.b40dd721.js.map",
     "static/css/2.ebc11a36.chunk.css": "/card-dungeon/static/css/2.ebc11a36.chunk.css",
-    "static/js/2.f0a25832.chunk.js": "/card-dungeon/static/js/2.f0a25832.chunk.js",
-    "static/js/2.f0a25832.chunk.js.map": "/card-dungeon/static/js/2.f0a25832.chunk.js.map",
+    "static/js/2.db4f93d0.chunk.js": "/card-dungeon/static/js/2.db4f93d0.chunk.js",
+    "static/js/2.db4f93d0.chunk.js.map": "/card-dungeon/static/js/2.db4f93d0.chunk.js.map",
     "index.html": "/card-dungeon/index.html",
-    "precache-manifest.c1bcf895d1008dc06bc32da24581418a.js": "/card-dungeon/precache-manifest.c1bcf895d1008dc06bc32da24581418a.js",
+    "precache-manifest.677da2b7e31acd8858a207c2bdfd9803.js": "/card-dungeon/precache-manifest.677da2b7e31acd8858a207c2bdfd9803.js",
     "service-worker.js": "/card-dungeon/service-worker.js",
     "static/css/2.ebc11a36.chunk.css.map": "/card-dungeon/static/css/2.ebc11a36.chunk.css.map",
     "static/css/main.a1c6ae05.chunk.css.map": "/card-dungeon/static/css/main.a1c6ae05.chunk.css.map",
-    "static/js/2.f0a25832.chunk.js.LICENSE.txt": "/card-dungeon/static/js/2.f0a25832.chunk.js.LICENSE.txt",
+    "static/js/2.db4f93d0.chunk.js.LICENSE.txt": "/card-dungeon/static/js/2.db4f93d0.chunk.js.LICENSE.txt",
     "static/media/index.css": "/card-dungeon/static/media/alagard.6faad178.ttf"
   },
   "entrypoints": [
     "static/js/runtime-main.b40dd721.js",
     "static/css/2.ebc11a36.chunk.css",
-    "static/js/2.f0a25832.chunk.js",
+    "static/js/2.db4f93d0.chunk.js",
     "static/css/main.a1c6ae05.chunk.css",
-    "static/js/main.32d64cd3.chunk.js"
+    "static/js/main.6737940d.chunk.js"
   ]
 }
