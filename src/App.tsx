@@ -9,219 +9,44 @@ import GridLayout, { Layout } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "@reach/dialog/styles.css";
 import SpellPicker from "./SpellPicker";
-import YoutubeCardComponent, { YoutubeCard } from "./YoutubeCardComponent";
-import AvatarCardComponent, { AvatarCard } from "./AvatarCardComponent";
+import YoutubeCardComponent from "./YoutubeCardComponent";
+import AvatarCardComponent from "./AvatarCardComponent";
 import BackpackComponent from "./BackpackComponent";
 import { truncate } from "lodash";
 import BackpackIcon from "./assets/backpack.png";
 import OrbIcon from "./assets/orb.png";
-import EyeIcon from "./assets/eye.png";
+import DataManager, { Card } from "./DataManager";
 // import FrameBorder from "./assets/frame-border.png";
-interface UserInfo {
-  name: string;
-  id: string;
-}
-export interface AbstractCard {
-  layout: GridLayout.Layout;
-  title: string;
-  icon: string;
-  author: UserInfo;
-  manager: UserInfo | null;
-}
-
-export type Card = YoutubeCard | AvatarCard;
-
-interface AddCard {
-  kind: "add_card";
-  card: Card;
-}
-
-interface UpdateCard {
-  kind: "update_card";
-  card: Card;
-}
-
-interface BatchUpdateLayouts {
-  kind: "batch_update_layouts";
-  layouts: Layout[];
-}
-
-interface LoadBackpack {
-  kind: "load_backpack";
-  backpack: Card[];
-}
-
-interface AddToBackpack {
-  kind: "add_to_backpack";
-  card: Card;
-}
-
-interface AddFromBackpack {
-  kind: "add_from_backpack";
-  cardID: string;
-}
-
-interface ClearBackpack {
-  kind: "clear_backpack";
-}
-
-interface VideoAction {
-  kind: "video_action";
-  card: YoutubeCard;
-}
-
-export type action =
-  | AddCard
-  | UpdateCard
-  | BatchUpdateLayouts
-  | LoadBackpack
-  | AddToBackpack
-  | AddFromBackpack
-  | ClearBackpack
-  | VideoAction;
-
-export interface OverallState {
-  cards: Card[];
-  myBackpack: Card[];
-  me: UserInfo;
-}
-
-const saveBackpack = (backpack: Card[]) => {
-  localStorage.setItem("myBackpack", JSON.stringify(backpack));
-};
-
-const reducer = (state: OverallState, action: action): OverallState => {
-  let newCards = [...state.cards];
-  let newBackpack;
-  let newState;
-  switch (action.kind) {
-    case "add_card":
-      return { ...state, cards: [...state.cards, action.card] };
-    case "update_card":
-      let idx = newCards.findIndex(
-        (crd) => crd.layout.i === action.card.layout.i
-      );
-      newCards[idx] = action.card;
-      return { ...state, cards: newCards };
-    case "batch_update_layouts":
-      let newLayouts = state.cards
-        .map((card) => ({
-          ...card,
-          layout:
-            action.layouts.find(({ i }) => i === card.layout.i) || card.layout,
-        }))
-        .map((card) => {
-          const { layout } = card;
-          const { w, h } = layout;
-          if (Math.abs(h - w) > 3) {
-            // for some reason doesnt work immutably
-            card.layout.h = Math.min(w, h);
-            card.layout.w = Math.min(w, h);
-            return card;
-          }
-          return card;
-        });
-      return {
-        ...state,
-        cards: newLayouts,
-      };
-    case "load_backpack":
-      return { ...state, myBackpack: action.backpack };
-    case "add_to_backpack":
-      let newCard = { ...action.card };
-      if (newCard.kind === "youtube") {
-        newCard.state = { ...newCard.state, playing: false };
-      }
-      if (state.myBackpack.some((card) => card.layout.i === newCard.layout.i)) {
-        newBackpack = state.myBackpack.map((card) =>
-          card.layout.i === newCard.layout.i ? newCard : card
-        );
-      } else {
-        newBackpack = [...state.myBackpack, newCard];
-      }
-      saveBackpack(newBackpack);
-      return { ...state, myBackpack: newBackpack };
-    case "clear_backpack":
-      newState = { ...state, myBackpack: [] };
-      saveBackpack([]);
-      return newState;
-    case "add_from_backpack":
-      let addedCard = state.myBackpack.find(
-        (card) => card.layout.i === action.cardID
-      );
-      if (!addedCard) {
-        return state;
-      }
-      if (state.cards.some((crd) => crd.layout.i === action.cardID)) {
-        return state;
-      }
-      newCards = [...state.cards, addedCard];
-      newBackpack = state.myBackpack.filter(
-        (card) => card.layout.i !== action.cardID
-      );
-      saveBackpack(newBackpack);
-      return { ...state, cards: newCards, myBackpack: newBackpack };
-    case "video_action":
-      newCards = state.cards.map((card) =>
-        card.layout.i === action.card.layout.i ? action.card : card
-      );
-      return { ...state, cards: newCards };
-  }
-};
 
 const NUM_COLS = 12;
 
 export const BORDER_SECONDARY_COLOR = "#3A1915";
 export const BORDER_PRIMARY_COLOR = "#C39B77";
 
-const MECONST = {
-  id: "meme",
-  name: "me",
-};
+export const dataManager = new DataManager();
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, {
-    me: MECONST,
-    cards: [
-      {
-        kind: "avatar",
-        title: "me",
-        icon: EyeIcon,
-        layout: {
-          i: "1",
-          x: 0,
-          y: 0,
-          w: 2,
-          h: 2,
-        },
-        author: {
-          name: "",
-          id: "",
-        },
-        manager: {
-          name: "",
-          id: "",
-        },
-      },
-    ],
-    myBackpack: [],
-  });
+  const [state, dispatch] = useReducer(
+    dataManager.reducer,
+    dataManager.defaultMe()
+  );
+  dataManager.setDispatch(dispatch);
   useEffect(() => {
     const backpackLoaded = localStorage.getItem("myBackpack");
     if (backpackLoaded) {
-      dispatch({ kind: "load_backpack", backpack: JSON.parse(backpackLoaded) });
+      dispatch({ kind: "set_backpack", backpack: JSON.parse(backpackLoaded) });
     }
   }, [dispatch]);
 
   const { cards } = state;
   const [showSpellPicker, setShowSpellPicker] = useState(false);
   const [showBackpack, setShowBackpack] = useState(false);
-  const onLayoutChange = useCallback(
-    (newLayout: Layout[]) => {
-      dispatch({ kind: "batch_update_layouts", layouts: newLayout });
-    },
-    [dispatch]
-  );
+  const onLayoutChange = useCallback((newLayout: Layout[]) => {
+    dataManager.updateLayouts(newLayout);
+  }, []);
+  useEffect(() => {
+    dataManager.setDispatch(dispatch);
+  }, [dispatch]);
 
   return (
     <div className="App">
@@ -307,71 +132,78 @@ function App() {
         autoSize={true}
         compactType={null}
         // isBounded={true}
+        layout={cards.map(({ layout }) => layout)}
         margin={[30, 30]}
         isResizable={true}
         resizeHandles={["se"]}
         draggableHandle=".bar"
       >
-        {cards.map((card: Card, key: number) => (
-          <div
-            key={card.layout.i}
-            // this is naughty
-            data-grid={{ ...card.layout, minW: 2, minH: 1 }}
-            style={{
-              backgroundColor: "sandybrown",
-              display: "flex",
-              flexFlow: "column",
-              boxShadow: "5px 5px hsla(0, 0%, 0%, 0.5)",
-              // border: "10px solid transparent",
-              // borderImageSource: `url(${FrameBorder})`,
-              // borderImageRepeat: "stretch",
-              // borderImageSlice: "34 13 34 13",
-            }}
-          >
+        {cards.map((card: Card, key: number) => {
+          return (
             <div
+              key={card.layout.i}
+              // this is naughty
+              // data-grid={JSON.parse(
+              //   JSON.stringify({ ...card.layout, minW: 2, minH: 1 })
+              // )}
               style={{
-                flexShrink: 0,
-                fontFamily: `"Alagard"`,
-                fontSize: "18px",
-                backgroundColor: "#C39B77",
-                userSelect: "none",
+                backgroundColor: "sandybrown",
                 display: "flex",
-                justifyContent: "space-between",
+                flexFlow: "column",
+                boxShadow: "5px 5px hsla(0, 0%, 0%, 0.5)",
+                // border: "10px solid transparent",
+                // borderImageSource: `url(${FrameBorder})`,
+                // borderImageRepeat: "stretch",
+                // borderImageSlice: "34 13 34 13",
               }}
-              className="bar"
             >
-              <div>
-                <img
-                  src={card.icon}
-                  width={20}
-                  style={{ verticalAlign: "middle", marginLeft: "10px" }}
-                />{" "}
-                <span>{truncate(card.title, { length: 24 })}</span>
+              <div
+                style={{
+                  flexShrink: 0,
+                  fontFamily: `"Alagard"`,
+                  fontSize: "18px",
+                  backgroundColor: "#C39B77",
+                  userSelect: "none",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+                className="bar"
+              >
+                <div>
+                  <img
+                    src={card.icon}
+                    width={20}
+                    style={{ verticalAlign: "middle", marginLeft: "10px" }}
+                  />{" "}
+                  <span>{truncate(card.title, { length: 24 })}</span>
+                </div>
+                <div>
+                  {!(card.kind === "avatar") && (
+                    <button
+                      onClick={() =>
+                        dispatch({ kind: "add_to_backpack", card })
+                      }
+                      style={{ border: "none", background: "none", padding: 0 }}
+                    >
+                      <img
+                        width={20}
+                        src={BackpackIcon}
+                        style={{ verticalAlign: "middle" }}
+                      />
+                    </button>
+                  )}
+                </div>
               </div>
-              <div>
-                {!(card.kind === "avatar") && (
-                  <button
-                    onClick={() => dispatch({ kind: "add_to_backpack", card })}
-                    style={{ border: "none", background: "none", padding: 0 }}
-                  >
-                    <img
-                      width={20}
-                      src={BackpackIcon}
-                      style={{ verticalAlign: "middle" }}
-                    />
-                  </button>
+              <div style={{ overflow: "hidden", flexGrow: 1 }}>
+                {card.kind === "avatar" ? (
+                  <AvatarCardComponent card={card} />
+                ) : (
+                  <YoutubeCardComponent card={card} dispatch={dispatch} />
                 )}
               </div>
             </div>
-            <div style={{ overflow: "hidden", flexGrow: 1 }}>
-              {card.kind === "avatar" ? (
-                <AvatarCardComponent card={card} />
-              ) : (
-                <YoutubeCardComponent card={card} dispatch={dispatch} />
-              )}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </GridLayout>
     </div>
   );

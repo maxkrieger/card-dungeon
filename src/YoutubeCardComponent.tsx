@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
-import { AbstractCard, action } from "./App";
+import { AbstractCard, action } from "./DataManager";
 import { PickerProps } from "./SpellPicker";
 import YoutubeIcon from "./assets/youtube.png";
+import { dataManager } from "./App";
 
 export interface PlayerState {
   playing: boolean;
@@ -27,34 +28,25 @@ export const YoutubeWizard: React.FC<PickerProps> = ({ dispatch, onClose }) => {
   const [searchResults, setSearchResults] = useState<any>([]);
   const dispatchURL = useCallback(
     (url: string) => {
-      dispatch({
-        kind: "add_card",
-        card: {
-          kind: "youtube",
-          title: "video",
-          icon: YoutubeIcon,
-          uri: url,
-          layout: { x: 0, y: 0, i: Math.random().toString(), w: 2, h: 2 },
-          state: {
-            playing: false,
-            playedProgress: 0,
-            playedSeconds: 0,
-            volume: 1,
-            muted: false,
-          },
-          author: {
-            name: "",
-            id: "",
-          },
-          manager: {
-            name: "",
-            id: "",
-          },
+      dataManager.addCard({
+        kind: "youtube",
+        title: "video",
+        icon: YoutubeIcon,
+        uri: url,
+        layout: { x: 0, y: 0, i: Math.random().toString(), w: 2, h: 2 },
+        state: {
+          playing: false,
+          playedProgress: 0,
+          playedSeconds: 0,
+          volume: 1,
+          muted: false,
         },
+        author: "",
+        manager: "",
       });
       onClose();
     },
-    [dispatch, onClose]
+    [onClose]
   );
   const onSubmitURL = useCallback(
     (e: any) => {
@@ -183,10 +175,10 @@ const YoutubeCardComponent: React.FC<{
       const activePlayer = player.getInternalPlayer() as any;
       const video_data = activePlayer.getVideoData();
       const title = video_data.title;
-      dispatch({ kind: "update_card", card: { ...card, title } });
+      dataManager.updateCard({ ...card, title });
       setReady(true);
     },
-    [card, dispatch]
+    [card]
   );
   const playerRef = useRef<ReactPlayer>(null);
 
@@ -206,18 +198,18 @@ const YoutubeCardComponent: React.FC<{
         playedProgress: prog.played,
         playedSeconds: prog.playedSeconds,
       };
-      dispatch({ kind: "video_action", card: { ...card, state } });
+      dataManager.updateCard({ ...card, state });
     },
-    [card, dispatch]
+    [card]
   );
   const onPlay = useCallback(() => {
     const state = { ...card.state, playing: true };
-    dispatch({ kind: "video_action", card: { ...card, state } });
-  }, [dispatch, card]);
+    dataManager.updateCard({ ...card, state });
+  }, [card]);
   const onPause = useCallback(() => {
     const state = { ...card.state, playing: false };
-    dispatch({ kind: "video_action", card: { ...card, state } });
-  }, [dispatch, card]);
+    dataManager.updateCard({ ...card, state });
+  }, [card]);
   const onEnd = useCallback(() => {
     const state = {
       ...card.state,
@@ -225,12 +217,12 @@ const YoutubeCardComponent: React.FC<{
       playedProgress: 0,
       playedSeconds: 0,
     };
-    dispatch({ kind: "video_action", card: { ...card, state } });
-  }, [dispatch, card]);
+    dataManager.updateCard({ ...card, state });
+  }, [card]);
   const togglePlay = useCallback(() => {
     const state = { ...card.state, playing: !card.state.playing };
-    dispatch({ kind: "video_action", card: { ...card, state } });
-  }, [dispatch, card]);
+    dataManager.updateCard({ ...card, state });
+  }, [card]);
   useEffect(() => {
     if (playerRef.current && playerRef.current.getCurrentTime() !== null) {
       if (

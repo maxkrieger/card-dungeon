@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
-import { action, BORDER_PRIMARY_COLOR } from "./App";
+import { BORDER_PRIMARY_COLOR, dataManager } from "./App";
 import Orb from "./assets/orb.png";
 import YoutubeIcon from "./assets/youtube.png";
 import { YoutubeWizard } from "./YoutubeCardComponent";
+import { action } from "./DataManager";
+import EyeIcon from "./assets/eye.png";
 
 enum Primaries {
   YOUTUBE,
@@ -71,12 +73,29 @@ const SpellPicker: React.FC<{
             <div
               style={
                 primaryOpen === Primaries.YOUTUBE
-                  ? { color: "#FFFFFF", backgroundColor: "#000000" }
-                  : { color: "#000000", backgroundColor: "#FFFFFF" }
+                  ? {
+                      color: "#FFFFFF",
+                      backgroundColor: "#000000",
+                      verticalAlign: "middle",
+                    }
+                  : {
+                      color: "#000000",
+                      backgroundColor: "#FFFFFF",
+                      verticalAlign: "middle",
+                    }
               }
               onClick={() => setPrimaryOpen(Primaries.YOUTUBE)}
             >
               <img src={YoutubeIcon} width={30} /> youtube {">"}
+            </div>
+            <div
+              onClick={() => {
+                dataManager.addMyAvatar();
+                onClose();
+              }}
+              style={{ verticalAlign: "middle" }}
+            >
+              <img src={EyeIcon} width={30} /> me
             </div>
           </div>
           {primaryOpen === Primaries.YOUTUBE && (

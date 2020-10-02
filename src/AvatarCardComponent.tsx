@@ -1,24 +1,33 @@
 import React, { useRef, useEffect } from "react";
-import { AbstractCard } from "./App";
+import { dataManager } from "./App";
+import { AbstractCard } from "./DataManager";
 
 export interface AvatarCard extends AbstractCard {
   kind: "avatar";
+  updateTicker: number;
 }
 const AvatarCardComponent: React.FC<{ card: AvatarCard }> = ({ card }) => {
   const videoElement = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     if (!videoElement) {
+      console.log("no video yet");
       return;
     }
-    navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-      let video = videoElement.current;
-      if (!video) {
-        return;
+    let video = videoElement.current;
+    if (!video) {
+      console.log("no video yet2");
+      return;
+    }
+    const stream = dataManager.streamMap[card.author];
+    video.srcObject = stream;
+    (async () => {
+      await video.play();
+      console.log("playing", card.author, "me", dataManager.me.peerId);
+      if (card.author === dataManager.me.peerId) {
+        video.muted = true;
       }
-      video.srcObject = stream;
-      video.play();
-    });
-  }, [videoElement]);
+    })();
+  }, [videoElement, card.author, card.updateTicker]);
   return (
     <video
       ref={videoElement}

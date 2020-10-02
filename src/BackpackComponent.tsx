@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
-import { action, BORDER_PRIMARY_COLOR, Card } from "./App";
+import { BORDER_PRIMARY_COLOR, dataManager } from "./App";
 import YoutubeIcon from "./assets/youtube.png";
 import BackpackIcon from "./assets/backpack.png";
+import { Card, action } from "./DataManager";
 
 enum Primaries {
   YOUTUBE,
@@ -27,8 +28,8 @@ const BackpackComponent: React.FC<{
     dispatch({ kind: "clear_backpack" });
   }, [dispatch]);
   const addFrom = useCallback(
-    (cardID: string) => {
-      dispatch({ kind: "add_from_backpack", cardID });
+    (card: Card) => {
+      dataManager.addFromBackpack(card);
     },
     [dispatch]
   );
@@ -95,7 +96,7 @@ const BackpackComponent: React.FC<{
                   <div
                     key={card.layout.i}
                     style={{ cursor: "pointer", margin: "10px" }}
-                    onClick={() => addFrom(card.layout.i)}
+                    onClick={() => addFrom(card)}
                   >
                     {card.title}
                   </div>
