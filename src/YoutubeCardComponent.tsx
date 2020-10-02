@@ -43,6 +43,7 @@ export const YoutubeWizard: React.FC<PickerProps> = ({ dispatch, onClose }) => {
         },
         author: dataManager.me.id,
         manager: dataManager.me.id,
+        trashed: false,
       });
       onClose();
     },

@@ -17,6 +17,7 @@ export interface AbstractCard {
   icon: string;
   author: string;
   manager: string | null;
+  trashed: boolean;
 }
 
 export type Card = YoutubeCard | AvatarCard;
@@ -59,6 +60,11 @@ interface AddPeer {
   peer: UserInfo;
 }
 
+interface RemovePeer {
+  kind: "remove_peer";
+  peerId: string;
+}
+
 export type action =
   | SetCards
   | SetBackpack
@@ -67,7 +73,8 @@ export type action =
   | AddFromBackpack
   | IncrementTicker
   | SetReady
-  | AddPeer;
+  | AddPeer
+  | RemovePeer;
 
 export interface OverallState {
   cards: Card[];
@@ -135,7 +142,9 @@ class DataManager {
       if (this.dispatch) {
         this.dispatch({
           kind: "set_cards",
-          cards: JSON.parse(JSON.stringify(Array.from(this.cardsY.values()))),
+          cards: (Array.from(this.cardsY.values()) as Card[]).filter(
+            (card) => !card.trashed
+          ),
         });
       }
     });
@@ -170,6 +179,7 @@ class DataManager {
       layout: { x: 0, y: 0, i: id, w: 2, h: 2 },
       author: this.me.id,
       manager: this.me.id,
+      trashed: false,
     });
   };
   setupStream = async () => {
@@ -181,6 +191,7 @@ class DataManager {
         }
         e.removed.forEach((peerId: string) => {
           console.log(`${peerId} left`);
+          this.dispatch!({ kind: "remove_peer", peerId });
         });
         e.added.forEach((peerId: string) => {
           if (!this.provider!.room) {
@@ -220,7 +231,7 @@ class DataManager {
               }
             });
             peer.on("stream", async (stream: any) => {
-              console.log("stream");
+              console.log("stream", stream);
               this.streamMap[peerId] = stream;
               this.incrementTicker();
             });
@@ -243,7 +254,9 @@ class DataManager {
   };
   defaultMe = (): OverallState => {
     return {
-      cards: Array.from(this.cardsY.values()) as Card[],
+      cards: Array.from(this.cardsY.values()).filter(
+        (card: any) => !card.trashed
+      ) as Card[],
       myBackpack: [],
       ticker: 1,
       ready: false,
@@ -273,6 +286,16 @@ class DataManager {
   };
   updateCard = (card: Card) => {
     this.cardsY.set(card.layout.i, card);
+    if (card.author === this.me.id && card.trashed && card.kind === "avatar") {
+      if (this.provider && this.provider.room) {
+        this.provider.room.webrtcConns.forEach((conn) => {
+          //   conn.peer.removeStream(this.myStream);
+        });
+      }
+      this.myStream.getTracks().forEach((stream: any) => {
+        stream.stop();
+      });
+    }
   };
 
   addFromBackpack = (card: Card) => {
@@ -328,6 +351,11 @@ class DataManager {
         return { ...state, ready: true, peers: [...state.peers, this.me] };
       case "add_peer":
         return { ...state, peers: [...state.peers, action.peer] };
+      case "remove_peer":
+        return {
+          ...state,
+          peers: state.peers.filter((peer) => peer.peerId !== action.peerId),
+        };
     }
   };
 }

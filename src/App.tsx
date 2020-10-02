@@ -55,6 +55,9 @@ function App() {
     },
     [myName]
   );
+  const remove = useCallback((card: Card) => {
+    dataManager.updateCard({ ...card, trashed: true });
+  }, []);
   if (!state.ready) {
     return (
       <div className="App" style={{ padding: "1em", fontFamily: `"Alagard"` }}>
@@ -230,6 +233,7 @@ function App() {
                       />
                     </button>
                   )}
+                  <button onClick={() => remove(card)}>x</button>
                 </div>
               </div>
               <div style={{ overflow: "hidden", flexGrow: 1 }}>
