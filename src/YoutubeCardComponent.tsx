@@ -165,10 +165,15 @@ export const YoutubeWizard: React.FC<PickerProps> = ({ dispatch, onClose }) => {
   );
 };
 
-const YoutubeCardComponent: React.FC<{
+export interface YoutubeCardProps {
   card: YoutubeCard;
   dispatch: React.Dispatch<action>;
-}> = ({ card, dispatch }) => {
+}
+
+const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
+  card,
+  dispatch,
+}) => {
   const [ready, setReady] = useState(false);
   const onReady = useCallback(
     (player: ReactPlayer) => {

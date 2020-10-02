@@ -1,38 +1,50 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import { dataManager } from "./App";
-import { AbstractCard } from "./DataManager";
+import { AbstractCard, action } from "./DataManager";
 
 export interface AvatarCard extends AbstractCard {
   kind: "avatar";
-  updateTicker: number;
 }
-const AvatarCardComponent: React.FC<{ card: AvatarCard }> = ({ card }) => {
+
+export interface AvatarCardProps {
+  card: AvatarCard;
+  ticker: number;
+}
+
+const AvatarCardComponent: React.FC<AvatarCardProps> = ({ card, ticker }) => {
   const videoElement = useRef<HTMLVideoElement>(null);
+  const onRefReady = useCallback(() => {
+    let video = videoElement.current;
+    if (!video) {
+      console.log("no video yet2", ticker);
+      return;
+    }
+    const stream = dataManager.streamMap[card.author];
+    (async () => {
+      if (video.paused && stream) {
+        video.srcObject = stream;
+        await video.play();
+      }
+      if (card.author === dataManager.me.peerId) {
+        video.muted = true;
+      }
+    })();
+  }, [videoElement, card, ticker]);
   useEffect(() => {
     if (!videoElement) {
       console.log("no video yet");
       return;
     }
-    let video = videoElement.current;
-    if (!video) {
-      console.log("no video yet2");
-      return;
-    }
-    const stream = dataManager.streamMap[card.author];
-    video.srcObject = stream;
-    (async () => {
-      await video.play();
-      console.log("playing", card.author, "me", dataManager.me.peerId);
-      if (card.author === dataManager.me.peerId) {
-        video.muted = true;
-      }
-    })();
-  }, [videoElement, card.author, card.updateTicker]);
+    onRefReady();
+  }, [videoElement, onRefReady, ticker]);
   return (
-    <video
-      ref={videoElement}
-      style={{ width: "100%", height: "100%", objectFit: "contain" }}
-    />
+    <div>
+      <video
+        ref={videoElement}
+        style={{ width: "100%", height: "100%", objectFit: "contain" }}
+      />
+      {dataManager.streamMap[card.author] === undefined && "no stream"}
+    </div>
   );
 };
 

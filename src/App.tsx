@@ -38,7 +38,7 @@ function App() {
     }
   }, [dispatch]);
 
-  const { cards } = state;
+  const { cards, ticker } = state;
   const [showSpellPicker, setShowSpellPicker] = useState(false);
   const [showBackpack, setShowBackpack] = useState(false);
   const onLayoutChange = useCallback((newLayout: Layout[]) => {
@@ -47,7 +47,32 @@ function App() {
   useEffect(() => {
     dataManager.setDispatch(dispatch);
   }, [dispatch]);
-
+  const [myName, setMyName] = useState("");
+  const onSubmitName = useCallback(
+    (e: any) => {
+      e.preventDefault();
+      dataManager.setNameAndConnect(myName);
+    },
+    [myName]
+  );
+  if (!state.ready) {
+    return (
+      <div className="App" style={{ padding: "1em", fontFamily: `"Alagard"` }}>
+        <h1>What is your name, traveller?</h1>
+        <form onSubmit={onSubmitName}>
+          <input
+            type="text"
+            value={myName}
+            onChange={(e: any) => setMyName(e.target.value)}
+          />
+          <input
+            type="submit"
+            value={`It is me${myName ? ", " + myName : ""}!`}
+          />
+        </form>
+      </div>
+    );
+  }
   return (
     <div className="App">
       <header
@@ -111,7 +136,24 @@ function App() {
             </span>
           </div>
         </nav>
-        <nav>Tavern Cards</nav>
+        <nav>
+          <div style={{ display: "inline" }}>
+            {state.peers.map((peer) => (
+              <div
+                style={{
+                  color: "#FFFFFF",
+                  margin: "0 5px 0 5px",
+                  display: "inline-block",
+                  backgroundColor: BORDER_SECONDARY_COLOR,
+                }}
+                key={peer.id}
+              >
+                {peer.name}
+              </div>
+            ))}
+          </div>
+          <span>Tavern Cards</span>
+        </nav>
       </header>
       <SpellPicker
         show={showSpellPicker}
@@ -142,10 +184,6 @@ function App() {
           return (
             <div
               key={card.layout.i}
-              // this is naughty
-              // data-grid={JSON.parse(
-              //   JSON.stringify({ ...card.layout, minW: 2, minH: 1 })
-              // )}
               style={{
                 backgroundColor: "sandybrown",
                 display: "flex",
@@ -196,7 +234,7 @@ function App() {
               </div>
               <div style={{ overflow: "hidden", flexGrow: 1 }}>
                 {card.kind === "avatar" ? (
-                  <AvatarCardComponent card={card} />
+                  <AvatarCardComponent card={card} ticker={ticker} />
                 ) : (
                   <YoutubeCardComponent card={card} dispatch={dispatch} />
                 )}
