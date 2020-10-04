@@ -15,6 +15,7 @@ import BackpackComponent from "./BackpackComponent";
 import { truncate } from "lodash";
 import BackpackIcon from "./assets/backpack.png";
 import OrbIcon from "./assets/orb.png";
+import GrabbyCursor from "./assets/grabby_cursor.png";
 import DataManager, { Card } from "./DataManager";
 // import FrameBorder from "./assets/frame-border.png";
 
@@ -67,6 +68,7 @@ function App() {
             type="text"
             value={myName}
             onChange={(e: any) => setMyName(e.target.value)}
+            autoFocus={true}
           />
           <input
             type="submit"
@@ -78,6 +80,37 @@ function App() {
   }
   return (
     <div className="App">
+      <div style={{ position: "absolute" }}>
+        {state.peers.map((peer) =>
+          peer.cursor ? (
+            <div
+              style={{
+                position: "absolute",
+                top: peer.cursor.y,
+                left: peer.cursor.x,
+                zIndex: 1000,
+                pointerEvents: "none",
+                display: "flex",
+                flexFlow: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <img src={GrabbyCursor} />
+              <div
+                style={{
+                  fontFamily: `"Alagard"`,
+                  color: "#FFFFFF",
+                  marginTop: "5px",
+                  backgroundColor: BORDER_SECONDARY_COLOR,
+                }}
+              >
+                {peer.name}
+              </div>
+            </div>
+          ) : null
+        )}
+      </div>
       <header
         style={{
           backgroundColor: BORDER_PRIMARY_COLOR,

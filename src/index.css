@@ -17,6 +17,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* background-color: #ffecb2; */
   background-image: url("assets/sandy.png");
+  cursor: url("./assets/grabby_cursor.png"), auto;
 }
 
 code {
