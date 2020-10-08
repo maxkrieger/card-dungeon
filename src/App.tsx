@@ -82,7 +82,7 @@ function App() {
     <div className="App">
       <div style={{ position: "absolute" }}>
         {state.peers.map((peer) =>
-          peer.cursor ? (
+          peer.cursor && peer.id !== dataManager.getMe().id ? (
             <div
               style={{
                 position: "absolute",
@@ -95,6 +95,7 @@ function App() {
                 justifyContent: "center",
                 alignItems: "center",
               }}
+              key={"cursor" + peer.id}
             >
               <img src={GrabbyCursor} />
               <div

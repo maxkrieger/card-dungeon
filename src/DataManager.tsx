@@ -5,6 +5,7 @@ import { AvatarCard } from "./AvatarCardComponent";
 import { YoutubeCard } from "./YoutubeCardComponent";
 import EyeIcon from "./assets/eye.png";
 import { isEqual } from "lodash";
+import * as awarenessProtocol from "y-protocols/awareness.js";
 
 interface CursorPosition {
   x: number;
@@ -67,9 +68,8 @@ interface AddPeer {
 }
 
 interface UpdatePeer {
-  kind: "update_peer_xy";
-  peerID: string;
-  position: CursorPosition;
+  kind: "update_peer";
+  peer: UserInfo;
 }
 
 interface RemovePeer {
@@ -109,21 +109,15 @@ class DataManager {
   ydoc: Y.Doc;
   provider?: WebrtcProvider;
   streamMap: any = {};
-  me: UserInfo;
-  peerMap: { [clientID: string]: UserInfo } = {};
   dispatch?: React.Dispatch<action>;
   myStream: any;
   cardsY: any;
   myAvatarID?: string;
+  awareness: awarenessProtocol.Awareness;
   constructor() {
     this.ydoc = new Y.Doc();
+    this.awareness = new awarenessProtocol.Awareness(this.ydoc);
 
-    this.me = {
-      id: this.ydoc.clientID.toString(),
-      name: "",
-      peerId: "",
-      cursor: null,
-    };
     this.setupWatchers();
   }
   connect = () => {
@@ -145,9 +139,10 @@ class DataManager {
       ],
       filterBcConns: false,
       maxConns: Number.POSITIVE_INFINITY,
-      //   peerOpts: { initiator: matched === null, objectMode: false, streams: [] },
+      awareness: this.awareness,
       peerOpts: { objectMode: false, streams: [] },
     } as any);
+
     this.setupStream();
   };
   setupWatchers = () => {
@@ -162,6 +157,31 @@ class DataManager {
         });
       }
     });
+    this.awareness.on("update", (changes: any, peer: any) => {
+      const newStates = this.awareness.getStates();
+      if (peer === "local") {
+        return;
+      }
+      if (this.getMe().peerId === "") {
+        this.awareness.setLocalStateField("peerId", peer.peerId);
+      }
+      changes.added.forEach((id: number) => {
+        const peerState = newStates.get(id) as UserInfo;
+
+        this.dispatch!({ kind: "add_peer", peer: peerState });
+        // if (this.myStream) {
+        //               peer.addStream(this.myStream);
+        //               this.incrementTicker();
+        //             }
+      });
+      changes.updated.forEach((id: number) => {
+        const peerState = newStates.get(id) as UserInfo;
+        if (peerState.cursor) {
+          peerState.cursor = this.denormalizeCursor(peerState.cursor);
+        }
+        this.dispatch!({ kind: "update_peer", peer: peerState });
+      });
+    });
   };
   setDispatch(dispatch: React.Dispatch<action>) {
     this.dispatch = dispatch;
@@ -171,29 +191,31 @@ class DataManager {
       this.dispatch({ kind: "increment_ticker" });
     }
   };
+  getMe = (): UserInfo => this.awareness.getLocalState() as UserInfo;
   addMyAvatar = async () => {
     const myStream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true,
     });
+    const { peerId, id, name } = this.getMe();
     this.myStream = myStream;
-    this.streamMap[this.me.peerId] = myStream;
+    this.streamMap[peerId] = myStream;
     if (this.provider && this.provider.room) {
       this.provider.room.webrtcConns.forEach((conn) => {
         conn.peer.addStream(this.myStream);
         this.incrementTicker();
       });
     }
-    const id = Math.random().toString();
+    const CardId = Math.random().toString();
     this.myAvatarID = id;
     // TODO: prevent from adding it twice
     this.addCard({
       kind: "avatar",
-      title: this.me.name,
+      title: name,
       icon: EyeIcon,
-      layout: { x: 0, y: 0, i: id, w: 2, h: 2 },
-      author: this.me.id,
-      manager: this.me.id,
+      layout: { x: 0, y: 0, i: CardId, w: 2, h: 2 },
+      author: id,
+      manager: id,
       trashed: false,
     });
   };
@@ -209,78 +231,17 @@ class DataManager {
   };
   setupCursorBroadcast = () => {
     document.addEventListener("mousemove", (e: MouseEvent) => {
-      if (this.provider && this.provider.room) {
-        this.provider.room.webrtcConns.forEach((conn) => {
-          if (conn.connected) {
-            const { x, y } = this.normalizeCursor({
-              x: e.clientX,
-              y: e.clientY,
-            });
-            conn.peer.send(
-              JSON.stringify({
-                packetKind: "cursor",
-                x,
-                y,
-              })
-            );
-          }
-        });
-      }
+      const { x, y } = this.normalizeCursor({
+        x: e.clientX,
+        y: e.clientY,
+      });
+      this.awareness.setLocalStateField("cursor", { x, y });
     });
-  };
-  onPeerData = async (data: any, peer: any, peerId: string) => {
-    const stringified = data.toString();
-    if (stringified.length > 0 && stringified.match(/packetKind/)) {
-      const parsed = JSON.parse(stringified);
-      switch (parsed.packetKind) {
-        case "ID":
-          const id = parsed.docID.toString();
-          if (!this.peerMap[id]) {
-            const newPeer = {
-              name: parsed.myName,
-              id,
-              peerId,
-              cursor: null,
-            };
-            this.peerMap[id] = newPeer;
-            this.dispatch!({ kind: "add_peer", peer: newPeer });
-            peer.send(
-              JSON.stringify({
-                packetKind: "ID",
-                docID: this.me.id,
-                myName: this.me.name,
-              })
-            );
-            if (this.myStream) {
-              peer.addStream(this.myStream);
-              this.incrementTicker();
-            }
-          }
-          break;
-        case "cursor":
-          const { x, y } = parsed;
-          this.dispatch!({
-            kind: "update_peer_xy",
-            peerID: peerId,
-            position: this.denormalizeCursor({ x, y }),
-          });
-          break;
-        default:
-          console.log(`unknown packet`, parsed);
-      }
-      return false;
-    }
   };
   setupStream = async () => {
     try {
       this.provider!.on("peers", async (e: any) => {
-        if (this.provider!.room && this.me.peerId === "" && this.dispatch) {
-          this.me.peerId = this.provider!.room.peerId;
-          this.peerMap[this.me.id] = this.me;
-        }
-        e.removed.forEach((peerId: string) => {
-          this.dispatch!({ kind: "remove_peer", peerId });
-        });
+        e.removed.forEach((peerId: string) => {});
         e.added.forEach((peerId: string) => {
           if (!this.provider!.room) {
             return;
@@ -291,23 +252,13 @@ class DataManager {
           }
           const peer = conn.peer;
           if (peer) {
-            peer.on("data", async (data: any) => {
-              this.onPeerData(data, peer, peerId);
-            });
             peer.on("stream", async (stream: any) => {
               console.log("stream", stream);
               this.streamMap[peerId] = stream;
               this.incrementTicker();
             });
-
-            peer.on("connect", () => {
-              peer.send(
-                JSON.stringify({
-                  packetKind: "ID",
-                  docID: this.me.id,
-                  myName: this.me.name,
-                })
-              );
+            peer.on("close", () => {
+              this.dispatch!({ kind: "remove_peer", peerId });
             });
           }
         });
@@ -351,7 +302,11 @@ class DataManager {
   };
   updateCard = (card: Card) => {
     this.cardsY.set(card.layout.i, card);
-    if (card.author === this.me.id && card.trashed && card.kind === "avatar") {
+    if (
+      card.author === this.getMe().id &&
+      card.trashed &&
+      card.kind === "avatar"
+    ) {
       if (this.provider && this.provider.room) {
         this.provider.room.webrtcConns.forEach((conn) => {
           //   conn.peer.removeStream(this.myStream);
@@ -370,7 +325,12 @@ class DataManager {
     }
   };
   setNameAndConnect = (name: string) => {
-    this.me.name = name;
+    this.awareness.setLocalState({
+      name,
+      cursor: null,
+      id: this.ydoc.clientID.toString(),
+      peerId: "",
+    });
     this.dispatch!({ kind: "set_ready", myName: name });
     this.connect();
   };
@@ -413,7 +373,7 @@ class DataManager {
       case "increment_ticker":
         return { ...state, ticker: state.ticker + 1 };
       case "set_ready":
-        return { ...state, ready: true, peers: [...state.peers, this.me] };
+        return { ...state, ready: true, peers: [...state.peers, this.getMe()] };
       case "add_peer":
         return { ...state, peers: [...state.peers, action.peer] };
       case "remove_peer":
@@ -421,13 +381,11 @@ class DataManager {
           ...state,
           peers: state.peers.filter((peer) => peer.peerId !== action.peerId),
         };
-      case "update_peer_xy":
+      case "update_peer":
         return {
           ...state,
           peers: state.peers.map((peer) =>
-            peer.peerId === action.peerID
-              ? { ...peer, cursor: action.position }
-              : peer
+            peer.id === action.peer.id ? action.peer : peer
           ),
         };
     }

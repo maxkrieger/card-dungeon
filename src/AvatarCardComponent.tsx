@@ -13,11 +13,13 @@ export interface AvatarCardProps {
 
 const AvatarCardComponent: React.FC<AvatarCardProps> = ({ card, ticker }) => {
   const videoElement = useRef<HTMLVideoElement>(null);
+  const peers = dataManager.awareness.getStates();
+  const authorString = parseInt(card.author, 10);
   const stream =
-    card.author === dataManager.me.id
+    card.author === dataManager.getMe().id
       ? dataManager.myStream
-      : dataManager.peerMap[card.author]
-      ? dataManager.streamMap[dataManager.peerMap[card.author].peerId]
+      : peers.has(authorString)
+      ? dataManager.streamMap[(peers.get(authorString) as any).peerId]
       : undefined;
   const onRefReady = useCallback(() => {
     let video = videoElement.current;
@@ -31,7 +33,7 @@ const AvatarCardComponent: React.FC<AvatarCardProps> = ({ card, ticker }) => {
         video.srcObject = stream;
         await video.play();
       }
-      if (card.author === dataManager.me.id) {
+      if (card.author === dataManager.getMe().id) {
         video.muted = true;
       }
     })();
