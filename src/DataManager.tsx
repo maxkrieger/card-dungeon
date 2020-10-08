@@ -120,7 +120,7 @@ class DataManager {
 
     this.setupWatchers();
   }
-  connect = () => {
+  connect = async () => {
     const matched = window.location.hash.match(/#!([a-z0-9]+)-([a-z0-9]+)/);
     let roomId = gordonId();
     let pwd = gordonId();
@@ -142,7 +142,9 @@ class DataManager {
       awareness: this.awareness,
       peerOpts: { objectMode: false, streams: [] },
     } as any);
-
+    this.provider?.key.then(() => {
+      this.awareness.setLocalStateField("peerId", this.provider!.room!.peerId);
+    });
     this.setupStream();
   };
   setupWatchers = () => {
@@ -162,17 +164,12 @@ class DataManager {
       if (peer === "local") {
         return;
       }
-      if (this.getMe().peerId === "") {
-        this.awareness.setLocalStateField("peerId", peer.peerId);
-      }
+
       changes.added.forEach((id: number) => {
         const peerState = newStates.get(id) as UserInfo;
 
         this.dispatch!({ kind: "add_peer", peer: peerState });
-        // if (this.myStream) {
-        //               peer.addStream(this.myStream);
-        //               this.incrementTicker();
-        //             }
+        console.log(peer, peerState);
       });
       changes.updated.forEach((id: number) => {
         const peerState = newStates.get(id) as UserInfo;
@@ -252,6 +249,12 @@ class DataManager {
           }
           const peer = conn.peer;
           if (peer) {
+            peer.on("connect", async () => {
+              if (this.myStream) {
+                peer.addStream(this.myStream);
+                this.incrementTicker();
+              }
+            });
             peer.on("stream", async (stream: any) => {
               console.log("stream", stream);
               this.streamMap[peerId] = stream;
