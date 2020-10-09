@@ -1,11 +1,12 @@
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import GridLayout, { Layout } from "react-grid-layout";
-import { AvatarCard } from "./AvatarCardComponent";
-import { YoutubeCard } from "./YoutubeCardComponent";
+import { AvatarCard } from "./cards/AvatarCardComponent";
+import { YoutubeCard } from "./cards/YoutubeCardComponent";
 import EyeIcon from "./assets/eye.png";
 import { isEqual } from "lodash";
 import * as awarenessProtocol from "y-protocols/awareness.js";
+import { QuillCard } from "./cards/QuillCardComponent";
 
 interface CursorPosition {
   x: number;
@@ -17,6 +18,7 @@ interface UserInfo {
   id: string;
   peerId: string;
   cursor: CursorPosition | null;
+  user: { name: string };
 }
 export interface AbstractCard {
   layout: GridLayout.Layout;
@@ -27,7 +29,7 @@ export interface AbstractCard {
   trashed: boolean;
 }
 
-export type Card = YoutubeCard | AvatarCard;
+export type Card = YoutubeCard | AvatarCard | QuillCard;
 
 interface IncrementTicker {
   kind: "increment_ticker";
@@ -169,7 +171,6 @@ class DataManager {
         const peerState = newStates.get(id) as UserInfo;
 
         this.dispatch!({ kind: "add_peer", peer: peerState });
-        console.log(peer, peerState);
       });
       changes.updated.forEach((id: number) => {
         const peerState = newStates.get(id) as UserInfo;
@@ -333,6 +334,9 @@ class DataManager {
       cursor: null,
       id: this.ydoc.clientID.toString(),
       peerId: "",
+      user: {
+        name,
+      },
     });
     this.dispatch!({ kind: "set_ready", myName: name });
     this.connect();

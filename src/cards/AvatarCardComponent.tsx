@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useCallback } from "react";
-import { dataManager } from "./App";
-import { AbstractCard, action } from "./DataManager";
+import { dataManager } from "../App";
+import { AbstractCard, action } from "../DataManager";
 
 export interface AvatarCard extends AbstractCard {
   kind: "avatar";

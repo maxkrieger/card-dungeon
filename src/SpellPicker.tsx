@@ -3,8 +3,8 @@ import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
 import { BORDER_PRIMARY_COLOR, dataManager } from "./App";
 import Orb from "./assets/orb.png";
 import YoutubeIcon from "./assets/youtube.png";
-import { YoutubeWizard } from "./YoutubeCardComponent";
-import { action } from "./DataManager";
+import { YoutubeWizard } from "./cards/YoutubeCardComponent";
+import { action, gordonId } from "./DataManager";
 import EyeIcon from "./assets/eye.png";
 
 enum Primaries {
@@ -30,6 +30,25 @@ const SpellPicker: React.FC<{
   dispatch: React.Dispatch<action>;
 }> = ({ show, onClose, dispatch }) => {
   const [primaryOpen, setPrimaryOpen] = useState<Primaries>(Primaries.NONE);
+  const addText = useCallback(() => {
+    dataManager.addCard({
+      kind: "quill",
+      textID: gordonId(),
+      author: dataManager.getMe().id,
+      manager: dataManager.getMe().id,
+      title: "text",
+      icon: "",
+      layout: {
+        x: 0,
+        y: 0,
+        w: 2,
+        h: 4,
+        i: gordonId(),
+      },
+      trashed: false,
+    });
+    onClose();
+  }, [onClose]);
   return (
     <DialogOverlay
       style={{ background: "none" }}
@@ -97,6 +116,7 @@ const SpellPicker: React.FC<{
             >
               <img src={EyeIcon} width={30} /> me
             </div>
+            <div onClick={addText}>{"✒️"} ️text</div>
           </div>
           {primaryOpen === Primaries.YOUTUBE && (
             <YoutubeWizard onClose={onClose} dispatch={dispatch} />

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
-import { AbstractCard, action } from "./DataManager";
-import { PickerProps } from "./SpellPicker";
-import YoutubeIcon from "./assets/youtube.png";
-import { dataManager } from "./App";
+import { AbstractCard, action } from "../DataManager";
+import { PickerProps } from "../SpellPicker";
+import YoutubeIcon from "../assets/youtube.png";
+import { dataManager } from "../App";
 
 export interface PlayerState {
   playing: boolean;

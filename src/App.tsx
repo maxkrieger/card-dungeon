@@ -9,15 +9,20 @@ import GridLayout, { Layout } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "@reach/dialog/styles.css";
 import SpellPicker from "./SpellPicker";
-import YoutubeCardComponent from "./YoutubeCardComponent";
-import AvatarCardComponent from "./AvatarCardComponent";
+import YoutubeCardComponent from "./cards/YoutubeCardComponent";
+import AvatarCardComponent from "./cards/AvatarCardComponent";
 import BackpackComponent from "./BackpackComponent";
 import { truncate } from "lodash";
 import BackpackIcon from "./assets/backpack.png";
 import OrbIcon from "./assets/orb.png";
 import GrabbyCursor from "./assets/grabby_cursor.png";
 import DataManager, { Card } from "./DataManager";
+import QuillCardComponent from "./cards/QuillCardComponent";
+import QuillCursors from "quill-cursors";
+import { Quill } from "react-quill";
 // import FrameBorder from "./assets/frame-border.png";
+
+Quill.register("modules/cursors", QuillCursors);
 
 const NUM_COLS = 12;
 
@@ -273,8 +278,10 @@ function App() {
               <div style={{ overflow: "hidden", flexGrow: 1 }}>
                 {card.kind === "avatar" ? (
                   <AvatarCardComponent card={card} ticker={ticker} />
-                ) : (
+                ) : card.kind === "youtube" ? (
                   <YoutubeCardComponent card={card} dispatch={dispatch} />
+                ) : (
+                  <QuillCardComponent card={card} />
                 )}
               </div>
             </div>
