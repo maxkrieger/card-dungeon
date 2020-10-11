@@ -38,13 +38,11 @@ const SpellPicker: React.FC<{
       manager: dataManager.getMe().id,
       title: "text",
       icon: "",
-      layout: {
-        x: 0,
-        y: 0,
-        w: 2,
-        h: 4,
-        i: gordonId(),
-      },
+      x: 0,
+      y: 0,
+      w: 200,
+      h: 400,
+      id: gordonId(),
       trashed: false,
     });
     onClose();

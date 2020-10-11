@@ -1,12 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
-import GridLayout, { Layout } from "react-grid-layout";
-import "react-grid-layout/css/styles.css";
+import React, { useCallback, useEffect, useReducer, useState } from "react";
 import "@reach/dialog/styles.css";
 import SpellPicker from "./SpellPicker";
 import YoutubeCardComponent from "./cards/YoutubeCardComponent";
@@ -20,6 +12,7 @@ import DataManager, { Card } from "./DataManager";
 import QuillCardComponent from "./cards/QuillCardComponent";
 import QuillCursors from "quill-cursors";
 import { Quill } from "react-quill";
+import Draggable from "react-draggable";
 // import FrameBorder from "./assets/frame-border.png";
 
 Quill.register("modules/cursors", QuillCursors);
@@ -47,9 +40,7 @@ function App() {
   const { cards, ticker } = state;
   const [showSpellPicker, setShowSpellPicker] = useState(false);
   const [showBackpack, setShowBackpack] = useState(false);
-  const onLayoutChange = useCallback((newLayout: Layout[]) => {
-    dataManager.updateLayouts(newLayout);
-  }, []);
+
   useEffect(() => {
     dataManager.setDispatch(dispatch);
   }, [dispatch]);
@@ -208,86 +199,87 @@ function App() {
         dispatch={dispatch}
         backpack={state.myBackpack}
       />
-      <GridLayout
-        onLayoutChange={onLayoutChange}
-        cols={NUM_COLS}
-        rowHeight={window.innerWidth / NUM_COLS}
-        width={window.innerWidth}
-        autoSize={true}
-        compactType={null}
-        // isBounded={true}
-        layout={cards.map(({ layout }) => layout)}
-        margin={[30, 30]}
-        isResizable={true}
-        resizeHandles={["se"]}
-        draggableHandle=".bar"
-      >
+      <div style={{ position: "relative" }}>
         {cards.map((card: Card, key: number) => {
+          const denorm = dataManager.denormalize({ x: card.x, y: card.y });
           return (
-            <div
-              key={card.layout.i}
-              style={{
-                backgroundColor: "sandybrown",
-                display: "flex",
-                flexFlow: "column",
-                boxShadow: "5px 5px hsla(0, 0%, 0%, 0.5)",
-                // border: "10px solid transparent",
-                // borderImageSource: `url(${FrameBorder})`,
-                // borderImageRepeat: "stretch",
-                // borderImageSlice: "34 13 34 13",
-              }}
+            <Draggable
+              handle=".handle"
+              position={{ x: denorm.x, y: denorm.y }}
+              key={card.id}
+              onDrag={(e, data) => dataManager.onDrag(data.x, data.y, card.id)}
             >
               <div
                 style={{
-                  flexShrink: 0,
-                  fontFamily: `"Alagard"`,
-                  fontSize: "18px",
-                  backgroundColor: "#C39B77",
-                  userSelect: "none",
+                  width: card.w,
+                  height: card.h,
+                  backgroundColor: "sandybrown",
                   display: "flex",
-                  justifyContent: "space-between",
+                  flexFlow: "column",
+                  boxShadow: "5px 5px hsla(0, 0%, 0%, 0.5)",
+                  // border: "10px solid transparent",
+                  // borderImageSource: `url(${FrameBorder})`,
+                  // borderImageRepeat: "stretch",
+                  // borderImageSlice: "34 13 34 13",
                 }}
-                className="bar"
               >
-                <div>
-                  <img
-                    src={card.icon}
-                    width={20}
-                    style={{ verticalAlign: "middle", marginLeft: "10px" }}
-                  />{" "}
-                  <span>{truncate(card.title, { length: 24 })}</span>
+                <div
+                  style={{
+                    flexShrink: 0,
+                    fontFamily: `"Alagard"`,
+                    fontSize: "18px",
+                    backgroundColor: "#C39B77",
+                    userSelect: "none",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    cursor: `url(${GrabbyCursor}), auto`,
+                  }}
+                  className="handle"
+                >
+                  <div>
+                    <img
+                      src={card.icon}
+                      width={20}
+                      style={{ verticalAlign: "middle", marginLeft: "10px" }}
+                    />{" "}
+                    <span>{truncate(card.title, { length: 24 })}</span>
+                  </div>
+                  <div>
+                    {!(card.kind === "avatar") && (
+                      <button
+                        onClick={() =>
+                          dispatch({ kind: "add_to_backpack", card })
+                        }
+                        style={{
+                          border: "none",
+                          background: "none",
+                          padding: 0,
+                        }}
+                      >
+                        <img
+                          width={20}
+                          src={BackpackIcon}
+                          style={{ verticalAlign: "middle" }}
+                        />
+                      </button>
+                    )}
+                    <button onClick={() => remove(card)}>x</button>
+                  </div>
                 </div>
-                <div>
-                  {!(card.kind === "avatar") && (
-                    <button
-                      onClick={() =>
-                        dispatch({ kind: "add_to_backpack", card })
-                      }
-                      style={{ border: "none", background: "none", padding: 0 }}
-                    >
-                      <img
-                        width={20}
-                        src={BackpackIcon}
-                        style={{ verticalAlign: "middle" }}
-                      />
-                    </button>
+                <div style={{ overflow: "hidden", flexGrow: 1 }}>
+                  {card.kind === "avatar" ? (
+                    <AvatarCardComponent card={card} ticker={ticker} />
+                  ) : card.kind === "youtube" ? (
+                    <YoutubeCardComponent card={card} dispatch={dispatch} />
+                  ) : (
+                    <QuillCardComponent card={card} />
                   )}
-                  <button onClick={() => remove(card)}>x</button>
                 </div>
               </div>
-              <div style={{ overflow: "hidden", flexGrow: 1 }}>
-                {card.kind === "avatar" ? (
-                  <AvatarCardComponent card={card} ticker={ticker} />
-                ) : card.kind === "youtube" ? (
-                  <YoutubeCardComponent card={card} dispatch={dispatch} />
-                ) : (
-                  <QuillCardComponent card={card} />
-                )}
-              </div>
-            </div>
+            </Draggable>
           );
         })}
-      </GridLayout>
+      </div>
     </div>
   );
 }

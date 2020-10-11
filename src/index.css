@@ -17,7 +17,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* background-color: #ffecb2; */
   background-image: url("assets/sandy.png");
-  cursor: url("./assets/grabby_cursor.png"), auto;
+  cursor: url("./assets/pointer_cursor.png"), auto;
+}
+
+.ql-container {
+  overflow-y: auto;
+}
+.ql-editor {
+  overflow-y: auto;
 }
 
 code {

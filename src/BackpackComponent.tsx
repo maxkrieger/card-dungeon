@@ -94,7 +94,7 @@ const BackpackComponent: React.FC<{
               <div>
                 {youtubes.map((card) => (
                   <div
-                    key={card.layout.i}
+                    key={card.id}
                     style={{ cursor: "pointer", margin: "10px" }}
                     onClick={() => addFrom(card)}
                   >

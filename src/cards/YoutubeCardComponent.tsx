@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
-import { AbstractCard, action } from "../DataManager";
+import { AbstractCard, action, gordonId } from "../DataManager";
 import { PickerProps } from "../SpellPicker";
 import YoutubeIcon from "../assets/youtube.png";
 import { dataManager } from "../App";
@@ -33,7 +33,11 @@ export const YoutubeWizard: React.FC<PickerProps> = ({ dispatch, onClose }) => {
         title: "video",
         icon: YoutubeIcon,
         uri: url,
-        layout: { x: 0, y: 0, i: Math.random().toString(), w: 2, h: 2 },
+        x: 0,
+        y: 0,
+        w: 300,
+        h: 200,
+        id: gordonId(),
         state: {
           playing: false,
           playedProgress: 0,

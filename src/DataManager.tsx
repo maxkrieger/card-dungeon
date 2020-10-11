@@ -1,10 +1,8 @@
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-import GridLayout, { Layout } from "react-grid-layout";
 import { AvatarCard } from "./cards/AvatarCardComponent";
 import { YoutubeCard } from "./cards/YoutubeCardComponent";
 import EyeIcon from "./assets/eye.png";
-import { isEqual } from "lodash";
 import * as awarenessProtocol from "y-protocols/awareness.js";
 import { QuillCard } from "./cards/QuillCardComponent";
 
@@ -21,12 +19,16 @@ interface UserInfo {
   user: { name: string };
 }
 export interface AbstractCard {
-  layout: GridLayout.Layout;
   title: string;
   icon: string;
   author: string;
   manager: string | null;
   trashed: boolean;
+  id: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
 
 export type Card = YoutubeCard | AvatarCard | QuillCard;
@@ -175,7 +177,7 @@ class DataManager {
       changes.updated.forEach((id: number) => {
         const peerState = newStates.get(id) as UserInfo;
         if (peerState.cursor) {
-          peerState.cursor = this.denormalizeCursor(peerState.cursor);
+          peerState.cursor = this.denormalize(peerState.cursor);
         }
         this.dispatch!({ kind: "update_peer", peer: peerState });
       });
@@ -199,7 +201,7 @@ class DataManager {
     this.myStream = myStream;
     this.streamMap[peerId] = myStream;
     if (this.provider && this.provider.room) {
-      this.provider.room.webrtcConns.forEach((conn) => {
+      this.provider.room.webrtcConns.forEach((conn: any) => {
         conn.peer.addStream(this.myStream);
         this.incrementTicker();
       });
@@ -211,25 +213,36 @@ class DataManager {
       kind: "avatar",
       title: name,
       icon: EyeIcon,
-      layout: { x: 0, y: 0, i: CardId, w: 2, h: 2 },
+      x: 0,
+      y: 0,
+      id: CardId,
+      w: 200,
+      h: 200,
       author: id,
       manager: id,
       trashed: false,
     });
   };
-  normalizeCursor = ({ x, y }: CursorPosition) => {
+  normalize = ({ x, y }: CursorPosition) => {
     const width = document.body.clientWidth;
     const height = document.body.clientHeight;
-    return { x: (x * 1000) / width, y: (y * 1000) / height };
+    // return { x: (x * 1000) / width, y: (y * 1000) / height };
+    return { x: (x * 1000) / width, y };
   };
-  denormalizeCursor = ({ x, y }: CursorPosition) => {
+  denormalize = ({ x, y }: CursorPosition) => {
     const width = document.body.clientWidth;
     const height = document.body.clientHeight;
-    return { x: (x * width) / 1000, y: (y * height) / 1000 };
+    // return { x: (x * width) / 1000, y: (y * height) / 1000 };
+    return { x: (x * width) / 1000, y };
+  };
+  onDrag = (xDenorm: number, yDenorm: number, id: string) => {
+    const oldCard = this.cardsY.get(id);
+    const { x, y } = this.normalize({ x: xDenorm, y: yDenorm });
+    this.updateCard({ ...oldCard, x, y });
   };
   setupCursorBroadcast = () => {
     document.addEventListener("mousemove", (e: MouseEvent) => {
-      const { x, y } = this.normalizeCursor({
+      const { x, y } = this.normalize({
         x: e.clientX,
         y: e.clientY,
       });
@@ -283,38 +296,21 @@ class DataManager {
       peers: [],
     };
   };
-  updateLayouts = (layouts: Layout[]) => {
-    layouts.forEach((layout: Layout) => {
-      const old = this.cardsY.get(layout.i);
-      if (!isEqual(old.layout, layout)) {
-        // const { w, h } = layout;
-        // if (Math.abs(h - w) > 3) {
-        //   // for some reason doesnt work immutably
-        //   card.layout.h = Math.min(w, h);
-        //   card.layout.w = Math.min(w, h);
-        //   return card;
-        this.cardsY.set(layout.i, {
-          ...old,
-          layout: JSON.parse(JSON.stringify(layout)),
-        });
-      }
-    });
-  };
 
   addCard = (card: Card) => {
-    this.cardsY.set(card.layout.i, card);
+    this.cardsY.set(card.id, card);
   };
   updateCard = (card: Card) => {
-    this.cardsY.set(card.layout.i, card);
+    this.cardsY.set(card.id, card);
     if (
       card.author === this.getMe().id &&
       card.trashed &&
       card.kind === "avatar"
     ) {
       if (this.provider && this.provider.room) {
-        this.provider.room.webrtcConns.forEach((conn) => {
-          //   conn.peer.removeStream(this.myStream);
-        });
+        // this.provider.room.webrtcConns.forEach((conn) => {
+        //   conn.peer.removeStream(this.myStream);
+        // });
       }
       this.myStream.getTracks().forEach((stream: any) => {
         stream.stop();
@@ -324,8 +320,8 @@ class DataManager {
 
   addFromBackpack = (card: Card) => {
     if (this.dispatch) {
-      this.dispatch({ kind: "add_from_backpack", cardID: card.layout.i });
-      this.cardsY.set(card.layout.i, card);
+      this.dispatch({ kind: "add_from_backpack", cardID: card.id });
+      this.cardsY.set(card.id, card);
     }
   };
   setNameAndConnect = (name: string) => {
@@ -356,11 +352,9 @@ class DataManager {
         if (newCard.kind === "youtube") {
           newCard.state = { ...newCard.state, playing: false };
         }
-        if (
-          state.myBackpack.some((card) => card.layout.i === newCard.layout.i)
-        ) {
+        if (state.myBackpack.some((card) => card.id === newCard.id)) {
           newBackpack = state.myBackpack.map((card) =>
-            card.layout.i === newCard.layout.i ? newCard : card
+            card.id === newCard.id ? newCard : card
           );
         } else {
           newBackpack = [...state.myBackpack, newCard];
@@ -373,7 +367,7 @@ class DataManager {
         return newState;
       case "add_from_backpack":
         newBackpack = state.myBackpack.filter(
-          (card) => card.layout.i !== action.cardID
+          (card) => card.id !== action.cardID
         );
         saveBackpack(newBackpack);
         return { ...state, myBackpack: newBackpack };
