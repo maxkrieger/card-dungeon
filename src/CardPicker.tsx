@@ -49,7 +49,7 @@ const CardPicker: React.FC<{ dispatch: dispatcher }> = ({ dispatch }) => {
         height: "100vh",
         backgroundColor: "rgba(0,0,0,0.1)",
       }}
-      //   onClick={() => setOpen(false)}
+      onClick={() => setOpen(false)}
     >
       {selectedCard < 0 &&
         PickerOptions.map(({ icon }, key: number) => (

@@ -243,7 +243,7 @@ function App() {
                   style={{
                     width: card.w,
                     height: card.h,
-                    backgroundColor: "sandybrown",
+                    backgroundColor: "#292019",
                     display: "flex",
                     flexFlow: "column",
                     boxShadow: "5px 5px hsla(0, 0%, 0%, 0.5)",
@@ -296,7 +296,7 @@ function App() {
                       <button onClick={() => remove(card)}>x</button>
                     </div>
                   </div>
-                  <div style={{ overflow: "hidden", flexGrow: 1 }}>
+                  <div style={{ flexGrow: 1 }}>
                     {card.kind === "avatar" ? (
                       <AvatarCardComponent card={card} ticker={ticker} />
                     ) : card.kind === "youtube" ? (

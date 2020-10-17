@@ -3,9 +3,44 @@ import ReactPlayer from "react-player";
 import { AbstractCard, action, gordonId } from "../DataManager";
 import { SpellPickerProps } from "../SpellPicker";
 import YoutubeIcon from "../assets/youtube.png";
-import { dataManager } from "../App";
+import { BORDER_PRIMARY_COLOR, dataManager } from "../App";
 import YoutubeCardIcon from "../assets/youtubecard.png";
 import { PickerProps, CardPickerData } from "../CardPicker";
+import PauseIcon from "../assets/pause.png";
+import PlayIcon from "../assets/play.png";
+import { FormattedTime } from "react-player-controls";
+import styled from "styled-components";
+import playhead from "../assets/playhead.png";
+
+import {
+  SliderInput,
+  SliderTrack,
+  SliderTrackHighlight,
+  SliderHandle,
+  SliderMarker,
+} from "@reach/slider";
+import "@reach/slider/styles.css";
+
+const SliderWrapper = styled.div`
+  width: 100%;
+  margin-bottom: 10px;
+  [data-reach-slider-input] {
+    width: 100%;
+    padding: 0;
+  }
+  [data-reach-slider-track] {
+    height: 10px;
+  }
+  [data-reach-slider-track-highlight] {
+    background-color: green;
+  }
+  [data-reach-slider-handle] {
+    background: url(${playhead});
+    background-size: cover;
+    width: 15px;
+    height: 15px;
+  }
+`;
 
 export interface PlayerState {
   playing: boolean;
@@ -49,8 +84,8 @@ export const YoutubeWizard: React.FC<SpellPickerProps> = ({
         uri: url,
         x: 0,
         y: 0,
-        w: 300,
-        h: 200,
+        w: 330,
+        h: 220,
         id: gordonId(),
         state: {
           playing: false,
@@ -106,7 +141,7 @@ export const YoutubeWizard: React.FC<SpellPickerProps> = ({
     <div
       style={{
         height: "100%",
-        overflow: "hidden",
+        // overflow: "hidden",
         display: "flex",
         flexGrow: 1,
         flexDirection: "column",
@@ -234,6 +269,11 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
     const state = { ...card.state, playing: false };
     dataManager.updateCard({ ...card, state });
   }, [card]);
+  const seekTo = useCallback((value: number) => {
+    if (playerRef.current) {
+      playerRef.current.seekTo(value, "fraction");
+    }
+  }, []);
   const onEnd = useCallback(() => {
     const state = {
       ...card.state,
@@ -260,12 +300,7 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
     }
   }, [card]);
   const { playedSeconds } = card.state;
-  // https://github.com/alexanderwallin/react-player-controls/blob/master/src/components/FormattedTime.js
-  const hours = Math.floor(playedSeconds / 3600).toString();
-  const minutes = Math.floor((playedSeconds % 3600) / 60)
-    .toString()
-    .padStart(2, "0");
-  const seconds = (Math.floor(playedSeconds) % 60).toString().padStart(2, "0");
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <div
@@ -312,15 +347,50 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
           flexGrow: 0,
           flexShrink: 0,
           flexBasis: "auto",
+          minHeight: "50px",
         }}
       >
-        <span>
-          {hours !== "0" && hours + ":"}
-          {minutes}:{seconds}
-        </span>
-        <button onClick={togglePlay} disabled={!ready}>
-          {card.state.playing ? "pause" : "play"}
-        </button>
+        <div style={{ width: "100%" }}>
+          <SliderWrapper>
+            <SliderInput
+              min={0}
+              max={1}
+              step={0.01}
+              value={card.state.playedProgress}
+              onChange={seekTo}
+            >
+              <SliderTrack>
+                <SliderTrackHighlight />
+                <SliderHandle />
+              </SliderTrack>
+            </SliderInput>
+          </SliderWrapper>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-around",
+          }}
+        >
+          <span
+            style={{ fontFamily: `"Alagard"`, color: BORDER_PRIMARY_COLOR }}
+          >
+            <FormattedTime numSeconds={playedSeconds} />
+          </span>
+          <button
+            onClick={togglePlay}
+            disabled={!ready}
+            style={{
+              background: `url(${card.state.playing ? PauseIcon : PlayIcon})`,
+              width: "30px",
+              height: "24px",
+              backgroundSize: "cover",
+              border: "none",
+              outline: "none",
+            }}
+          />
+        </div>
       </div>
     </div>
   );
