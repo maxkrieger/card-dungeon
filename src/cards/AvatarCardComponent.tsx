@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useCallback } from "react";
-import { dataManager } from "../App";
+import { dataManager, dispatcher } from "../App";
+import { CardPickerData, PickerProps } from "../CardPicker";
 import { AbstractCard, action } from "../DataManager";
+import MeCard from "../assets/mecard.png";
 
 export interface AvatarCard extends AbstractCard {
   kind: "avatar";
@@ -10,6 +12,15 @@ export interface AvatarCardProps {
   card: AvatarCard;
   ticker: number;
 }
+
+export const AvatarCardPicker: React.FC<PickerProps> = ({ dispatch }) => {
+  return <div>hi im avatar</div>;
+};
+
+export const AvatarCardData: CardPickerData = {
+  icon: MeCard,
+  picker: AvatarCardPicker,
+};
 
 const AvatarCardComponent: React.FC<AvatarCardProps> = ({ card, ticker }) => {
   const videoElement = useRef<HTMLVideoElement>(null);

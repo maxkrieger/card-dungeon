@@ -12,7 +12,7 @@ enum Primaries {
   NONE,
 }
 
-export interface PickerProps {
+export interface SpellPickerProps {
   dispatch: React.Dispatch<action>;
   onClose(): void;
 }

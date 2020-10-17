@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useReducer, useState } from "react";
+import React, {
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import "@reach/dialog/styles.css";
 import SpellPicker from "./SpellPicker";
 import YoutubeCardComponent from "./cards/YoutubeCardComponent";
@@ -8,14 +14,19 @@ import { truncate } from "lodash";
 import BackpackIcon from "./assets/backpack.png";
 import OrbIcon from "./assets/orb.png";
 import GrabbyCursor from "./assets/grabby_cursor.png";
-import DataManager, { Card } from "./DataManager";
+import DataManager, { action, Card } from "./DataManager";
 import QuillCardComponent from "./cards/QuillCardComponent";
 import QuillCursors from "quill-cursors";
 import { Quill } from "react-quill";
 import Draggable from "react-draggable";
+import CardPicker from "./CardPicker";
+import { ResizableBox, ResizeCallbackData } from "react-resizable";
+import "react-resizable/css/styles.css";
 // import FrameBorder from "./assets/frame-border.png";
 
 Quill.register("modules/cursors", QuillCursors);
+
+export type dispatcher = React.Dispatch<action>;
 
 const NUM_COLS = 12;
 
@@ -52,6 +63,16 @@ function App() {
     },
     [myName]
   );
+  const onResize = useCallback(
+    (e: SyntheticEvent, data: ResizeCallbackData, card: Card) => {
+      dataManager.updateCard({
+        ...card,
+        w: data.size.width,
+        h: data.size.height,
+      });
+    },
+    []
+  );
   const remove = useCallback((card: Card) => {
     dataManager.updateCard({ ...card, trashed: true });
   }, []);
@@ -82,8 +103,7 @@ function App() {
             <div
               style={{
                 position: "absolute",
-                top: peer.cursor.y,
-                left: peer.cursor.x,
+                transform: `translate(${peer.cursor.x}px, ${peer.cursor.y}px)`,
                 zIndex: 1000,
                 pointerEvents: "none",
                 display: "flex",
@@ -199,6 +219,7 @@ function App() {
         dispatch={dispatch}
         backpack={state.myBackpack}
       />
+      <CardPicker dispatch={dispatch} />
       <div style={{ position: "relative" }}>
         {cards.map((card: Card, key: number) => {
           const denorm = dataManager.denormalize({ x: card.x, y: card.y });
@@ -209,73 +230,83 @@ function App() {
               key={card.id}
               onDrag={(e, data) => dataManager.onDrag(data.x, data.y, card.id)}
             >
-              <div
-                style={{
-                  width: card.w,
-                  height: card.h,
-                  backgroundColor: "sandybrown",
-                  display: "flex",
-                  flexFlow: "column",
-                  boxShadow: "5px 5px hsla(0, 0%, 0%, 0.5)",
-                  // border: "10px solid transparent",
-                  // borderImageSource: `url(${FrameBorder})`,
-                  // borderImageRepeat: "stretch",
-                  // borderImageSlice: "34 13 34 13",
-                }}
+              <ResizableBox
+                width={card.w}
+                height={card.h}
+                minConstraints={[50, 50]}
+                onResize={(e, data) => onResize(e, data, card)}
+                lockAspectRatio={true}
+                // handle={<div style={{ width: "10px", height: "10px" }} />}
+                resizeHandles={["se"]}
               >
                 <div
                   style={{
-                    flexShrink: 0,
-                    fontFamily: `"Alagard"`,
-                    fontSize: "18px",
-                    backgroundColor: "#C39B77",
-                    userSelect: "none",
+                    width: card.w,
+                    height: card.h,
+                    backgroundColor: "sandybrown",
                     display: "flex",
-                    justifyContent: "space-between",
-                    cursor: `url(${GrabbyCursor}), auto`,
+                    flexFlow: "column",
+                    boxShadow: "5px 5px hsla(0, 0%, 0%, 0.5)",
+                    // border: "10px solid transparent",
+                    // borderImageSource: `url(${FrameBorder})`,
+                    // borderImageRepeat: "stretch",
+                    // borderImageSlice: "34 13 34 13",
                   }}
-                  className="handle"
                 >
-                  <div>
-                    <img
-                      src={card.icon}
-                      width={20}
-                      style={{ verticalAlign: "middle", marginLeft: "10px" }}
-                    />{" "}
-                    <span>{truncate(card.title, { length: 24 })}</span>
+                  <div
+                    style={{
+                      flexShrink: 0,
+                      fontFamily: `"Alagard"`,
+                      fontSize: "18px",
+                      backgroundColor: "#C39B77",
+                      userSelect: "none",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      cursor: `url(${GrabbyCursor}), auto`,
+                    }}
+                    className="handle"
+                  >
+                    <div>
+                      <img
+                        src={card.icon}
+                        width={20}
+                        style={{ verticalAlign: "middle", marginLeft: "10px" }}
+                      />{" "}
+                      <span>{truncate(card.title, { length: 24 })}</span>
+                    </div>
+                    <div>
+                      {!(card.kind === "avatar") && (
+                        <button
+                          onClick={() =>
+                            dispatch({ kind: "add_to_backpack", card })
+                          }
+                          style={{
+                            border: "none",
+                            background: "none",
+                            padding: 0,
+                          }}
+                        >
+                          <img
+                            width={20}
+                            src={BackpackIcon}
+                            style={{ verticalAlign: "middle" }}
+                          />
+                        </button>
+                      )}
+                      <button onClick={() => remove(card)}>x</button>
+                    </div>
                   </div>
-                  <div>
-                    {!(card.kind === "avatar") && (
-                      <button
-                        onClick={() =>
-                          dispatch({ kind: "add_to_backpack", card })
-                        }
-                        style={{
-                          border: "none",
-                          background: "none",
-                          padding: 0,
-                        }}
-                      >
-                        <img
-                          width={20}
-                          src={BackpackIcon}
-                          style={{ verticalAlign: "middle" }}
-                        />
-                      </button>
+                  <div style={{ overflow: "hidden", flexGrow: 1 }}>
+                    {card.kind === "avatar" ? (
+                      <AvatarCardComponent card={card} ticker={ticker} />
+                    ) : card.kind === "youtube" ? (
+                      <YoutubeCardComponent card={card} dispatch={dispatch} />
+                    ) : (
+                      <QuillCardComponent card={card} />
                     )}
-                    <button onClick={() => remove(card)}>x</button>
                   </div>
                 </div>
-                <div style={{ overflow: "hidden", flexGrow: 1 }}>
-                  {card.kind === "avatar" ? (
-                    <AvatarCardComponent card={card} ticker={ticker} />
-                  ) : card.kind === "youtube" ? (
-                    <YoutubeCardComponent card={card} dispatch={dispatch} />
-                  ) : (
-                    <QuillCardComponent card={card} />
-                  )}
-                </div>
-              </div>
+              </ResizableBox>
             </Draggable>
           );
         })}

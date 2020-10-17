@@ -4,11 +4,22 @@ import { AbstractCard } from "../DataManager";
 import ReactQuill from "react-quill";
 import { QuillBinding } from "y-quill";
 import "react-quill/dist/quill.snow.css";
+import QuillCardIcon from "../assets/quillcard.png";
+import { PickerProps, CardPickerData } from "../CardPicker";
 
 export interface QuillCard extends AbstractCard {
   kind: "quill";
   textID: string;
 }
+
+export const QuillCardPicker: React.FC<PickerProps> = ({ dispatch }) => {
+  return <div />;
+};
+
+export const QuillCardData: CardPickerData = {
+  icon: QuillCardIcon,
+  picker: QuillCardPicker,
+};
 
 const QuillCardComponent: React.FC<{ card: QuillCard }> = ({ card }) => {
   const quillRef = useRef<ReactQuill>(null);

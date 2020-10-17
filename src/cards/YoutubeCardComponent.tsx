@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { AbstractCard, action, gordonId } from "../DataManager";
-import { PickerProps } from "../SpellPicker";
+import { SpellPickerProps } from "../SpellPicker";
 import YoutubeIcon from "../assets/youtube.png";
 import { dataManager } from "../App";
+import YoutubeCardIcon from "../assets/youtubecard.png";
+import { PickerProps, CardPickerData } from "../CardPicker";
 
 export interface PlayerState {
   playing: boolean;
@@ -18,11 +20,23 @@ export interface YoutubeCard extends AbstractCard {
   state: PlayerState;
 }
 
+export const YoutubeCardPicker: React.FC<PickerProps> = ({ dispatch }) => {
+  return <div />;
+};
+
+export const YoutubeCardData: CardPickerData = {
+  icon: YoutubeCardIcon,
+  picker: YoutubeCardPicker,
+};
+
 const regex = `https?:\\/\\/(www\\.)?youtube.com\\/watch\\?v=.+`;
 
 const api_key = process.env.REACT_APP_YOUTUBE_API_KEY || "";
 
-export const YoutubeWizard: React.FC<PickerProps> = ({ dispatch, onClose }) => {
+export const YoutubeWizard: React.FC<SpellPickerProps> = ({
+  dispatch,
+  onClose,
+}) => {
   const [urlFieldVal, setUrlFieldVal] = useState("");
   const [searchFieldVal, setSearchFieldVal] = useState("");
   const [searchResults, setSearchResults] = useState<any>([]);
@@ -260,6 +274,7 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
           flexShrink: 0,
           flexBasis: "auto",
         }}
+        onClick={togglePlay}
       >
         <ReactPlayer
           url={card.uri}
@@ -269,6 +284,7 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
           onReady={onReady}
           ref={playerRef}
           controls={false}
+          style={{ pointerEvents: "none" }}
           // loop={true}
           playing={card.state.playing}
           volume={card.state.volume}

@@ -29,6 +29,7 @@ export interface AbstractCard {
   y: number;
   w: number;
   h: number;
+  // z: number;
 }
 
 export type Card = YoutubeCard | AvatarCard | QuillCard;
