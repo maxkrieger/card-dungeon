@@ -96,7 +96,10 @@ function App() {
     );
   }
   return (
-    <div className="App">
+    <div
+      className="App"
+      style={{ height: "100vh", display: "flex", flexDirection: "column" }}
+    >
       <div style={{ position: "absolute" }}>
         {state.peers.map((peer) =>
           peer.cursor && peer.id !== dataManager.getMe().id ? (
@@ -140,6 +143,8 @@ function App() {
           borderBottom: "1px solid black",
           fontFamily: `"Alagard", serif`,
           userSelect: "none",
+          flexGrow: 0,
+          flexShrink: 0,
         }}
       >
         <nav>
@@ -220,7 +225,10 @@ function App() {
         backpack={state.myBackpack}
       />
       <CardPicker dispatch={dispatch} />
-      <div style={{ position: "relative" }}>
+      <div
+        style={{ position: "relative", width: "100vw", flexGrow: 1 }}
+        className="cardBody"
+      >
         {cards.map((card: Card, key: number) => {
           const denorm = dataManager.denormalize({ x: card.x, y: card.y });
           return (
@@ -229,6 +237,7 @@ function App() {
               position={{ x: denorm.x, y: denorm.y }}
               defaultPosition={{ x: 0, y: 0 }}
               key={card.id}
+              bounds=".cardBody"
               onDrag={(e, data) => dataManager.onDrag(data.x, data.y, card.id)}
             >
               <ResizableBox
@@ -240,6 +249,7 @@ function App() {
                 // @ts-ignore
                 style={{
                   zIndex: (cardLayering.indexOf(card.id) + 1) * 10,
+                  position: "absolute",
                 }}
                 // handle={<div style={{ width: "10px", height: "10px" }} />}
                 resizeHandles={["se"]}
