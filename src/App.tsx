@@ -48,7 +48,7 @@ function App() {
     }
   }, [dispatch]);
 
-  const { cards, ticker } = state;
+  const { cards, ticker, cardLayering } = state;
   const [showSpellPicker, setShowSpellPicker] = useState(false);
   const [showBackpack, setShowBackpack] = useState(false);
 
@@ -227,6 +227,7 @@ function App() {
             <Draggable
               handle=".handle"
               position={{ x: denorm.x, y: denorm.y }}
+              defaultPosition={{ x: 0, y: 0 }}
               key={card.id}
               onDrag={(e, data) => dataManager.onDrag(data.x, data.y, card.id)}
             >
@@ -236,6 +237,10 @@ function App() {
                 minConstraints={[50, 50]}
                 onResize={(e, data) => onResize(e, data, card)}
                 lockAspectRatio={true}
+                // @ts-ignore
+                style={{
+                  zIndex: (cardLayering.indexOf(card.id) + 1) * 10,
+                }}
                 // handle={<div style={{ width: "10px", height: "10px" }} />}
                 resizeHandles={["se"]}
               >

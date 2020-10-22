@@ -37,6 +37,7 @@ const QuillCardComponent: React.FC<{ card: QuillCard }> = ({ card }) => {
         overflow: "hidden",
         flexGrow: 1,
         position: "relative",
+        backgroundColor: "#FFFFFF",
       }}
     >
       <ReactQuill

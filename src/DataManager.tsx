@@ -5,6 +5,7 @@ import { YoutubeCard } from "./cards/YoutubeCardComponent";
 import EyeIcon from "./assets/eye.png";
 import * as awarenessProtocol from "y-protocols/awareness.js";
 import { QuillCard } from "./cards/QuillCardComponent";
+import { debounce } from "lodash";
 
 interface CursorPosition {
   x: number;
@@ -29,7 +30,6 @@ export interface AbstractCard {
   y: number;
   w: number;
   h: number;
-  // z: number;
 }
 
 export type Card = YoutubeCard | AvatarCard | QuillCard;
@@ -82,6 +82,11 @@ interface RemovePeer {
   peerId: string;
 }
 
+interface SetCardLayering {
+  kind: "set_card_layering";
+  layering: string[];
+}
+
 export type action =
   | SetCards
   | SetBackpack
@@ -92,10 +97,12 @@ export type action =
   | SetReady
   | AddPeer
   | RemovePeer
-  | UpdatePeer;
+  | UpdatePeer
+  | SetCardLayering;
 
 export interface OverallState {
   cards: Card[];
+  cardLayering: string[];
   myBackpack: Card[];
   ticker: number;
   ready: boolean;
@@ -117,6 +124,7 @@ class DataManager {
   dispatch?: React.Dispatch<action>;
   myStream: any;
   cardsY: any;
+  cardLayeringY: any;
   myAvatarID?: string;
   awareness: awarenessProtocol.Awareness;
   constructor() {
@@ -154,6 +162,7 @@ class DataManager {
   };
   setupWatchers = () => {
     this.cardsY = this.ydoc.getMap("cards");
+    this.cardLayeringY = this.ydoc.getArray("card-layering");
     this.cardsY.observe((evt: any) => {
       if (this.dispatch) {
         this.dispatch({
@@ -161,6 +170,14 @@ class DataManager {
           cards: (Array.from(this.cardsY.values()) as Card[]).filter(
             (card) => !card.trashed
           ),
+        });
+      }
+    });
+    this.cardLayeringY.observe((evt: any) => {
+      if (this.dispatch) {
+        this.dispatch({
+          kind: "set_card_layering",
+          layering: this.cardLayeringY.toArray(),
         });
       }
     });
@@ -242,13 +259,16 @@ class DataManager {
     this.updateCard({ ...oldCard, x, y });
   };
   setupCursorBroadcast = () => {
-    document.addEventListener("mousemove", (e: MouseEvent) => {
-      const { x, y } = this.normalize({
-        x: e.clientX,
-        y: e.clientY,
-      });
-      this.awareness.setLocalStateField("cursor", { x, y });
-    });
+    document.addEventListener(
+      "mousemove",
+      debounce((e: MouseEvent) => {
+        const { x, y } = this.normalize({
+          x: e.clientX,
+          y: e.clientY,
+        });
+        this.awareness.setLocalStateField("cursor", { x, y });
+      }, 10)
+    );
   };
   setupStream = async () => {
     try {
@@ -291,6 +311,7 @@ class DataManager {
       cards: Array.from(this.cardsY.values()).filter(
         (card: any) => !card.trashed
       ) as Card[],
+      cardLayering: [],
       myBackpack: [],
       ticker: 1,
       ready: false,
@@ -300,9 +321,15 @@ class DataManager {
 
   addCard = (card: Card) => {
     this.cardsY.set(card.id, card);
+    this.cardLayeringY.push([card.id]);
   };
   updateCard = (card: Card) => {
     this.cardsY.set(card.id, card);
+    const idx = this.cardLayeringY.toArray().indexOf(card.id);
+    if (idx !== this.cardLayeringY.length - 1) {
+      this.cardLayeringY.push([card.id]);
+      this.cardLayeringY.delete(idx, 1);
+    }
     if (
       card.author === this.getMe().id &&
       card.trashed &&
@@ -390,6 +417,8 @@ class DataManager {
             peer.id === action.peer.id ? action.peer : peer
           ),
         };
+      case "set_card_layering":
+        return { ...state, cardLayering: action.layering };
     }
   };
 }
