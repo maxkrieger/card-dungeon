@@ -12,6 +12,7 @@ import BackpackComponent from "./BackpackComponent";
 import { truncate } from "lodash";
 import BackpackIcon from "./assets/backpack.png";
 import OrbIcon from "./assets/orb.png";
+import Greeter from "./assets/greeter.gif";
 import GrabbyCursor from "./assets/grabby_cursor.png";
 import DataManager, { action, Card } from "./DataManager";
 import QuillCardComponent from "./cards/QuillCardComponent";
@@ -21,6 +22,7 @@ import Draggable from "react-draggable";
 import CardPicker from "./CardPicker";
 import { ResizableBox, ResizeCallbackData } from "react-resizable";
 import "react-resizable/css/styles.css";
+import styled from "styled-components";
 // import FrameBorder from "./assets/frame-border.png";
 
 Quill.register("modules/cursors", QuillCursors);
@@ -33,6 +35,22 @@ export const BORDER_SECONDARY_COLOR = "#3A1915";
 export const BORDER_PRIMARY_COLOR = "#C39B77";
 
 export const dataManager = new DataManager();
+
+const NameInput = styled.input`
+  font-family: "Alagard", sans-serif;
+  font-size: 2em;
+  color: ${BORDER_PRIMARY_COLOR};
+  background-color: ${BORDER_SECONDARY_COLOR};
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  padding: 10px 20px 10px 20px;
+  transition: 0.1s;
+  &:focus {
+    transition: 0.1s;
+    box-shadow: 0px 0px 5px 5px rgba(189, 135, 0, 1);
+  }
+`;
 
 function App() {
   const [state, dispatch] = useReducer(
@@ -76,20 +94,58 @@ function App() {
   }, []);
   if (!state.ready) {
     return (
-      <div className="App" style={{ padding: "1em", fontFamily: `"Alagard"` }}>
-        <h1>What is your name, traveller?</h1>
-        <form onSubmit={onSubmitName}>
-          <input
-            type="text"
-            value={myName}
-            onChange={(e: any) => setMyName(e.target.value)}
-            autoFocus={true}
+      <div
+        className="App"
+        style={{
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+          fontFamily: "Alagard",
+        }}
+      >
+        <div style={{ width: "100%", flexShrink: 1 }}>
+          <img
+            src={Greeter}
+            style={{ width: "100%", verticalAlign: "bottom" }}
           />
-          <input
-            type="submit"
-            value={`It is me${myName ? ", " + myName : ""}!`}
-          />
-        </form>
+        </div>
+        <div
+          style={{
+            flexGrow: 1,
+            flexShrink: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#292019",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div>
+              <h1 style={{ color: BORDER_PRIMARY_COLOR }}>
+                What is your name, traveller?
+              </h1>
+            </div>
+            <div>
+              <form onSubmit={onSubmitName}>
+                <NameInput
+                  type="text"
+                  value={myName}
+                  maxLength={50}
+                  onChange={(e: any) => setMyName(e.target.value)}
+                  autoFocus={true}
+                />
+                <input type="submit" style={{ outline: "none" }} value={">"} />
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -157,7 +213,7 @@ function App() {
                 }}
                 key={peer.id}
               >
-                {peer.name}
+                {truncate(peer.name, { length: 15 })}
               </div>
             ))}
           </div>
@@ -204,7 +260,14 @@ function App() {
       />
       <CardPicker dispatch={dispatch} />
       <div
-        style={{ position: "relative", width: "100vw", flexGrow: 1, zIndex: 0 }}
+        style={{
+          position: "relative",
+          width: "100vw",
+          flexGrow: 1,
+          zIndex: 0,
+          boxShadow: "inset 0 0 100px black",
+          background: "radial-gradient(#cc975c, #8f4b33)",
+        }}
         className="cardBody"
       >
         {cards.map((card: Card, key: number) => {
