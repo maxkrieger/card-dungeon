@@ -64,7 +64,6 @@ const CardPicker: React.FC<{ dispatch: dispatcher }> = ({ dispatch }) => {
         <DialogContent
           style={{
             padding: 0,
-            height: "70vh",
             maxWidth: "75vw",
             minWidth: "500px",
             display: "flex",
@@ -79,8 +78,8 @@ const CardPicker: React.FC<{ dispatch: dispatcher }> = ({ dispatch }) => {
                 <div
                   key={key}
                   style={{
-                    width: "100px",
-                    height: "150px",
+                    width: "125px",
+                    height: "187.5px",
                     margin: "1em",
                     background: `url(${icon})`,
                     backgroundSize: "cover",

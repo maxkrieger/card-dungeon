@@ -11,6 +11,7 @@ import AvatarCardComponent from "./cards/AvatarCardComponent";
 import BackpackComponent from "./BackpackComponent";
 import { truncate } from "lodash";
 import BackpackIcon from "./assets/backpack.png";
+import SubmitButton from "./assets/submit-button.png";
 import OrbIcon from "./assets/orb.png";
 import Greeter from "./assets/greeter.gif";
 import GrabbyCursor from "./assets/grabby_cursor.png";
@@ -23,6 +24,7 @@ import CardPicker from "./CardPicker";
 import { ResizableBox, ResizeCallbackData } from "react-resizable";
 import "react-resizable/css/styles.css";
 import styled from "styled-components";
+import ImageCardComponent from "./cards/ImageCardComponent";
 // import FrameBorder from "./assets/frame-border.png";
 
 Quill.register("modules/cursors", QuillCursors);
@@ -51,6 +53,23 @@ const NameInput = styled.input`
     box-shadow: 0px 0px 5px 5px rgba(189, 135, 0, 1);
   }
 `;
+
+const CardSwitcher = (
+  card: Card,
+  ticker: number,
+  dispatch: React.Dispatch<action>
+): JSX.Element => {
+  switch (card.kind) {
+    case "avatar":
+      return <AvatarCardComponent card={card} ticker={ticker} />;
+    case "youtube":
+      return <YoutubeCardComponent card={card} dispatch={dispatch} />;
+    case "quill":
+      return <QuillCardComponent card={card} />;
+    case "image":
+      return <ImageCardComponent card={card} />;
+  }
+};
 
 function App() {
   const [state, dispatch] = useReducer(
@@ -104,7 +123,14 @@ function App() {
           fontFamily: "Alagard",
         }}
       >
-        <div style={{ width: "100%", flexShrink: 1 }}>
+        <div
+          style={{
+            width: "100%",
+            flexShrink: 1,
+            flexGrow: 0,
+            overflow: "hidden",
+          }}
+        >
           <img
             src={Greeter}
             style={{ width: "100%", verticalAlign: "bottom" }}
@@ -133,7 +159,14 @@ function App() {
               </h1>
             </div>
             <div>
-              <form onSubmit={onSubmitName}>
+              <form
+                onSubmit={onSubmitName}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
                 <NameInput
                   type="text"
                   value={myName}
@@ -141,7 +174,18 @@ function App() {
                   onChange={(e: any) => setMyName(e.target.value)}
                   autoFocus={true}
                 />
-                <input type="submit" style={{ outline: "none" }} value={">"} />
+                <input
+                  type="image"
+                  src={SubmitButton}
+                  style={{
+                    outline: "none",
+                    width: "96px",
+                    height: "66px",
+                    // display: "inline-block",
+                    border: 0,
+                  }}
+                  alt="submit"
+                />
               </form>
             </div>
           </div>
@@ -353,13 +397,7 @@ function App() {
                     </div>
                   </div>
                   <div style={{ flexGrow: 1 }}>
-                    {card.kind === "avatar" ? (
-                      <AvatarCardComponent card={card} ticker={ticker} />
-                    ) : card.kind === "youtube" ? (
-                      <YoutubeCardComponent card={card} dispatch={dispatch} />
-                    ) : (
-                      <QuillCardComponent card={card} />
-                    )}
+                    {CardSwitcher(card, ticker, dispatch)}
                   </div>
                 </div>
               </ResizableBox>

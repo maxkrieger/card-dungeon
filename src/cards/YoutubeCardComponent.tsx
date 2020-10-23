@@ -10,6 +10,7 @@ import PlayIcon from "../assets/play.png";
 import { FormattedTime } from "react-player-controls";
 import styled from "styled-components";
 import playhead from "../assets/playhead.png";
+import SubmitButton from "../assets/submit-button.png";
 
 import {
   SliderInput,
@@ -113,7 +114,7 @@ export const YoutubeCardPicker: React.FC<PickerProps> = ({
             q: searchFieldVal,
             type: "video",
             videoEmbeddable: "true",
-            maxResults: "5",
+            maxResults: "6",
           })}`,
           {
             method: "GET",
@@ -133,12 +134,20 @@ export const YoutubeCardPicker: React.FC<PickerProps> = ({
         height: "100%",
         display: "flex",
         flexDirection: "column",
+        fontFamily: "Alagard",
       }}
     >
       <div>
-        <label>
+        <label style={{ color: BORDER_PRIMARY_COLOR }}>
           by URL
-          <form onSubmit={onSubmitURL}>
+          <form
+            onSubmit={onSubmitURL}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
             <input
               type="url"
               value={urlFieldVal}
@@ -148,10 +157,10 @@ export const YoutubeCardPicker: React.FC<PickerProps> = ({
               placeholder={"youtube url..."}
               pattern={regex}
             />
-            <input type="submit" value="cast!" />
+            <input type="image" src={SubmitButton} style={{ width: "50px" }} />
           </form>
         </label>
-        <label>
+        <label style={{ color: BORDER_PRIMARY_COLOR }}>
           search
           <form onSubmit={onSearch}>
             <input
@@ -181,7 +190,7 @@ export const YoutubeCardPicker: React.FC<PickerProps> = ({
             <div
               key={result.id.videoId}
               style={{
-                backgroundColor: "rgba(0,0,0,0.1)",
+                backgroundColor: "rgba(0,0,0,0.4)",
                 margin: "10px",
                 padding: "10px",
                 cursor: "pointer",
@@ -192,7 +201,13 @@ export const YoutubeCardPicker: React.FC<PickerProps> = ({
                 dispatchURL(`https://youtube.com/watch?v=${result.id.videoId}`)
               }
             >
-              <h2 style={{ margin: 0, fontSize: "20px" }}>
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: "20px",
+                  color: BORDER_PRIMARY_COLOR,
+                }}
+              >
                 <img src={result.snippet.thumbnails.medium.url} width={200} />
                 {result.snippet.title}
               </h2>

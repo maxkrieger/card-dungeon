@@ -6,6 +6,7 @@ import EyeIcon from "./assets/eye.png";
 import * as awarenessProtocol from "y-protocols/awareness.js";
 import { QuillCard } from "./cards/QuillCardComponent";
 import { debounce } from "lodash";
+import { ImageCard } from "./cards/ImageCardComponent";
 
 interface CursorPosition {
   x: number;
@@ -32,7 +33,7 @@ export interface AbstractCard {
   h: number;
 }
 
-export type Card = YoutubeCard | AvatarCard | QuillCard;
+export type Card = YoutubeCard | AvatarCard | QuillCard | ImageCard;
 
 interface IncrementTicker {
   kind: "increment_ticker";
