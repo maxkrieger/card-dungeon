@@ -6,7 +6,6 @@ import React, {
   useState,
 } from "react";
 import "@reach/dialog/styles.css";
-import SpellPicker from "./SpellPicker";
 import YoutubeCardComponent from "./cards/YoutubeCardComponent";
 import AvatarCardComponent from "./cards/AvatarCardComponent";
 import BackpackComponent from "./BackpackComponent";
@@ -49,7 +48,6 @@ function App() {
   }, [dispatch]);
 
   const { cards, ticker, cardLayering } = state;
-  const [showSpellPicker, setShowSpellPicker] = useState(false);
   const [showBackpack, setShowBackpack] = useState(false);
 
   useEffect(() => {
@@ -98,39 +96,13 @@ function App() {
   return (
     <div
       className="App"
-      style={{ height: "100vh", display: "flex", flexDirection: "column" }}
+      style={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+      }}
     >
-      <div style={{ position: "absolute" }}>
-        {state.peers.map((peer) =>
-          peer.cursor && peer.id !== dataManager.getMe().id ? (
-            <div
-              style={{
-                position: "absolute",
-                transform: `translate(${peer.cursor.x}px, ${peer.cursor.y}px)`,
-                zIndex: 1000,
-                pointerEvents: "none",
-                display: "flex",
-                flexFlow: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              key={"cursor" + peer.id}
-            >
-              <img src={GrabbyCursor} />
-              <div
-                style={{
-                  fontFamily: `"Alagard"`,
-                  color: "#FFFFFF",
-                  marginTop: "5px",
-                  backgroundColor: BORDER_SECONDARY_COLOR,
-                }}
-              >
-                {peer.name}
-              </div>
-            </div>
-          ) : null
-        )}
-      </div>
       <header
         style={{
           backgroundColor: BORDER_PRIMARY_COLOR,
@@ -148,27 +120,6 @@ function App() {
         }}
       >
         <nav>
-          <div
-            onClick={() => setShowSpellPicker(true)}
-            style={{
-              cursor: "pointer",
-              color: showSpellPicker
-                ? BORDER_PRIMARY_COLOR
-                : BORDER_SECONDARY_COLOR,
-              background: showSpellPicker
-                ? BORDER_SECONDARY_COLOR
-                : BORDER_PRIMARY_COLOR,
-              display: "inline-block",
-              marginLeft: "10px",
-            }}
-          >
-            <img
-              src={OrbIcon}
-              width={20}
-              style={{ verticalAlign: "middle", marginRight: "5px" }}
-            />
-            <span>spells</span>
-          </div>
           <div
             onClick={() => setShowBackpack(true)}
             style={{
@@ -213,11 +164,38 @@ function App() {
           <span>Tavern Cards</span>
         </nav>
       </header>
-      <SpellPicker
-        show={showSpellPicker}
-        onClose={() => setShowSpellPicker(false)}
-        dispatch={dispatch}
-      />
+      <div style={{ position: "absolute" }}>
+        {state.peers.map((peer) =>
+          peer.cursor && peer.id !== dataManager.getMe().id ? (
+            <div
+              style={{
+                position: "absolute",
+                transform: `translate(${peer.cursor.x}px, ${peer.cursor.y}px)`,
+                zIndex: 1000,
+                pointerEvents: "none",
+                display: "flex",
+                flexFlow: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              key={"cursor" + peer.id}
+            >
+              <img src={GrabbyCursor} />
+              <div
+                style={{
+                  fontFamily: `"Alagard"`,
+                  color: "#FFFFFF",
+                  marginTop: "5px",
+                  backgroundColor: BORDER_SECONDARY_COLOR,
+                }}
+              >
+                {peer.name}
+              </div>
+            </div>
+          ) : null
+        )}
+      </div>
+
       <BackpackComponent
         show={showBackpack}
         onClose={() => setShowBackpack(false)}
@@ -226,7 +204,7 @@ function App() {
       />
       <CardPicker dispatch={dispatch} />
       <div
-        style={{ position: "relative", width: "100vw", flexGrow: 1 }}
+        style={{ position: "relative", width: "100vw", flexGrow: 1, zIndex: 0 }}
         className="cardBody"
       >
         {cards.map((card: Card, key: number) => {

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { AbstractCard, action, gordonId } from "../DataManager";
-import { SpellPickerProps } from "../SpellPicker";
 import YoutubeIcon from "../assets/youtube.png";
 import { BORDER_PRIMARY_COLOR, dataManager } from "../App";
 import YoutubeCardIcon from "../assets/youtubecard.png";
@@ -55,20 +54,11 @@ export interface YoutubeCard extends AbstractCard {
   state: PlayerState;
 }
 
-export const YoutubeCardPicker: React.FC<PickerProps> = ({ dispatch }) => {
-  return <div />;
-};
-
-export const YoutubeCardData: CardPickerData = {
-  icon: YoutubeCardIcon,
-  picker: YoutubeCardPicker,
-};
-
 const regex = `https?:\\/\\/(www\\.)?youtube.com\\/watch\\?v=.+`;
 
 const api_key = process.env.REACT_APP_YOUTUBE_API_KEY || "";
 
-export const YoutubeWizard: React.FC<SpellPickerProps> = ({
+export const YoutubeCardPicker: React.FC<PickerProps> = ({
   dispatch,
   onClose,
 }) => {
@@ -141,9 +131,7 @@ export const YoutubeWizard: React.FC<SpellPickerProps> = ({
     <div
       style={{
         height: "100%",
-        // overflow: "hidden",
         display: "flex",
-        flexGrow: 1,
         flexDirection: "column",
       }}
     >
@@ -172,7 +160,7 @@ export const YoutubeWizard: React.FC<SpellPickerProps> = ({
               onChange={(e: React.ChangeEvent<any>) => {
                 setSearchFieldVal(e.target.value);
               }}
-              autoFocus={true}
+              autoFocus={true} // TODO: not working?
               placeholder={"search query..."}
             />
             <input type="submit" value="search!" />
@@ -217,6 +205,11 @@ export const YoutubeWizard: React.FC<SpellPickerProps> = ({
       </div>
     </div>
   );
+};
+
+export const YoutubeCardData: CardPickerData = {
+  icon: YoutubeCardIcon,
+  picker: YoutubeCardPicker,
 };
 
 export interface YoutubeCardProps {
@@ -302,7 +295,14 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
   const { playedSeconds } = card.state;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        userSelect: "none",
+      }}
+    >
       <div
         style={{
           flexGrow: 1,

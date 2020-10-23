@@ -13,13 +13,11 @@ export interface AvatarCardProps {
   ticker: number;
 }
 
-export const AvatarCardPicker: React.FC<PickerProps> = ({ dispatch }) => {
-  return <div>hi im avatar</div>;
-};
-
 export const AvatarCardData: CardPickerData = {
   icon: MeCard,
-  picker: AvatarCardPicker,
+  onPick: () => {
+    dataManager.addMyAvatar();
+  },
 };
 
 const AvatarCardComponent: React.FC<AvatarCardProps> = ({ card, ticker }) => {

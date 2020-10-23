@@ -261,13 +261,17 @@ class DataManager {
   setupCursorBroadcast = () => {
     document.addEventListener(
       "mousemove",
-      debounce((e: MouseEvent) => {
-        const { x, y } = this.normalize({
-          x: e.clientX,
-          y: e.clientY,
-        });
-        this.awareness.setLocalStateField("cursor", { x, y });
-      }, 10)
+      debounce(
+        (e: MouseEvent) => {
+          const { x, y } = this.normalize({
+            x: e.clientX,
+            y: e.clientY,
+          });
+          this.awareness.setLocalStateField("cursor", { x, y });
+        },
+        10,
+        { leading: true }
+      )
     );
   };
   setupStream = async () => {

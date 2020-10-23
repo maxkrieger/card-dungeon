@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import { dataManager } from "../App";
-import { AbstractCard } from "../DataManager";
+import { AbstractCard, gordonId } from "../DataManager";
 import ReactQuill from "react-quill";
 import { QuillBinding } from "y-quill";
 import "react-quill/dist/quill.snow.css";
@@ -12,13 +12,24 @@ export interface QuillCard extends AbstractCard {
   textID: string;
 }
 
-export const QuillCardPicker: React.FC<PickerProps> = ({ dispatch }) => {
-  return <div />;
-};
-
 export const QuillCardData: CardPickerData = {
   icon: QuillCardIcon,
-  picker: QuillCardPicker,
+  onPick: () => {
+    dataManager.addCard({
+      kind: "quill",
+      textID: gordonId(),
+      author: dataManager.getMe().id,
+      manager: dataManager.getMe().id,
+      title: "text",
+      icon: "",
+      x: 0,
+      y: 0,
+      w: 200,
+      h: 400,
+      id: gordonId(),
+      trashed: false,
+    });
+  },
 };
 
 const QuillCardComponent: React.FC<{ card: QuillCard }> = ({ card }) => {

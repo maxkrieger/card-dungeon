@@ -18,6 +18,7 @@ body {
   /* background-color: #ffecb2; */
   background-image: url("assets/sandy.png");
   cursor: url("./assets/pointer_cursor.png"), auto;
+  box-shadow: inset 0 0 100px black;
 }
 
 .ql-container {
