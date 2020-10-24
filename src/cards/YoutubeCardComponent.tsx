@@ -248,6 +248,7 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
     [card]
   );
   const playerRef = useRef<ReactPlayer>(null);
+  const myID = dataManager.getMe().id;
 
   const onSeek = useCallback((seconds: number) => {
     console.log(seconds, "seeked");
@@ -260,14 +261,16 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
       loaded: number;
       loadedSeconds: number;
     }) => {
-      const state = {
-        ...card.state,
-        playedProgress: prog.played,
-        playedSeconds: prog.playedSeconds,
-      };
-      dataManager.updateCard({ ...card, state });
+      if (myID === card.manager) {
+        const state = {
+          ...card.state,
+          playedProgress: prog.played,
+          playedSeconds: prog.playedSeconds,
+        };
+        dataManager.updateCard({ ...card, state });
+      }
     },
-    [card]
+    [card, myID]
   );
   const onPlay = useCallback(() => {
     const state = { ...card.state, playing: true };
@@ -277,11 +280,21 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
     const state = { ...card.state, playing: false };
     dataManager.updateCard({ ...card, state });
   }, [card]);
-  const seekTo = useCallback((value: number) => {
-    if (playerRef.current) {
-      playerRef.current.seekTo(value, "fraction");
-    }
-  }, []);
+  const seekTo = useCallback(
+    (value: number) => {
+      if (playerRef.current) {
+        const duration = playerRef.current.getDuration();
+        const state = {
+          ...card.state,
+          playing: true,
+          playedProgress: value,
+          playedSeconds: value * duration,
+        };
+        dataManager.updateCard({ ...card, state });
+      }
+    },
+    [card]
+  );
   const onEnd = useCallback(() => {
     const state = {
       ...card.state,

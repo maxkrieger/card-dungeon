@@ -5,7 +5,7 @@ import { YoutubeCard } from "./cards/YoutubeCardComponent";
 import EyeIcon from "./assets/eye.png";
 import * as awarenessProtocol from "y-protocols/awareness.js";
 import { QuillCard } from "./cards/QuillCardComponent";
-import { debounce } from "lodash";
+import { debounce, min } from "lodash";
 import { ImageCard } from "./cards/ImageCardComponent";
 
 interface CursorPosition {
@@ -128,6 +128,7 @@ class DataManager {
   cardLayeringY: any;
   myAvatarID?: string;
   awareness: awarenessProtocol.Awareness;
+  peers: UserInfo[] = [];
   constructor() {
     this.ydoc = new Y.Doc();
     this.awareness = new awarenessProtocol.Awareness(this.ydoc);
@@ -190,7 +191,6 @@ class DataManager {
 
       changes.added.forEach((id: number) => {
         const peerState = newStates.get(id) as UserInfo;
-
         this.dispatch!({ kind: "add_peer", peer: peerState });
       });
       changes.updated.forEach((id: number) => {
@@ -278,7 +278,9 @@ class DataManager {
   setupStream = async () => {
     try {
       this.provider!.on("peers", async (e: any) => {
-        e.removed.forEach((peerId: string) => {});
+        e.removed.forEach((peerId: string) => {
+          console.log(peerId, "left");
+        });
         e.added.forEach((peerId: string) => {
           if (!this.provider!.room) {
             return;
@@ -301,6 +303,17 @@ class DataManager {
               this.incrementTicker();
             });
             peer.on("close", () => {
+              const minKey = min(
+                Array.from(this.awareness.getStates().keys())
+              )!.toString();
+              const peerLeftId = this.peers.find(
+                (peer: any) => peer.peerId === peerId
+              )!.id;
+              this.cardsY.forEach((card: Card) => {
+                if (peerLeftId === card.manager) {
+                  this.updateCard({ ...card, manager: minKey });
+                }
+              });
               this.dispatch!({ kind: "remove_peer", peerId });
             });
           }
@@ -374,6 +387,7 @@ class DataManager {
   reducer = (state: OverallState, action: action): OverallState => {
     let newBackpack;
     let newState;
+    let newPeers;
     switch (action.kind) {
       case "set_cards":
         return { ...state, cards: action.cards };
@@ -409,18 +423,24 @@ class DataManager {
       case "set_ready":
         return { ...state, ready: true, peers: [...state.peers, this.getMe()] };
       case "add_peer":
-        return { ...state, peers: [...state.peers, action.peer] };
+        newPeers = [...state.peers, action.peer];
+        this.peers = newPeers;
+        return { ...state, peers: newPeers };
       case "remove_peer":
+        newPeers = state.peers.filter((peer) => peer.peerId !== action.peerId);
+        this.peers = newPeers;
         return {
           ...state,
-          peers: state.peers.filter((peer) => peer.peerId !== action.peerId),
+          peers: newPeers,
         };
       case "update_peer":
+        newPeers = state.peers.map((peer) =>
+          peer.id === action.peer.id ? action.peer : peer
+        );
+        this.peers = newPeers;
         return {
           ...state,
-          peers: state.peers.map((peer) =>
-            peer.id === action.peer.id ? action.peer : peer
-          ),
+          peers: newPeers,
         };
       case "set_card_layering":
         return { ...state, cardLayering: action.layering };

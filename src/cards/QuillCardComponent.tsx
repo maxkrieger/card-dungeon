@@ -54,7 +54,12 @@ const QuillCardComponent: React.FC<{ card: QuillCard }> = ({ card }) => {
       <ReactQuill
         theme="snow"
         ref={quillRef}
-        // modules={{ cursors: true }}
+        modules={{
+          // cursors: true,
+          history: {
+            userOnly: true,
+          },
+        }}
         placeholder={"begin your incantations"}
         style={{ height: "100%" }}
       />
