@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/card-dungeon/static/css/main.70888bfc.chunk.css",
-    "main.js": "/card-dungeon/static/js/main.77f40e6f.chunk.js",
-    "main.js.map": "/card-dungeon/static/js/main.77f40e6f.chunk.js.map",
+    "main.js": "/card-dungeon/static/js/main.e500117b.chunk.js",
+    "main.js.map": "/card-dungeon/static/js/main.e500117b.chunk.js.map",
     "runtime-main.js": "/card-dungeon/static/js/runtime-main.b40dd721.js",
     "runtime-main.js.map": "/card-dungeon/static/js/runtime-main.b40dd721.js.map",
     "static/css/2.1aebbb29.chunk.css": "/card-dungeon/static/css/2.1aebbb29.chunk.css",
     "static/js/2.69cf3b4b.chunk.js": "/card-dungeon/static/js/2.69cf3b4b.chunk.js",
     "static/js/2.69cf3b4b.chunk.js.map": "/card-dungeon/static/js/2.69cf3b4b.chunk.js.map",
     "index.html": "/card-dungeon/index.html",
-    "precache-manifest.4dca45a990b7cc24320dc95c19b1acf0.js": "/card-dungeon/precache-manifest.4dca45a990b7cc24320dc95c19b1acf0.js",
+    "precache-manifest.a66e61df46565592bd039721501838ec.js": "/card-dungeon/precache-manifest.a66e61df46565592bd039721501838ec.js",
     "service-worker.js": "/card-dungeon/service-worker.js",
     "static/css/2.1aebbb29.chunk.css.map": "/card-dungeon/static/css/2.1aebbb29.chunk.css.map",
     "static/css/main.70888bfc.chunk.css.map": "/card-dungeon/static/css/main.70888bfc.chunk.css.map",
@@ -26,6 +26,6 @@
     "static/css/2.1aebbb29.chunk.css",
     "static/js/2.69cf3b4b.chunk.js",
     "static/css/main.70888bfc.chunk.css",
-    "static/js/main.77f40e6f.chunk.js"
+    "static/js/main.e500117b.chunk.js"
   ]
 }
