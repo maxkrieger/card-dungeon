@@ -273,12 +273,16 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
     [card, myID]
   );
   const onPlay = useCallback(() => {
-    const state = { ...card.state, playing: true };
-    dataManager.updateCard({ ...card, state });
+    if (!card.state.playing) {
+      const state = { ...card.state, playing: true };
+      dataManager.updateCard({ ...card, state });
+    }
   }, [card]);
   const onPause = useCallback(() => {
-    const state = { ...card.state, playing: false };
-    dataManager.updateCard({ ...card, state });
+    if (card.state.playing) {
+      const state = { ...card.state, playing: false };
+      dataManager.updateCard({ ...card, state });
+    }
   }, [card]);
   const seekTo = useCallback(
     (value: number) => {
@@ -296,13 +300,15 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
     [card]
   );
   const onEnd = useCallback(() => {
-    const state = {
-      ...card.state,
-      playing: false,
-      playedProgress: 0,
-      playedSeconds: 0,
-    };
-    dataManager.updateCard({ ...card, state });
+    if (card.state.playedProgress !== 0) {
+      const state = {
+        ...card.state,
+        playing: false,
+        playedProgress: 0,
+        playedSeconds: 0,
+      };
+      dataManager.updateCard({ ...card, state });
+    }
   }, [card]);
   const togglePlay = useCallback(() => {
     const state = { ...card.state, playing: !card.state.playing };
@@ -410,7 +416,10 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
             onClick={togglePlay}
             disabled={!ready}
             style={{
-              background: `url(${card.state.playing ? PauseIcon : PlayIcon})`,
+              backgroundImage: `url(${
+                card.state.playing ? PauseIcon : PlayIcon
+              })`,
+              backgroundColor: "transparent",
               width: "30px",
               height: "24px",
               backgroundSize: "cover",
