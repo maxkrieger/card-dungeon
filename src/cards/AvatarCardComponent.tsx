@@ -38,12 +38,16 @@ const AvatarCardComponent: React.FC<AvatarCardProps> = ({ card, ticker }) => {
     }
 
     (async () => {
-      if (video.paused && stream) {
-        video.srcObject = stream;
-        await video.play();
-      }
-      if (card.author === dataManager.getMe().id) {
-        video.muted = true;
+      try {
+        if (video.paused && stream) {
+          video.srcObject = stream;
+          await video.play();
+        }
+        if (card.author === dataManager.getMe().id) {
+          video.muted = true;
+        }
+      } catch (err) {
+        console.log(`Error when starting ${card.title}'s video`, err);
       }
     })();
   }, [videoElement, card, ticker, stream]);

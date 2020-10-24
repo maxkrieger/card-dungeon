@@ -61,7 +61,7 @@ const QuillCardComponent: React.FC<{ card: QuillCard }> = ({ card }) => {
           },
         }}
         placeholder={"begin your incantations"}
-        style={{ height: "100%" }}
+        style={{ height: "100%", overflow: "auto" }}
       />
     </div>
   );
