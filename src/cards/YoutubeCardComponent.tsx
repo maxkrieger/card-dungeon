@@ -104,7 +104,7 @@ export const YoutubeCardPicker: React.FC<PickerProps> = ({
           q: searchFieldVal,
           type: "video",
           videoEmbeddable: "true",
-          maxResults: "6",
+          maxResults: "12",
         })}`,
         {
           method: "GET",

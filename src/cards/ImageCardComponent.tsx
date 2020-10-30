@@ -13,7 +13,7 @@ const giphy = require("giphy-api")({
   https: true,
 });
 
-const URIRegex = `(http(s?):).*\.(?:jpe?g|gif|png|svg|webp)`;
+const URIRegex = `(http(s?):).*\.(?:jpe?g|gif|png|svg|webp)(.*)`;
 
 export const ImagePicker: React.FC<PickerProps> = ({ dispatch, onClose }) => {
   const fileInput = createRef<HTMLInputElement>();

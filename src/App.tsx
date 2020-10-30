@@ -81,6 +81,15 @@ function App() {
   }, []);
   const onResize = useCallback(
     (e: SyntheticEvent, data: ResizeCallbackData, card: Card) => {
+      // const normalized = dataManager.normalize({
+      //   x: data.size.width,
+      //   y: data.size.height,
+      // });
+      // dataManager.updateCard({
+      //   ...card,
+      //   w: normalized.x,
+      //   h: normalized.y,
+      // });
       dataManager.updateCard({
         ...card,
         w: data.size.width,
@@ -321,6 +330,7 @@ function App() {
       >
         {cards.map((card: Card, key: number) => {
           const denorm = dataManager.denormalize({ x: card.x, y: card.y });
+          // const denormWH = dataManager.denormalize({ x: card.w, y: card.h });
           return (
             <Draggable
               handle=".handle"

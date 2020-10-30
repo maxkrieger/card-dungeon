@@ -46,11 +46,6 @@ interface AddToBackpack {
   card: Card;
 }
 
-interface AddFromBackpack {
-  kind: "add_from_backpack";
-  cardID: string;
-}
-
 interface ClearBackpack {
   kind: "clear_backpack";
 }
@@ -100,7 +95,6 @@ export type action =
   | SetBackpack
   | AddToBackpack
   | ClearBackpack
-  | AddFromBackpack
   | IncrementTicker
   | SetReady
   | AddPeer
@@ -270,14 +264,12 @@ class DataManager {
   normalize = ({ x, y }: CursorPosition) => {
     const width = document.body.clientWidth;
     const height = document.body.clientHeight;
-    // return { x: (x * 1000) / width, y: (y * 1000) / height };
-    return { x: (x * 1000) / width, y };
+    return { x: (x * 1000) / width, y: (y * 1000) / height };
   };
   denormalize = ({ x, y }: CursorPosition) => {
     const width = document.body.clientWidth;
     const height = document.body.clientHeight;
-    // return { x: (x * width) / 1000, y: (y * height) / 1000 };
-    return { x: (x * width) / 1000, y };
+    return { x: (x * width) / 1000, y: (y * height) / 1000 };
   };
   onDrag = (xDenorm: number, yDenorm: number, id: string) => {
     const oldCard = this.cardsY.get(id);
@@ -394,7 +386,7 @@ class DataManager {
 
   addFromBackpack = (card: Card) => {
     if (this.dispatch) {
-      this.dispatch({ kind: "add_from_backpack", cardID: card.id });
+      // this.dispatch({ kind: "add_from_backpack", cardID: card.id });
       this.addCard(card);
       if (card.kind === "quill") {
         this.ydoc.getText(card.textID).insert(0, card.initialText, {});
@@ -403,7 +395,11 @@ class DataManager {
   };
   addAllOnScreenToBackpack = () => {
     this.cardsY.forEach((card: Card) => {
-      if (!card.trashed && this.dispatch !== undefined) {
+      if (
+        !card.trashed &&
+        this.dispatch !== undefined &&
+        card.kind !== "avatar"
+      ) {
         this.dispatch({ kind: "add_to_backpack", card });
       }
     });
@@ -457,12 +453,6 @@ class DataManager {
       case "remove_from_backpack":
         newBackpack = state.myBackpack.filter(
           (card) => card.id !== action.card.id
-        );
-        saveBackpack(newBackpack);
-        return { ...state, myBackpack: newBackpack };
-      case "add_from_backpack":
-        newBackpack = state.myBackpack.filter(
-          (card) => card.id !== action.cardID
         );
         saveBackpack(newBackpack);
         return { ...state, myBackpack: newBackpack };
