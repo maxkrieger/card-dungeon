@@ -53,7 +53,7 @@ const NameInput = styled.input`
   }
 `;
 
-const CardSwitcher = (
+export const CardSwitcher = (
   card: Card,
   ticker: number,
   dispatch: React.Dispatch<action>
@@ -236,53 +236,59 @@ function App() {
         </nav>
         <nav>
           <div style={{ display: "inline", overflow: "hidden" }}>
-            {state.peers.map((peer) => (
-              <div
-                style={{
-                  color: "#FFFFFF",
-                  margin: "0 5px 0 5px",
-                  display: "inline-block",
-                  backgroundColor: BORDER_SECONDARY_COLOR,
-                }}
-                key={peer.id}
-              >
-                {truncate(peer.name, { length: 15 })}
-              </div>
-            ))}
+            {state.peers
+              .filter(
+                (peer) => peer.currentTab === dataManager.getMe().currentTab
+              )
+              .map((peer) => (
+                <div
+                  style={{
+                    color: "#FFFFFF",
+                    margin: "0 5px 0 5px",
+                    display: "inline-block",
+                    backgroundColor: BORDER_SECONDARY_COLOR,
+                  }}
+                  key={peer.id}
+                >
+                  {truncate(peer.name, { length: 15 })}
+                </div>
+              ))}
           </div>
           <span>Tavern Card</span>
         </nav>
       </header>
       <div style={{ position: "absolute" }}>
-        {state.peers.map((peer) =>
-          peer.cursor && peer.id !== dataManager.getMe().id ? (
-            <div
-              style={{
-                position: "absolute",
-                transform: `translate(${peer.cursor.x}px, ${peer.cursor.y}px)`,
-                zIndex: 1000,
-                pointerEvents: "none",
-                display: "flex",
-                flexFlow: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              key={"cursor" + peer.id}
-            >
-              <img src={GrabbyCursor} />
+        {state.peers
+          .filter((peer) => peer.currentTab === dataManager.getMe().currentTab)
+          .map((peer) =>
+            peer.cursor && peer.id !== dataManager.getMe().id ? (
               <div
                 style={{
-                  fontFamily: `"Alagard"`,
-                  color: "#FFFFFF",
-                  marginTop: "5px",
-                  backgroundColor: BORDER_SECONDARY_COLOR,
+                  position: "absolute",
+                  transform: `translate(${peer.cursor.x}px, ${peer.cursor.y}px)`,
+                  zIndex: 1000,
+                  pointerEvents: "none",
+                  display: "flex",
+                  flexFlow: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
+                key={"cursor" + peer.id}
               >
-                {peer.name}
+                <img src={GrabbyCursor} />
+                <div
+                  style={{
+                    fontFamily: `"Alagard"`,
+                    color: "#FFFFFF",
+                    marginTop: "5px",
+                    backgroundColor: BORDER_SECONDARY_COLOR,
+                  }}
+                >
+                  {peer.name}
+                </div>
               </div>
-            </div>
-          ) : null
-        )}
+            ) : null
+          )}
       </div>
 
       <BackpackComponent
@@ -382,12 +388,16 @@ function App() {
                             border: "none",
                             background: "none",
                             padding: 0,
+                            // backgroundColor: BORDER_PRIMARY_COLOR,
                           }}
                         >
                           <img
                             width={20}
                             src={BackpackIcon}
-                            style={{ verticalAlign: "middle" }}
+                            style={{
+                              verticalAlign: "middle",
+                              filter: `drop-shadow(1px 1px 0 ${BORDER_PRIMARY_COLOR}) drop-shadow(-1px -1px 0 ${BORDER_PRIMARY_COLOR})`,
+                            }}
                           />
                         </button>
                       )}
@@ -399,6 +409,7 @@ function App() {
                           backgroundColor: BORDER_SECONDARY_COLOR,
                           border: `0.8px solid ${BORDER_PRIMARY_COLOR}`,
                           borderRadius: "5px",
+                          marginLeft: "5px",
                         }}
                       >
                         x

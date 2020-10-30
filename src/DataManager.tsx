@@ -7,6 +7,7 @@ import * as awarenessProtocol from "y-protocols/awareness.js";
 import { QuillCard } from "./cards/QuillCardComponent";
 import { debounce, min } from "lodash";
 import { ImageCard } from "./cards/ImageCardComponent";
+import { userInfo } from "os";
 
 interface CursorPosition {
   x: number;
@@ -18,6 +19,7 @@ interface UserInfo {
   id: string;
   peerId: string;
   cursor: CursorPosition | null;
+  currentTab: number;
   user: { name: string };
 }
 export interface AbstractCard {
@@ -63,6 +65,11 @@ interface SetBackpack {
   backpack: Card[];
 }
 
+interface RemoveFromBackpack {
+  kind: "remove_from_backpack";
+  card: Card;
+}
+
 interface SetReady {
   kind: "set_ready";
   myName: string;
@@ -99,7 +106,8 @@ export type action =
   | AddPeer
   | RemovePeer
   | UpdatePeer
-  | SetCardLayering;
+  | SetCardLayering
+  | RemoveFromBackpack;
 
 export interface OverallState {
   cards: Card[];
@@ -212,35 +220,41 @@ class DataManager {
   };
   getMe = (): UserInfo => this.awareness.getLocalState() as UserInfo;
   addMyAvatar = async () => {
-    const myStream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
     const { peerId, id, name } = this.getMe();
-    this.myStream = myStream;
-    this.streamMap[peerId] = myStream;
-    if (this.provider && this.provider.room) {
-      this.provider.room.webrtcConns.forEach((conn: any) => {
-        conn.peer.addStream(this.myStream);
-        this.incrementTicker();
+    const myExistingAvatars = Array.from(this.cardsY.values()).filter(
+      (card: any) =>
+        card.kind === "avatar" && card.author === id && !card.trashed
+    );
+    if (myExistingAvatars.length === 0) {
+      const myStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      this.myStream = myStream;
+      this.streamMap[peerId] = myStream;
+      if (this.provider && this.provider.room) {
+        this.provider.room.webrtcConns.forEach((conn: any) => {
+          conn.peer.addStream(this.myStream);
+          this.incrementTicker();
+        });
+      }
+      const CardId = gordonId();
+      this.myAvatarID = id;
+
+      this.addCard({
+        kind: "avatar",
+        title: name,
+        icon: EyeIcon,
+        x: 0,
+        y: 0,
+        id: CardId,
+        w: 200,
+        h: 200,
+        author: id,
+        manager: id,
+        trashed: false,
       });
     }
-    const CardId = Math.random().toString();
-    this.myAvatarID = id;
-    // TODO: prevent from adding this card twice
-    this.addCard({
-      kind: "avatar",
-      title: name,
-      icon: EyeIcon,
-      x: 0,
-      y: 0,
-      id: CardId,
-      w: 200,
-      h: 200,
-      author: id,
-      manager: id,
-      trashed: false,
-    });
   };
   normalize = ({ x, y }: CursorPosition) => {
     const width = document.body.clientWidth;
@@ -368,18 +382,23 @@ class DataManager {
     if (this.dispatch) {
       this.dispatch({ kind: "add_from_backpack", cardID: card.id });
       this.cardsY.set(card.id, card);
+      if (card.kind === "quill") {
+        this.ydoc.getText(card.textID).insert(0, card.initialText, {});
+      }
     }
   };
   setNameAndConnect = (name: string) => {
-    this.awareness.setLocalState({
+    const initialState: UserInfo = {
       name,
       cursor: null,
       id: this.ydoc.clientID.toString(),
+      currentTab: 0,
       peerId: "",
       user: {
         name,
       },
-    });
+    };
+    this.awareness.setLocalState(initialState);
     this.dispatch!({ kind: "set_ready", myName: name });
     this.connect();
   };
@@ -398,6 +417,8 @@ class DataManager {
         let newCard = { ...action.card };
         if (newCard.kind === "youtube") {
           newCard.state = { ...newCard.state, playing: false };
+        } else if (newCard.kind === "quill") {
+          newCard.initialText = this.ydoc.getText(newCard.textID).toString();
         }
         if (state.myBackpack.some((card) => card.id === newCard.id)) {
           newBackpack = state.myBackpack.map((card) =>
@@ -412,6 +433,12 @@ class DataManager {
         newState = { ...state, myBackpack: [] };
         saveBackpack([]);
         return newState;
+      case "remove_from_backpack":
+        newBackpack = state.myBackpack.filter(
+          (card) => card.id !== action.card.id
+        );
+        saveBackpack(newBackpack);
+        return { ...state, myBackpack: newBackpack };
       case "add_from_backpack":
         newBackpack = state.myBackpack.filter(
           (card) => card.id !== action.cardID

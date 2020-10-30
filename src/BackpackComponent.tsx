@@ -1,22 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
 import { dataManager } from "./App";
-import YoutubeIcon from "./assets/youtube.png";
 import BackpackIcon from "./assets/backpack.png";
+import TextBorder from "./assets/textborder.png";
+import FrameBorder from "./assets/border.png";
 import { Card, action } from "./DataManager";
-import { BORDER_PRIMARY_COLOR } from "./colors";
-
-enum Primaries {
-  YOUTUBE,
-  NONE,
-}
-
-const ColStyle = {
-  overflow: "scroll",
-  borderRight: "1px solid black",
-  maxWidth: "300px",
-  flexBasis: "200px",
-};
+import { BORDER_PRIMARY_COLOR, BORDER_SECONDARY_COLOR } from "./colors";
+import { truncate } from "lodash";
 
 const BackpackComponent: React.FC<{
   backpack: Card[];
@@ -24,17 +14,21 @@ const BackpackComponent: React.FC<{
   onClose(): void;
   dispatch: React.Dispatch<action>;
 }> = ({ show, onClose, dispatch, backpack }) => {
-  const [primaryOpen, setPrimaryOpen] = useState<Primaries>(Primaries.NONE);
-  const clearBackpack = useCallback(() => {
-    dispatch({ kind: "clear_backpack" });
-  }, [dispatch]);
+  // const clearBackpack = useCallback(() => {
+  //   dispatch({ kind: "clear_backpack" });
+  // }, [dispatch]);
+  const removeFromBackpack = useCallback(
+    (card: Card) => {
+      dispatch({ kind: "remove_from_backpack", card });
+    },
+    [dispatch]
+  );
   const addFrom = useCallback(
     (card: Card) => {
       dataManager.addFromBackpack(card);
     },
     [dispatch]
   );
-  const youtubes = backpack.filter((card) => card.kind === "youtube");
   return (
     <DialogOverlay
       style={{ background: "none" }}
@@ -47,16 +41,28 @@ const BackpackComponent: React.FC<{
           fontFamily: `"Alagard"`,
           padding: 0,
           minHeight: "300px",
+          maxHeight: "75vh",
           display: "flex",
           flexDirection: "column",
+          backgroundImage: `url(${TextBorder})`,
+          userSelect: "none",
+          // backgroundSize: "cover",
+          backgroundRepeat: "repeat",
         }}
         aria-label="spell picker"
       >
         <div
           style={{
-            width: "100%",
-            backgroundColor: BORDER_PRIMARY_COLOR,
+            flexShrink: 0,
+            fontFamily: `"Alagard"`,
+            fontSize: "18px",
+            backgroundColor: "#C39B77",
+            backgroundImage: `url(${FrameBorder})`,
+            backgroundRepeat: "repeat",
             userSelect: "none",
+            display: "flex",
+            justifyContent: "space-between",
+            color: BORDER_PRIMARY_COLOR,
           }}
         >
           <img
@@ -65,48 +71,98 @@ const BackpackComponent: React.FC<{
             style={{ verticalAlign: "middle" }}
           />
           <span>backpack</span>
-          <button onClick={onClose}>x</button>
-          <button onClick={clearBackpack}>clear</button>
+          <button
+            style={{
+              fontFamily: "Alagard",
+              color: "#FFFFFF",
+              backgroundColor: BORDER_SECONDARY_COLOR,
+              border: `0.8px solid ${BORDER_PRIMARY_COLOR}`,
+              borderRadius: "5px",
+            }}
+            onClick={onClose}
+          >
+            x
+          </button>
         </div>
         <div
           style={{
             width: "100%",
-            display: "flex",
-            overflow: "hidden",
-            alignItems: "stretch",
+            height: "100%",
+            overflow: "auto",
             flexGrow: 1,
+            position: "relative",
           }}
         >
-          <div style={ColStyle}>
+          {backpack.length === 0 && (
             <div
-              style={
-                primaryOpen === Primaries.YOUTUBE
-                  ? { color: "#FFFFFF", backgroundColor: "#000000" }
-                  : { color: "#000000", backgroundColor: "#FFFFFF" }
-              }
-              onClick={() => setPrimaryOpen(Primaries.YOUTUBE)}
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: `translate(-50%, -50%)`,
+              }}
             >
-              <img src={YoutubeIcon} width={30} /> youtube ({youtubes.length})
-              {" >"}
+              backpack is empty
             </div>
-          </div>
-          <div style={ColStyle}>
-            {primaryOpen === Primaries.YOUTUBE ? (
-              <div>
-                {youtubes.map((card) => (
-                  <div
-                    key={card.id}
-                    style={{ cursor: "pointer", margin: "10px" }}
-                    onClick={() => addFrom(card)}
-                  >
-                    {card.title}
-                  </div>
-                ))}
+          )}
+          {backpack.map((card: Card, key: number) => (
+            <div
+              style={{
+                margin: "5px",
+                display: "inline-block",
+              }}
+            >
+              <button
+                style={{
+                  fontFamily: "Alagard",
+                  color: "#FFFFFF",
+                  backgroundColor: BORDER_SECONDARY_COLOR,
+                  border: `0.8px solid ${BORDER_PRIMARY_COLOR}`,
+                  borderRadius: "5px",
+                }}
+                onClick={() => removeFromBackpack(card)}
+              >
+                x
+              </button>
+              <div
+                style={{
+                  margin: "10px",
+                  backgroundColor: BORDER_SECONDARY_COLOR,
+                  borderRadius: "5px",
+                  color: BORDER_PRIMARY_COLOR,
+                  width: "100px",
+                  height: "75px",
+                  padding: "10px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  boxShadow: "5px 5px 5px hsla(0, 0%, 0%, 0.5)",
+                }}
+                onClick={() => addFrom(card)}
+              >
+                <div
+                  style={{
+                    flexGrow: 1,
+                    flexShrink: 0,
+                    backgroundImage: `url(${
+                      card.kind === "image" ? card.uri : card.icon
+                    })`,
+                    backgroundColor: "transparent",
+                    backgroundSize: "fit",
+                    backgroundRepeat: "no-repeat",
+                    height: "100%",
+                  }}
+                />
+
+                <div>
+                  {card.title}{" "}
+                  {card.kind === "quill" &&
+                    truncate(card.initialText, { length: 10 })}
+                </div>
               </div>
-            ) : (
-              <div />
-            )}
-          </div>
+            </div>
+          ))}
         </div>
       </DialogContent>
     </DialogOverlay>

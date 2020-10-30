@@ -11,6 +11,7 @@ import { PickerProps, CardPickerData } from "../CardPicker";
 export interface QuillCard extends AbstractCard {
   kind: "quill";
   textID: string;
+  initialText: string;
 }
 
 export const QuillCardData: CardPickerData = {
@@ -19,6 +20,7 @@ export const QuillCardData: CardPickerData = {
     dataManager.addCard({
       kind: "quill",
       textID: gordonId(),
+      initialText: "",
       author: dataManager.getMe().id,
       manager: dataManager.getMe().id,
       title: "text",
