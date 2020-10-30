@@ -226,10 +226,20 @@ class DataManager {
         card.kind === "avatar" && card.author === id && !card.trashed
     );
     if (myExistingAvatars.length === 0) {
-      const myStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
+      let myStream;
+      try {
+        myStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+      } catch (err) {
+        alert("could not get your camera feed");
+        return;
+      }
+      const { width, height } = myStream.getVideoTracks()[0].getSettings() as {
+        width: number;
+        height: number;
+      };
       this.myStream = myStream;
       this.streamMap[peerId] = myStream;
       if (this.provider && this.provider.room) {
@@ -240,7 +250,8 @@ class DataManager {
       }
       const CardId = gordonId();
       this.myAvatarID = id;
-
+      // https://stackoverflow.com/a/14731922
+      const ratio = Math.min(300 / width, 200 / height);
       this.addCard({
         kind: "avatar",
         title: name,
@@ -248,8 +259,8 @@ class DataManager {
         x: 0,
         y: 0,
         id: CardId,
-        w: 200,
-        h: 200,
+        w: width * ratio,
+        h: height * ratio + 20,
         author: id,
         manager: id,
         trashed: false,
