@@ -2,15 +2,21 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import SubmitButton from "./assets/submit-button.png";
 import { BORDER_PRIMARY_COLOR, BORDER_SECONDARY_COLOR } from "./colors";
-const NameInput = styled.input`
+
+interface InProps {
+  small: boolean;
+}
+
+const NameInput = styled.input<InProps>`
   font-family: "Alagard", sans-serif;
-  font-size: 2em;
+  font-size: ${({ small }: any) => (small ? `1em` : `2em`)};
   color: ${BORDER_PRIMARY_COLOR};
   background-color: ${BORDER_SECONDARY_COLOR};
   border: none;
-  border-radius: 10px;
+  border-radius: ${({ small }: any) => (small ? "3px" : `10px`)};
   outline: none;
-  padding: 10px 20px 10px 20px;
+  padding: ${({ small }: any) =>
+    small ? `2px 4px 2px 4px` : `10px 20px 10px 20px`};
   transition: 0.1s;
   &:focus {
     transition: 0.1s;
@@ -24,7 +30,8 @@ const TextInputForm: React.FC<{
   placeholder: string;
   regex: string | null;
   keepOnSubmit?: boolean;
-}> = ({ onSubmit, maxLength, placeholder, regex, keepOnSubmit }) => {
+  small?: boolean;
+}> = ({ onSubmit, maxLength, placeholder, regex, keepOnSubmit, small }) => {
   const [fieldValue, setFieldValue] = useState("");
   const onSubmitField = useCallback(
     (e: any) => {
@@ -67,14 +74,15 @@ const TextInputForm: React.FC<{
         autoFocus={true}
         pattern={regex || undefined}
         minLength={1}
+        small={small || false}
       />
       <input
         type="image"
         src={SubmitButton}
         style={{
           outline: "none",
-          width: "96px",
-          height: "66px",
+          width: small ? "32px" : "96px",
+          height: small ? "22px" : "66px",
           // display: "inline-block",
           border: 0,
         }}
