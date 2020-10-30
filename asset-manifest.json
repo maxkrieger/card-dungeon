@@ -1,21 +1,21 @@
 {
   "files": {
     "main.css": "/card-dungeon/static/css/main.26267dc1.chunk.css",
-    "main.js": "/card-dungeon/static/js/main.16515406.chunk.js",
-    "main.js.map": "/card-dungeon/static/js/main.16515406.chunk.js.map",
+    "main.js": "/card-dungeon/static/js/main.4f8d50e2.chunk.js",
+    "main.js.map": "/card-dungeon/static/js/main.4f8d50e2.chunk.js.map",
     "runtime-main.js": "/card-dungeon/static/js/runtime-main.2c28b516.js",
     "runtime-main.js.map": "/card-dungeon/static/js/runtime-main.2c28b516.js.map",
     "static/css/2.f7ea424f.chunk.css": "/card-dungeon/static/css/2.f7ea424f.chunk.css",
-    "static/js/2.13b5308d.chunk.js": "/card-dungeon/static/js/2.13b5308d.chunk.js",
-    "static/js/2.13b5308d.chunk.js.map": "/card-dungeon/static/js/2.13b5308d.chunk.js.map",
+    "static/js/2.26fdd827.chunk.js": "/card-dungeon/static/js/2.26fdd827.chunk.js",
+    "static/js/2.26fdd827.chunk.js.map": "/card-dungeon/static/js/2.26fdd827.chunk.js.map",
     "static/js/3.d6e2b7bd.chunk.js": "/card-dungeon/static/js/3.d6e2b7bd.chunk.js",
     "static/js/3.d6e2b7bd.chunk.js.map": "/card-dungeon/static/js/3.d6e2b7bd.chunk.js.map",
     "index.html": "/card-dungeon/index.html",
-    "precache-manifest.03053f83253902f94f2464fa06ffa7ae.js": "/card-dungeon/precache-manifest.03053f83253902f94f2464fa06ffa7ae.js",
+    "precache-manifest.8fc35d26acfd28212f19c8f35e1c508a.js": "/card-dungeon/precache-manifest.8fc35d26acfd28212f19c8f35e1c508a.js",
     "service-worker.js": "/card-dungeon/service-worker.js",
     "static/css/2.f7ea424f.chunk.css.map": "/card-dungeon/static/css/2.f7ea424f.chunk.css.map",
     "static/css/main.26267dc1.chunk.css.map": "/card-dungeon/static/css/main.26267dc1.chunk.css.map",
-    "static/js/2.13b5308d.chunk.js.LICENSE.txt": "/card-dungeon/static/js/2.13b5308d.chunk.js.LICENSE.txt",
+    "static/js/2.26fdd827.chunk.js.LICENSE.txt": "/card-dungeon/static/js/2.26fdd827.chunk.js.LICENSE.txt",
     "static/js/3.d6e2b7bd.chunk.js.LICENSE.txt": "/card-dungeon/static/js/3.d6e2b7bd.chunk.js.LICENSE.txt",
     "static/media/index.css": "/card-dungeon/static/media/alagard.6faad178.ttf",
     "static/media/board.png": "/card-dungeon/static/media/board.59d6e030.png",
@@ -33,8 +33,8 @@
   "entrypoints": [
     "static/js/runtime-main.2c28b516.js",
     "static/css/2.f7ea424f.chunk.css",
-    "static/js/2.13b5308d.chunk.js",
+    "static/js/2.26fdd827.chunk.js",
     "static/css/main.26267dc1.chunk.css",
-    "static/js/main.16515406.chunk.js"
+    "static/js/main.4f8d50e2.chunk.js"
   ]
 }

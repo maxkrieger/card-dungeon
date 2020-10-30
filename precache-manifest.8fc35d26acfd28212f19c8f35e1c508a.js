@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "58b4f38e94074ba2f72d871495ae4689",
+    "revision": "6ee3b33e3202728299c9d33518bf6737",
     "url": "/card-dungeon/index.html"
   },
   {
-    "revision": "d50f2a4ca99ec5cd7aa1",
+    "revision": "466fab4a5f8c36a21e65",
     "url": "/card-dungeon/static/css/2.f7ea424f.chunk.css"
   },
   {
-    "revision": "748b2f2e3e9ed46838b7",
+    "revision": "db8108c13c94ae0f08fd",
     "url": "/card-dungeon/static/css/main.26267dc1.chunk.css"
   },
   {
-    "revision": "d50f2a4ca99ec5cd7aa1",
-    "url": "/card-dungeon/static/js/2.13b5308d.chunk.js"
+    "revision": "466fab4a5f8c36a21e65",
+    "url": "/card-dungeon/static/js/2.26fdd827.chunk.js"
   },
   {
     "revision": "24fef0872d983b2ae58d3321e8a780bb",
-    "url": "/card-dungeon/static/js/2.13b5308d.chunk.js.LICENSE.txt"
+    "url": "/card-dungeon/static/js/2.26fdd827.chunk.js.LICENSE.txt"
   },
   {
     "revision": "cfc626af6aef5814e0b1",
@@ -28,8 +28,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/card-dungeon/static/js/3.d6e2b7bd.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "748b2f2e3e9ed46838b7",
-    "url": "/card-dungeon/static/js/main.16515406.chunk.js"
+    "revision": "db8108c13c94ae0f08fd",
+    "url": "/card-dungeon/static/js/main.4f8d50e2.chunk.js"
   },
   {
     "revision": "f7843496269a70f7ed46",
