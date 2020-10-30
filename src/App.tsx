@@ -27,15 +27,14 @@ import "react-resizable/css/styles.css";
 import styled from "styled-components";
 import ImageCardComponent from "./cards/ImageCardComponent";
 import FrameBorder from "./assets/border.png";
+import TextInputForm from "./TextInputForm";
+import { BORDER_PRIMARY_COLOR, BORDER_SECONDARY_COLOR } from "./colors";
 
 Quill.register("modules/cursors", QuillCursors);
 
 export type dispatcher = React.Dispatch<action>;
 
 const NUM_COLS = 12;
-
-export const BORDER_SECONDARY_COLOR = "#3A1915";
-export const BORDER_PRIMARY_COLOR = "#C39B77";
 
 export const dataManager = new DataManager();
 
@@ -91,14 +90,9 @@ function App() {
   useEffect(() => {
     dataManager.setDispatch(dispatch);
   }, [dispatch]);
-  const [myName, setMyName] = useState("");
-  const onSubmitName = useCallback(
-    (e: any) => {
-      e.preventDefault();
-      dataManager.setNameAndConnect(myName);
-    },
-    [myName]
-  );
+  const onSubmitName = useCallback((name: string) => {
+    dataManager.setNameAndConnect(name);
+  }, []);
   const onResize = useCallback(
     (e: SyntheticEvent, data: ResizeCallbackData, card: Card) => {
       dataManager.updateCard({
@@ -160,34 +154,12 @@ function App() {
               </h1>
             </div>
             <div>
-              <form
+              <TextInputForm
                 onSubmit={onSubmitName}
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <NameInput
-                  type="text"
-                  value={myName}
-                  maxLength={50}
-                  onChange={(e: any) => setMyName(e.target.value)}
-                  autoFocus={true}
-                />
-                <input
-                  type="image"
-                  src={SubmitButton}
-                  style={{
-                    outline: "none",
-                    width: "96px",
-                    height: "66px",
-                    // display: "inline-block",
-                    border: 0,
-                  }}
-                  alt="submit"
-                />
-              </form>
+                maxLength={50}
+                placeholder={"name"}
+                regex={null}
+              />
             </div>
           </div>
         </div>
@@ -376,7 +348,11 @@ function App() {
                       <img
                         src={card.icon}
                         width={20}
-                        style={{ verticalAlign: "middle", marginLeft: "10px" }}
+                        style={{
+                          verticalAlign: "middle",
+                          marginLeft: "10px",
+                        }}
+                        draggable="false"
                       />{" "}
                       <span>{truncate(card.title, { length: 24 })}</span>
                     </div>

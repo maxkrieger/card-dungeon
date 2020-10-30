@@ -1,43 +1,101 @@
-import { AbstractCard } from "../DataManager";
-import React, { useCallback, useState } from "react";
+import { AbstractCard, gordonId } from "../DataManager";
+import React, { createRef, useCallback, useEffect, useState } from "react";
 import SubmitButton from "../assets/submit-button.png";
 import { PickerProps, CardPickerData } from "../CardPicker";
+import ImageCardIcon from "../assets/imageimages/image_0000.png";
+import ImageIcon from "../assets/imageicon.png";
+import { dataManager } from "../App";
+import TextInputForm from "../TextInputForm";
+import { BORDER_PRIMARY_COLOR } from "../colors";
 
-const URIRegex = `(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)`;
+const URIRegex = `(http(s?):).*\.(?:jpe?g|gif|png|svg|webp)`;
 
 export const ImagePicker: React.FC<PickerProps> = ({ dispatch, onClose }) => {
-  const [uri, setUri] = useState("");
-  const setURIField = useCallback((e: any) => {
-    setUri(e.target.value);
-  }, []);
-  const dispatchURI = useCallback((url: string) => {}, []);
-  const onSubmitURI = useCallback(
-    (e: any) => {
-      e.preventDefault();
-      if (uri.match(URIRegex)) {
-        dispatchURI(uri);
-        setUri("");
-      }
+  const fileInput = createRef<HTMLInputElement>();
+
+  const dispatchURI = useCallback(
+    (url: string) => {
+      const img = new Image();
+      img.onerror = (err: any) => {
+        onClose();
+        console.error(err);
+      };
+      img.onload = () => {
+        const ratio = img.height / img.width;
+        dataManager.addCard({
+          kind: "image",
+          title: "photo",
+          icon: ImageIcon,
+          uri: url,
+          x: 0,
+          y: 0,
+          w: 200,
+          h: ratio * 200,
+          id: gordonId(),
+          author: dataManager.getMe().id,
+          manager: dataManager.getMe().id,
+          trashed: false,
+        });
+      };
+      img.src = url;
+
+      onClose();
     },
-    [dispatchURI, uri]
+    [onClose]
   );
+  const onSubmitFile = useCallback(() => {
+    const reader = new FileReader();
+    reader.addEventListener(
+      "load",
+      () => {
+        dispatchURI(reader.result as string);
+      },
+      false
+    );
+    if (
+      fileInput.current &&
+      fileInput.current.files &&
+      fileInput.current!.files!.length > 0
+    ) {
+      const first = fileInput.current.files[0];
+      reader.readAsDataURL(first);
+    }
+  }, [dispatchURI, fileInput]);
+  useEffect(() => {
+    if (fileInput.current) {
+      fileInput.current.onchange = onSubmitFile;
+    }
+  }, [fileInput, onSubmitFile]);
   return (
-    <div>
-      <form>
-        <input
-          type="url"
-          pattern={URIRegex}
-          value={uri}
-          onChange={setURIField}
-        />
-        <input type="image" src={SubmitButton} style={{ width: "50px" }} />
-      </form>
+    <div
+      style={{
+        color: BORDER_PRIMARY_COLOR,
+      }}
+    >
+      <TextInputForm
+        maxLength={800}
+        onSubmit={dispatchURI}
+        placeholder={"image url"}
+        regex={URIRegex}
+      />
+      <hr style={{ borderColor: BORDER_PRIMARY_COLOR }} />
+      <div style={{ fontFamily: "Alagard", fontSize: "2em" }}>
+        <label>
+          upload your own:{" "}
+          <input
+            type="file"
+            ref={fileInput}
+            multiple={false}
+            accept={".jpg,.jpeg,.gif,.png,.svg"}
+          />
+        </label>
+      </div>
     </div>
   );
 };
 
 export const ImageCardData: CardPickerData = {
-  icon: "",
+  icon: ImageCardIcon,
   picker: ImagePicker,
 };
 
@@ -55,7 +113,8 @@ const ImageCardComponent: React.FC<ImageCardProps> = ({ card }) => (
     style={{
       width: "100%",
       height: "100%",
-      background: `url(${card.uri}) cover`,
+      backgroundImage: `url(${card.uri})`,
+      backgroundSize: `cover`,
     }}
   />
 );

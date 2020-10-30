@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
-import { BORDER_PRIMARY_COLOR, dataManager } from "./App";
+import { dataManager } from "./App";
 import YoutubeIcon from "./assets/youtube.png";
 import BackpackIcon from "./assets/backpack.png";
 import { Card, action } from "./DataManager";
+import { BORDER_PRIMARY_COLOR } from "./colors";
 
 enum Primaries {
   YOUTUBE,

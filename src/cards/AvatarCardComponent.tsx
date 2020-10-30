@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useCallback } from "react";
-import { BORDER_PRIMARY_COLOR, dataManager, dispatcher } from "../App";
+import { dataManager, dispatcher } from "../App";
 import { CardPickerData, PickerProps } from "../CardPicker";
 import { AbstractCard, action } from "../DataManager";
-import MeCard from "../assets/mecard.png";
+import MeCard from "../assets/mirrorimages/camera_0000.png";
+import { BORDER_PRIMARY_COLOR } from "../colors";
 
 export interface AvatarCard extends AbstractCard {
   kind: "avatar";

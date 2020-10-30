@@ -7,6 +7,7 @@ import { AvatarCardData } from "./cards/AvatarCardComponent";
 import { QuillCardData } from "./cards/QuillCardComponent";
 import { YoutubeCardData } from "./cards/YoutubeCardComponent";
 import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
+import { ImageCardData } from "./cards/ImageCardComponent";
 
 export type PickerProps = { dispatch: dispatcher; onClose(): void };
 
@@ -20,6 +21,7 @@ const PickerOptions: CardPickerData[] = [
   AvatarCardData,
   QuillCardData,
   YoutubeCardData,
+  ImageCardData,
 ];
 
 const CardPicker: React.FC<{ dispatch: dispatcher }> = ({ dispatch }) => {

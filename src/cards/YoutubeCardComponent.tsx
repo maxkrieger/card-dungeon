@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { AbstractCard, action, gordonId } from "../DataManager";
 import YoutubeIcon from "../assets/youtube.png";
-import { BORDER_PRIMARY_COLOR, dataManager } from "../App";
-import YoutubeCardIcon from "../assets/youtubecard.png";
+import { dataManager } from "../App";
+import YoutubeCardIcon from "../assets/youtubeimages/youtube_0000.png";
 import { PickerProps, CardPickerData } from "../CardPicker";
 import PauseIcon from "../assets/pause.png";
 import PlayIcon from "../assets/play.png";
@@ -20,6 +20,8 @@ import {
   SliderMarker,
 } from "@reach/slider";
 import "@reach/slider/styles.css";
+import { BORDER_PRIMARY_COLOR } from "../colors";
+import TextInputForm from "../TextInputForm";
 
 const SliderWrapper = styled.div`
   width: 100%;
@@ -63,8 +65,6 @@ export const YoutubeCardPicker: React.FC<PickerProps> = ({
   dispatch,
   onClose,
 }) => {
-  const [urlFieldVal, setUrlFieldVal] = useState("");
-  const [searchFieldVal, setSearchFieldVal] = useState("");
   const [searchResults, setSearchResults] = useState<any>([]);
   const dispatchURL = useCallback(
     (url: string) => {
@@ -93,41 +93,28 @@ export const YoutubeCardPicker: React.FC<PickerProps> = ({
     },
     [onClose]
   );
-  const onSubmitURL = useCallback(
-    (e: any) => {
-      e.preventDefault();
-      if (urlFieldVal.match(regex)) {
-        dispatchURL(urlFieldVal);
-        setUrlFieldVal("");
-      }
-    },
-    [dispatchURL, urlFieldVal]
-  );
-  const onSearch = useCallback(
-    async (e: any) => {
-      e.preventDefault();
-      try {
-        const res = await fetch(
-          `https://www.googleapis.com/youtube/v3/search?${new URLSearchParams({
-            key: api_key,
-            part: "snippet",
-            q: searchFieldVal,
-            type: "video",
-            videoEmbeddable: "true",
-            maxResults: "6",
-          })}`,
-          {
-            method: "GET",
-          }
-        );
-        const { items } = await res.json();
-        setSearchResults(items);
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    [searchFieldVal]
-  );
+
+  const onSearch = useCallback(async (searchFieldVal: string) => {
+    try {
+      const res = await fetch(
+        `https://www.googleapis.com/youtube/v3/search?${new URLSearchParams({
+          key: api_key,
+          part: "snippet",
+          q: searchFieldVal,
+          type: "video",
+          videoEmbeddable: "true",
+          maxResults: "6",
+        })}`,
+        {
+          method: "GET",
+        }
+      );
+      const { items } = await res.json();
+      setSearchResults(items);
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
   return (
     <div
       style={{
@@ -138,43 +125,20 @@ export const YoutubeCardPicker: React.FC<PickerProps> = ({
       }}
     >
       <div>
-        <label style={{ color: BORDER_PRIMARY_COLOR }}>
-          by URL
-          <form
-            onSubmit={onSubmitURL}
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <input
-              type="url"
-              value={urlFieldVal}
-              onChange={(e: React.ChangeEvent<any>) => {
-                setUrlFieldVal(e.target.value);
-              }}
-              placeholder={"youtube url..."}
-              pattern={regex}
-            />
-            <input type="image" src={SubmitButton} style={{ width: "50px" }} />
-          </form>
-        </label>
-        <label style={{ color: BORDER_PRIMARY_COLOR }}>
-          search
-          <form onSubmit={onSearch}>
-            <input
-              type="text"
-              value={searchFieldVal}
-              onChange={(e: React.ChangeEvent<any>) => {
-                setSearchFieldVal(e.target.value);
-              }}
-              autoFocus={true} // TODO: not working?
-              placeholder={"search query..."}
-            />
-            <input type="submit" value="search!" />
-          </form>
-        </label>
+        <TextInputForm
+          onSubmit={dispatchURL}
+          regex={regex}
+          maxLength={50}
+          placeholder="youtube URL"
+        />
+        <hr style={{ borderColor: BORDER_PRIMARY_COLOR }} />
+        <TextInputForm
+          onSubmit={onSearch}
+          maxLength={800}
+          regex={null}
+          placeholder="search youtube"
+          keepOnSubmit={true}
+        />
       </div>
       <div
         style={{

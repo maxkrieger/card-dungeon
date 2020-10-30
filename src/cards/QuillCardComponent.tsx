@@ -4,7 +4,8 @@ import { AbstractCard, gordonId } from "../DataManager";
 import ReactQuill from "react-quill";
 import { QuillBinding } from "y-quill";
 import "react-quill/dist/quill.snow.css";
-import QuillCardIcon from "../assets/quillcard.png";
+import QuillCardIcon from "../assets/textimages/text_0000.png";
+import QuillLibIcon from "../assets/quilllibicon.png";
 import { PickerProps, CardPickerData } from "../CardPicker";
 
 export interface QuillCard extends AbstractCard {
@@ -21,7 +22,7 @@ export const QuillCardData: CardPickerData = {
       author: dataManager.getMe().id,
       manager: dataManager.getMe().id,
       title: "text",
-      icon: "",
+      icon: QuillLibIcon,
       x: 0,
       y: 0,
       w: 200,
