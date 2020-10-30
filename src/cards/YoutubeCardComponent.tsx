@@ -7,10 +7,11 @@ import YoutubeCardIcon from "../assets/youtubeimages/youtube_0000.png";
 import { PickerProps, CardPickerData } from "../CardPicker";
 import PauseIcon from "../assets/pause.png";
 import PlayIcon from "../assets/play.png";
+import MutedIcon from "../assets/muted.png";
+import UnmutedIcon from "../assets/unmuted.png";
 import { FormattedTime } from "react-player-controls";
 import styled from "styled-components";
 import playhead from "../assets/playhead.png";
-import SubmitButton from "../assets/submit-button.png";
 
 import {
   SliderInput,
@@ -278,6 +279,10 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
     const state = { ...card.state, playing: !card.state.playing };
     dataManager.updateCard({ ...card, state });
   }, [card]);
+  const toggleMuted = useCallback(() => {
+    const state = { ...card.state, muted: !card.state.muted };
+    dataManager.updateCard({ ...card, state });
+  }, [card]);
   useEffect(() => {
     if (playerRef.current && playerRef.current.getCurrentTime() !== null) {
       if (
@@ -382,6 +387,21 @@ const YoutubeCardComponent: React.FC<YoutubeCardProps> = ({
             style={{
               backgroundImage: `url(${
                 card.state.playing ? PauseIcon : PlayIcon
+              })`,
+              backgroundColor: "transparent",
+              width: "30px",
+              height: "24px",
+              backgroundSize: "cover",
+              border: "none",
+              outline: "none",
+            }}
+          />
+          <button
+            onClick={toggleMuted}
+            disabled={!ready}
+            style={{
+              backgroundImage: `url(${
+                card.state.muted ? MutedIcon : UnmutedIcon
               })`,
               backgroundColor: "transparent",
               width: "30px",

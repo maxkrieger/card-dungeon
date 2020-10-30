@@ -29,6 +29,9 @@ const TextInputForm: React.FC<{
   const onSubmitField = useCallback(
     (e: any) => {
       e.preventDefault();
+      if (fieldValue.length <= 0) {
+        return false;
+      }
       if (regex) {
         if (fieldValue.match(regex)) {
           onSubmit(fieldValue);
@@ -44,7 +47,7 @@ const TextInputForm: React.FC<{
       }
       return false;
     },
-    [regex, fieldValue, onSubmit]
+    [regex, fieldValue, onSubmit, keepOnSubmit]
   );
   return (
     <form
@@ -63,6 +66,7 @@ const TextInputForm: React.FC<{
         placeholder={placeholder}
         autoFocus={true}
         pattern={regex || undefined}
+        minLength={1}
       />
       <input
         type="image"
