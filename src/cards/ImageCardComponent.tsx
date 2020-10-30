@@ -8,7 +8,10 @@ import { dataManager } from "../App";
 import TextInputForm from "../TextInputForm";
 import { BORDER_PRIMARY_COLOR } from "../colors";
 import { sample } from "lodash";
-const giphy = require("giphy-api")(process.env.REACT_APP_GIPHY_API_KEY || "");
+const giphy = require("giphy-api")({
+  apiKey: process.env.REACT_APP_GIPHY_API_KEY || "",
+  https: true,
+});
 
 const URIRegex = `(http(s?):).*\.(?:jpe?g|gif|png|svg|webp)`;
 

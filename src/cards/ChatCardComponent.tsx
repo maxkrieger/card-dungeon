@@ -13,7 +13,7 @@ import pet1 from "../assets/pet/pet1.gif";
 import pet2 from "../assets/pet/pet2.gif";
 import pet3 from "../assets/pet/pet3.gif";
 import pet4 from "../assets/pet/pet4.gif";
-import { random } from "lodash";
+import { random, truncate } from "lodash";
 
 const PETS = [pet1, pet2, pet3, pet4];
 
@@ -112,7 +112,7 @@ const ChatCardComponent: React.FC<{ card: ChatCard }> = ({ card }) => {
               }}
             >
               {chat.author === id && <img src={OrbIcon} width={"15px"} />}{" "}
-              {chat.authorName}:
+              {truncate(chat.authorName, { length: 15 })}:
             </span>{" "}
             <span
               style={{

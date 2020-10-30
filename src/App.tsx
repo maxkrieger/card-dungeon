@@ -265,7 +265,7 @@ function App() {
                     backgroundColor: BORDER_SECONDARY_COLOR,
                   }}
                 >
-                  {peer.name}
+                  {truncate(peer.name, { length: 15 })}
                 </div>
               </div>
             ) : null
