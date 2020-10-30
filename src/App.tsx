@@ -9,7 +9,7 @@ import "@reach/dialog/styles.css";
 import YoutubeCardComponent from "./cards/YoutubeCardComponent";
 import AvatarCardComponent from "./cards/AvatarCardComponent";
 import BackpackComponent from "./BackpackComponent";
-import { truncate } from "lodash";
+import { random, truncate } from "lodash";
 import BackpackIcon from "./assets/backpack.png";
 import Logo from "./assets/logo.png";
 import Greeter from "./assets/greeter.gif";
@@ -18,7 +18,7 @@ import GrabbyCursor from "./assets/grabby_cursor.png";
 import DataManager, { action, Card } from "./DataManager";
 import QuillCardComponent from "./cards/QuillCardComponent";
 import Draggable from "react-draggable";
-import CardPicker from "./CardPicker";
+import CardPicker, { CardSpritesheet } from "./CardPicker";
 import { ResizableBox, ResizeCallbackData } from "react-resizable";
 import "react-resizable/css/styles.css";
 import styled from "styled-components";
@@ -28,6 +28,7 @@ import TextInputForm from "./TextInputForm";
 import { BORDER_PRIMARY_COLOR, BORDER_SECONDARY_COLOR } from "./colors";
 import ChatCardComponent from "./cards/ChatCardComponent";
 import CrumpleSfx1 from "./assets/crumple-1.mp3";
+import CardSfx from "./assets/card.mp3";
 import useSound from "use-sound";
 
 export type dispatcher = React.Dispatch<action>;
@@ -67,6 +68,7 @@ function App() {
   }, [dispatch]);
 
   const [playCrumple] = useSound(CrumpleSfx1);
+  const [playCardSound] = useSound(CardSfx, { sprite: CardSpritesheet });
 
   const { cards, ticker, cardLayering } = state;
   const [showBackpack, setShowBackpack] = useState(false);
@@ -106,6 +108,9 @@ function App() {
     },
     [playCrumple, dispatch]
   );
+  const playCard = useCallback(() => {
+    playCardSound({ id: random(1, 5).toString() });
+  }, [playCardSound]);
   if (!state.ready) {
     return (
       <div
@@ -317,6 +322,8 @@ function App() {
               defaultPosition={{ x: 0, y: 0 }}
               key={card.id}
               bounds=".cardBody"
+              onStart={playCard}
+              onStop={playCard}
               onDrag={(e, data) => dataManager.onDrag(data.x, data.y, card.id)}
             >
               <ResizableBox

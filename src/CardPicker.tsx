@@ -29,17 +29,19 @@ const PickerOptions: CardPickerData[] = [
   ChatCardData,
 ];
 
+export const CardSpritesheet = {
+  1: [0, 600],
+  2: [1947, 400],
+  3: [3821, 400],
+  4: [5555, 400],
+  5: [7247, 300],
+} as any;
+
 const CardPicker: React.FC<{ dispatch: dispatcher }> = ({ dispatch }) => {
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
   const [play] = useSound(CardSfx, {
-    sprite: {
-      1: [0, 600],
-      2: [1947, 400],
-      3: [3821, 400],
-      4: [5555, 400],
-      5: [7247, 300],
-    },
+    sprite: CardSpritesheet,
   });
   const closePicker = useCallback(() => {
     setOpen(false);
