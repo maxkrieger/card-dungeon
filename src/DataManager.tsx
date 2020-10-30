@@ -401,6 +401,13 @@ class DataManager {
       }
     }
   };
+  addAllOnScreenToBackpack = () => {
+    this.cardsY.forEach((card: Card) => {
+      if (!card.trashed && this.dispatch !== undefined) {
+        this.dispatch({ kind: "add_to_backpack", card });
+      }
+    });
+  };
   setNameAndConnect = (name: string) => {
     const initialState: UserInfo = {
       name,

@@ -236,7 +236,13 @@ function App() {
           </div>
         </nav>
         <nav>
-          <div style={{ display: "inline", overflow: "hidden" }}>
+          <div
+            style={{
+              display: "inline",
+              overflow: "hidden",
+              marginRight: "5px",
+            }}
+          >
             {state.peers
               .filter(
                 (peer) => peer.currentTab === dataManager.getMe().currentTab

@@ -62,27 +62,48 @@ const BackpackComponent: React.FC<{
             userSelect: "none",
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
+            verticalAlign: "middle",
             color: BORDER_PRIMARY_COLOR,
           }}
         >
-          <img
-            src={BackpackIcon}
-            width={30}
-            style={{ verticalAlign: "middle" }}
-          />
-          <span>backpack</span>
-          <button
-            style={{
-              fontFamily: "Alagard",
-              color: "#FFFFFF",
-              backgroundColor: BORDER_SECONDARY_COLOR,
-              border: `0.8px solid ${BORDER_PRIMARY_COLOR}`,
-              borderRadius: "5px",
-            }}
-            onClick={onClose}
-          >
-            x
-          </button>
+          <div>
+            <img
+              src={BackpackIcon}
+              width={30}
+              style={{ verticalAlign: "middle" }}
+            />
+            <span>backpack</span>
+          </div>
+          <div style={{ verticalAlign: "middle" }}>
+            <button
+              style={{
+                fontFamily: "Alagard",
+                color: "#FFFFFF",
+                backgroundColor: BORDER_SECONDARY_COLOR,
+                border: `0.8px solid ${BORDER_PRIMARY_COLOR}`,
+                borderRadius: "5px",
+              }}
+              autoFocus={false}
+              onClick={() => dataManager.addAllOnScreenToBackpack()}
+            >
+              add from table
+            </button>
+            <button
+              style={{
+                fontFamily: "Alagard",
+                color: "#FFFFFF",
+                backgroundColor: BORDER_SECONDARY_COLOR,
+                border: `0.8px solid ${BORDER_PRIMARY_COLOR}`,
+                borderRadius: "5px",
+                marginLeft: "5px",
+              }}
+              onClick={onClose}
+              autoFocus={true}
+            >
+              x
+            </button>
+          </div>
         </div>
         <div
           style={{
