@@ -11,8 +11,7 @@ import AvatarCardComponent from "./cards/AvatarCardComponent";
 import BackpackComponent from "./BackpackComponent";
 import { truncate } from "lodash";
 import BackpackIcon from "./assets/backpack.png";
-import SubmitButton from "./assets/submit-button.png";
-import OrbIcon from "./assets/orb.png";
+import Logo from "./assets/logo.png";
 import Greeter from "./assets/greeter.gif";
 import Board from "./assets/board.png";
 import GrabbyCursor from "./assets/grabby_cursor.png";
@@ -127,13 +126,25 @@ function App() {
           style={{
             width: "100%",
             flexShrink: 1,
-            flexGrow: 0,
-            overflow: "hidden",
+            flexGrow: 1,
+            position: "relative",
+            backgroundImage: `url(${Greeter})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         >
           <img
-            src={Greeter}
-            style={{ width: "100%", verticalAlign: "bottom" }}
+            src={Logo}
+            style={{
+              width: "50%",
+              position: "absolute",
+              bottom: -100,
+              left: 0,
+              right: 0,
+              marginLeft: "auto",
+              marginRight: "auto",
+              zIndex: 100000,
+            }}
           />
         </div>
         <div

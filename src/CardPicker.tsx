@@ -46,10 +46,10 @@ const CardPicker: React.FC<{ dispatch: dispatcher }> = ({ dispatch }) => {
       <div
         style={{
           position: "absolute",
-          bottom: "10px",
-          left: "10px",
-          width: "98px",
-          height: "144px",
+          bottom: "20px",
+          left: "20px",
+          width: "110px",
+          height: "162px",
           background: `url(${CardsEye})`,
           backgroundSize: "cover",
           cursor: "pointer",
