@@ -395,7 +395,7 @@ class DataManager {
       this.dispatch({ kind: "add_from_backpack", cardID: card.id });
       this.addCard(card);
       if (card.kind === "quill") {
-        this.ydoc.getXmlFragment(card.textID).insert(0, card.initialText);
+        this.ydoc.getText(card.textID).insert(0, card.initialText, {});
       }
     }
   };
@@ -430,9 +430,7 @@ class DataManager {
         if (newCard.kind === "youtube") {
           newCard.state = { ...newCard.state, playing: false };
         } else if (newCard.kind === "quill") {
-          newCard.initialText = this.ydoc
-            .getXmlFragment(newCard.textID)
-            .toArray();
+          newCard.initialText = this.ydoc.getText(newCard.textID).toString();
         }
         if (state.myBackpack.some((card) => card.id === newCard.id)) {
           newBackpack = state.myBackpack.map((card) =>

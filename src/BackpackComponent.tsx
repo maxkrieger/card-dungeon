@@ -159,7 +159,7 @@ const BackpackComponent: React.FC<{
                 <div>
                   {card.title}{" "}
                   {card.kind === "quill" &&
-                    truncate(card.initialText[0].toString(), { length: 10 })}
+                    truncate(card.initialText, { length: 10 })}
                 </div>
               </div>
             </div>
