@@ -7,7 +7,6 @@ import * as awarenessProtocol from "y-protocols/awareness.js";
 import { QuillCard } from "./cards/QuillCardComponent";
 import { debounce, min } from "lodash";
 import { ImageCard } from "./cards/ImageCardComponent";
-import { userInfo } from "os";
 
 interface CursorPosition {
   x: number;
@@ -18,7 +17,7 @@ interface UserInfo {
   name: string;
   id: string;
   peerId: string;
-  cursor: CursorPosition | null;
+  mouse: CursorPosition | null;
   currentTab: number;
   user: { name: string };
 }
@@ -203,8 +202,8 @@ class DataManager {
       });
       changes.updated.forEach((id: number) => {
         const peerState = newStates.get(id) as UserInfo;
-        if (peerState.cursor) {
-          peerState.cursor = this.denormalize(peerState.cursor);
+        if (peerState.mouse) {
+          peerState.mouse = this.denormalize(peerState.mouse);
         }
         this.dispatch!({ kind: "update_peer", peer: peerState });
       });
@@ -293,7 +292,7 @@ class DataManager {
             x: e.clientX,
             y: e.clientY,
           });
-          this.awareness.setLocalStateField("cursor", { x, y });
+          this.awareness.setLocalStateField("mouse", { x, y });
         },
         10,
         { leading: true }
@@ -396,14 +395,14 @@ class DataManager {
       this.dispatch({ kind: "add_from_backpack", cardID: card.id });
       this.addCard(card);
       if (card.kind === "quill") {
-        this.ydoc.getText(card.textID).insert(0, card.initialText, {});
+        this.ydoc.getXmlFragment(card.textID).insert(0, card.initialText);
       }
     }
   };
   setNameAndConnect = (name: string) => {
     const initialState: UserInfo = {
       name,
-      cursor: null,
+      mouse: null,
       id: this.ydoc.clientID.toString(),
       currentTab: 0,
       peerId: "",
@@ -431,7 +430,9 @@ class DataManager {
         if (newCard.kind === "youtube") {
           newCard.state = { ...newCard.state, playing: false };
         } else if (newCard.kind === "quill") {
-          newCard.initialText = this.ydoc.getText(newCard.textID).toString();
+          newCard.initialText = this.ydoc
+            .getXmlFragment(newCard.textID)
+            .toArray();
         }
         if (state.myBackpack.some((card) => card.id === newCard.id)) {
           newBackpack = state.myBackpack.map((card) =>

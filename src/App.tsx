@@ -17,8 +17,6 @@ import Board from "./assets/board.png";
 import GrabbyCursor from "./assets/grabby_cursor.png";
 import DataManager, { action, Card } from "./DataManager";
 import QuillCardComponent from "./cards/QuillCardComponent";
-import QuillCursors from "quill-cursors";
-import { Quill } from "react-quill";
 import Draggable from "react-draggable";
 import CardPicker from "./CardPicker";
 import { ResizableBox, ResizeCallbackData } from "react-resizable";
@@ -29,29 +27,9 @@ import FrameBorder from "./assets/border.png";
 import TextInputForm from "./TextInputForm";
 import { BORDER_PRIMARY_COLOR, BORDER_SECONDARY_COLOR } from "./colors";
 
-Quill.register("modules/cursors", QuillCursors);
-
 export type dispatcher = React.Dispatch<action>;
 
-const NUM_COLS = 12;
-
 export const dataManager = new DataManager();
-
-const NameInput = styled.input`
-  font-family: "Alagard", sans-serif;
-  font-size: 2em;
-  color: ${BORDER_PRIMARY_COLOR};
-  background-color: ${BORDER_SECONDARY_COLOR};
-  border: none;
-  border-radius: 10px;
-  outline: none;
-  padding: 10px 20px 10px 20px;
-  transition: 0.1s;
-  &:focus {
-    transition: 0.1s;
-    box-shadow: 0px 0px 5px 5px rgba(189, 135, 0, 1);
-  }
-`;
 
 export const CardSwitcher = (
   card: Card,
@@ -261,11 +239,11 @@ function App() {
         {state.peers
           .filter((peer) => peer.currentTab === dataManager.getMe().currentTab)
           .map((peer) =>
-            peer.cursor && peer.id !== dataManager.getMe().id ? (
+            peer.mouse && peer.id !== dataManager.getMe().id ? (
               <div
                 style={{
                   position: "absolute",
-                  transform: `translate(${peer.cursor.x}px, ${peer.cursor.y}px)`,
+                  transform: `translate(${peer.mouse.x}px, ${peer.mouse.y}px)`,
                   zIndex: 1000,
                   pointerEvents: "none",
                   display: "flex",

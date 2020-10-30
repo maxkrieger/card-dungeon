@@ -1,17 +1,30 @@
 import React, { useRef, useEffect, useCallback } from "react";
 import { dataManager } from "../App";
 import { AbstractCard, gordonId } from "../DataManager";
-import ReactQuill from "react-quill";
-import { QuillBinding } from "y-quill";
-import "react-quill/dist/quill.snow.css";
+
 import QuillCardIcon from "../assets/textimages/text_0000.png";
 import QuillLibIcon from "../assets/quilllibicon.png";
 import { PickerProps, CardPickerData } from "../CardPicker";
 
+import { schema } from "../pm-schema";
+import { EditorState, Plugin, PluginKey } from "prosemirror-state";
+import {
+  ySyncPlugin,
+  yCursorPlugin,
+  yUndoPlugin,
+  undo,
+  redo,
+} from "y-prosemirror";
+import { EditorView } from "prosemirror-view";
+import { exampleSetup } from "prosemirror-example-setup";
+import { keymap } from "prosemirror-keymap";
+
+import "../prosemirror.css";
+
 export interface QuillCard extends AbstractCard {
   kind: "quill";
   textID: string;
-  initialText: string;
+  initialText: any[];
 }
 
 export const QuillCardData: CardPickerData = {
@@ -20,7 +33,7 @@ export const QuillCardData: CardPickerData = {
     dataManager.addCard({
       kind: "quill",
       textID: gordonId(),
-      initialText: "",
+      initialText: [],
       author: dataManager.getMe().id,
       manager: dataManager.getMe().id,
       title: "text",
@@ -36,14 +49,29 @@ export const QuillCardData: CardPickerData = {
 };
 
 const QuillCardComponent: React.FC<{ card: QuillCard }> = ({ card }) => {
-  const quillRef = useRef<ReactQuill>(null);
+  const viewHost = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (quillRef.current) {
-      const editor = quillRef.current.getEditor();
-      const type = dataManager.ydoc.getText(card.textID);
-      const binding = new QuillBinding(type, editor, dataManager.awareness);
+    if (viewHost.current) {
+      console.log("ye");
+      const type = dataManager.ydoc.getXmlFragment(card.textID);
+      new EditorView(viewHost.current, {
+        state: EditorState.create({
+          schema,
+          plugins: [
+            ySyncPlugin(type),
+            yCursorPlugin(dataManager.awareness),
+            yUndoPlugin(),
+            keymap({
+              "Mod-z": undo,
+              "Mod-y": redo,
+              "Mod-Shift-z": redo,
+            }),
+          ].concat(exampleSetup({ schema })),
+        }),
+      });
     }
-  }, [quillRef, card.textID]);
+  }, [viewHost, card]);
+
   return (
     <div
       style={{
@@ -54,18 +82,7 @@ const QuillCardComponent: React.FC<{ card: QuillCard }> = ({ card }) => {
         backgroundColor: "#FFFFFF",
       }}
     >
-      <ReactQuill
-        theme="snow"
-        ref={quillRef}
-        modules={{
-          // cursors: true,
-          history: {
-            userOnly: true,
-          },
-        }}
-        placeholder={"begin your incantations"}
-        style={{ height: "100%", overflow: "auto" }}
-      />
+      <div ref={viewHost} />
     </div>
   );
 };
