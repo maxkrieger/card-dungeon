@@ -2,7 +2,7 @@ import { AbstractCard, gordonId } from "../DataManager";
 import React, { createRef, useCallback, useEffect, useState } from "react";
 import SubmitButton from "../assets/submit-button.png";
 import { PickerProps, CardPickerData } from "../CardPicker";
-import ImageCardIcon from "../assets/imageimages/image_0000.png";
+import ImageCardIcon from "../assets/card_animated/imagecard.gif";
 import ImageIcon from "../assets/imageicon.png";
 import { dataManager } from "../App";
 import TextInputForm from "../TextInputForm";

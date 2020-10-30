@@ -4,7 +4,7 @@ import { AbstractCard, gordonId } from "../DataManager";
 import ReactQuill from "react-quill";
 import { QuillBinding } from "y-quill";
 import "react-quill/dist/quill.bubble.css";
-import QuillCardIcon from "../assets/textimages/text_0000.png";
+import QuillCardIcon from "../assets/card_animated/textcard.gif";
 import QuillLibIcon from "../assets/quilllibicon.png";
 import { PickerProps, CardPickerData } from "../CardPicker";
 import QuillCursors from "quill-cursors";

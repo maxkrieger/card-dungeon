@@ -8,6 +8,7 @@ import { QuillCardData } from "./cards/QuillCardComponent";
 import { YoutubeCardData } from "./cards/YoutubeCardComponent";
 import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
 import { ImageCardData } from "./cards/ImageCardComponent";
+import { ChatCardData } from "./cards/ChatCardComponent";
 
 export type PickerProps = { dispatch: dispatcher; onClose(): void };
 
@@ -22,6 +23,7 @@ const PickerOptions: CardPickerData[] = [
   QuillCardData,
   YoutubeCardData,
   ImageCardData,
+  ChatCardData,
 ];
 
 const CardPicker: React.FC<{ dispatch: dispatcher }> = ({ dispatch }) => {
@@ -83,8 +85,9 @@ const CardPicker: React.FC<{ dispatch: dispatcher }> = ({ dispatch }) => {
                     width: "125px",
                     height: "187.5px",
                     margin: "1em",
-                    background: `url(${icon})`,
+                    backgroundImage: `url(${icon})`,
                     backgroundSize: "cover",
+                    borderRadius: "10px",
                     display: "inline-block",
                   }}
                   onClick={() => {

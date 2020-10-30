@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useCallback } from "react";
 import { dataManager, dispatcher } from "../App";
 import { CardPickerData, PickerProps } from "../CardPicker";
 import { AbstractCard, action } from "../DataManager";
-import MeCard from "../assets/mirrorimages/camera_0000.png";
+import MeCard from "../assets/card_animated/cameracard.gif";
 import { BORDER_PRIMARY_COLOR } from "../colors";
 
 export interface AvatarCard extends AbstractCard {

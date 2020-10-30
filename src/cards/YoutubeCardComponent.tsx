@@ -3,7 +3,7 @@ import ReactPlayer from "react-player";
 import { AbstractCard, action, gordonId } from "../DataManager";
 import YoutubeIcon from "../assets/youtube.png";
 import { dataManager } from "../App";
-import YoutubeCardIcon from "../assets/youtubeimages/youtube_0000.png";
+import YoutubeCardIcon from "../assets/card_animated/youtubecard.gif";
 import { PickerProps, CardPickerData } from "../CardPicker";
 import PauseIcon from "../assets/pause.png";
 import PlayIcon from "../assets/play.png";

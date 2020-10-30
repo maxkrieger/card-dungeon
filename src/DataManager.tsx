@@ -7,6 +7,7 @@ import * as awarenessProtocol from "y-protocols/awareness.js";
 import { QuillCard } from "./cards/QuillCardComponent";
 import { debounce, min } from "lodash";
 import { ImageCard } from "./cards/ImageCardComponent";
+import { ChatCard } from "./cards/ChatCardComponent";
 
 interface CursorPosition {
   x: number;
@@ -34,7 +35,7 @@ export interface AbstractCard {
   h: number;
 }
 
-export type Card = YoutubeCard | AvatarCard | QuillCard | ImageCard;
+export type Card = YoutubeCard | AvatarCard | QuillCard | ImageCard | ChatCard;
 
 interface IncrementTicker {
   kind: "increment_ticker";

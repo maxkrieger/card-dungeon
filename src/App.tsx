@@ -26,6 +26,7 @@ import ImageCardComponent from "./cards/ImageCardComponent";
 import FrameBorder from "./assets/border.png";
 import TextInputForm from "./TextInputForm";
 import { BORDER_PRIMARY_COLOR, BORDER_SECONDARY_COLOR } from "./colors";
+import ChatCardComponent from "./cards/ChatCardComponent";
 
 export type dispatcher = React.Dispatch<action>;
 
@@ -45,6 +46,8 @@ export const CardSwitcher = (
       return <QuillCardComponent card={card} />;
     case "image":
       return <ImageCardComponent card={card} />;
+    case "chat":
+      return <ChatCardComponent card={card} />;
   }
 };
 
