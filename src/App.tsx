@@ -27,6 +27,8 @@ import FrameBorder from "./assets/border.png";
 import TextInputForm from "./TextInputForm";
 import { BORDER_PRIMARY_COLOR, BORDER_SECONDARY_COLOR } from "./colors";
 import ChatCardComponent from "./cards/ChatCardComponent";
+import CrumpleSfx1 from "./assets/crumple-1.mp3";
+import useSound from "use-sound";
 
 export type dispatcher = React.Dispatch<action>;
 
@@ -64,6 +66,8 @@ function App() {
     }
   }, [dispatch]);
 
+  const [playCrumple] = useSound(CrumpleSfx1);
+
   const { cards, ticker, cardLayering } = state;
   const [showBackpack, setShowBackpack] = useState(false);
 
@@ -83,14 +87,25 @@ function App() {
     },
     []
   );
-  const remove = useCallback((card: Card) => {
-    const confirmed = window.confirm(
-      `are you sure you want to delete "${card.title}"?`
-    );
-    if (confirmed) {
-      dataManager.updateCard({ ...card, trashed: true });
-    }
-  }, []);
+  const remove = useCallback(
+    (card: Card) => {
+      const confirmed = window.confirm(
+        `are you sure you want to delete "${card.title}"?`
+      );
+      if (confirmed) {
+        dataManager.updateCard({ ...card, trashed: true });
+        playCrumple();
+      }
+    },
+    [playCrumple]
+  );
+  const addToBackpack = useCallback(
+    (card: Card) => {
+      dispatch({ kind: "add_to_backpack", card });
+      playCrumple();
+    },
+    [playCrumple, dispatch]
+  );
   if (!state.ready) {
     return (
       <div
@@ -364,9 +379,7 @@ function App() {
                     <div>
                       {!(card.kind === "avatar") && (
                         <button
-                          onClick={() =>
-                            dispatch({ kind: "add_to_backpack", card })
-                          }
+                          onClick={() => addToBackpack(card)}
                           style={{
                             border: "none",
                             background: "none",

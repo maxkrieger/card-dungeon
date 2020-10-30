@@ -9,6 +9,9 @@ import { YoutubeCardData } from "./cards/YoutubeCardComponent";
 import { Dialog, DialogOverlay, DialogContent } from "@reach/dialog";
 import { ImageCardData } from "./cards/ImageCardComponent";
 import { ChatCardData } from "./cards/ChatCardComponent";
+import useSound from "use-sound";
+import CardSfx from "./assets/card.mp3";
+import { random } from "lodash";
 
 export type PickerProps = { dispatch: dispatcher; onClose(): void };
 
@@ -29,19 +32,32 @@ const PickerOptions: CardPickerData[] = [
 const CardPicker: React.FC<{ dispatch: dispatcher }> = ({ dispatch }) => {
   const [open, setOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(-1);
+  const [play] = useSound(CardSfx, {
+    sprite: {
+      1: [0, 600],
+      2: [1947, 400],
+      3: [3821, 400],
+      4: [5555, 400],
+      5: [7247, 300],
+    },
+  });
   const closePicker = useCallback(() => {
     setOpen(false);
     setSelectedCard(-1);
-  }, []);
-  const onPicked = useCallback((key: number) => {
-    const option = PickerOptions[key];
-    if (option.picker) {
-      setSelectedCard(key);
-    } else if (option.onPick) {
-      option.onPick();
-      setOpen(false);
-    }
-  }, []);
+    play({ id: random(1, 5).toString() });
+  }, [play]);
+  const onPicked = useCallback(
+    (key: number) => {
+      const option = PickerOptions[key];
+      if (option.picker) {
+        setSelectedCard(key);
+      } else if (option.onPick) {
+        option.onPick();
+        closePicker();
+      }
+    },
+    [closePicker]
+  );
 
   return (
     <div style={{ zIndex: 10000 }}>
