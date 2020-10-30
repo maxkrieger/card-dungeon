@@ -15,6 +15,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-resizable": "^1.7.2",
     "giphy-api": "^2.0.1",
+    "howler": "^2.2.1",
     "lodash": "^4.17.20",
     "quill-cursors": "^2.2.1",
     "react": "^16.13.1",
@@ -59,6 +60,7 @@
   },
   "devDependencies": {
     "@types/giphy-api": "^2.0.2",
+    "@types/howler": "^2.2.1",
     "@types/lodash": "^4.14.161",
     "@types/react-grid-layout": "^1.1.0",
     "@types/simple-peer": "^9.6.0",

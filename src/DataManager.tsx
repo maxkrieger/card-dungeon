@@ -5,9 +5,13 @@ import { YoutubeCard } from "./cards/YoutubeCardComponent";
 import EyeIcon from "./assets/eye.png";
 import * as awarenessProtocol from "y-protocols/awareness.js";
 import { QuillCard } from "./cards/QuillCardComponent";
-import { debounce, min } from "lodash";
+import { debounce, min, random } from "lodash";
 import { ImageCard } from "./cards/ImageCardComponent";
 import { ChatCard } from "./cards/ChatCardComponent";
+import GlassFx1 from "./assets/glass-1.mp3";
+import GlassFx2 from "./assets/glass-2.mp3";
+import GlassFx3 from "./assets/glass-3.mp3";
+import { Howl } from "howler";
 
 interface CursorPosition {
   x: number;
@@ -131,11 +135,17 @@ class DataManager {
   myAvatarID?: string;
   awareness: awarenessProtocol.Awareness;
   peers: UserInfo[] = [];
+  knocks: any[];
   constructor() {
     this.ydoc = new Y.Doc();
     this.awareness = new awarenessProtocol.Awareness(this.ydoc);
 
     this.setupWatchers();
+    this.knocks = [
+      new Howl({ src: [GlassFx1] }),
+      new Howl({ src: [GlassFx2] }),
+      new Howl({ src: [GlassFx3] }),
+    ];
   }
   connect = async () => {
     const matched = window.location.hash.match(/#!([a-z0-9]+)-([a-z0-9]+)/);
@@ -185,6 +195,14 @@ class DataManager {
         });
       }
     });
+    const knock = this.ydoc.getArray("knock");
+    knock.observe((e, arr) => {
+      if (knock.length > 0) {
+        const last = knock.get(knock.length - 1) as number;
+        this.knocks[last].play();
+      }
+    });
+
     this.awareness.on("update", (changes: any, peer: any) => {
       const newStates = this.awareness.getStates();
       if (peer === "local") {
@@ -203,6 +221,22 @@ class DataManager {
         this.dispatch!({ kind: "update_peer", peer: peerState });
       });
     });
+    setTimeout(() => {
+      if (this.dispatch) {
+        this.dispatch({
+          kind: "set_card_layering",
+          layering: this.cardLayeringY.toArray(),
+        });
+        this.dispatch({
+          kind: "set_cards",
+          cards: (Array.from(this.cardsY.values()) as Card[]).filter(
+            (card) => !card.trashed
+          ),
+        });
+      } else {
+        console.log("dispatch unavailable");
+      }
+    }, 100);
   };
   setDispatch(dispatch: React.Dispatch<action>) {
     this.dispatch = dispatch;
@@ -213,6 +247,12 @@ class DataManager {
     }
   };
   getMe = (): UserInfo => this.awareness.getLocalState() as UserInfo;
+  knockTable = () => {
+    if (this.ydoc.getArray("knock").length > 0) {
+      this.ydoc.getArray("knock").delete(0, 1);
+    }
+    this.ydoc.getArray("knock").push([random(0, 2)]);
+  };
   addMyAvatar = async () => {
     const { peerId, id, name } = this.getMe();
     const myExistingAvatars = Array.from(this.cardsY.values()).filter(
