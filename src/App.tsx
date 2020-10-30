@@ -307,7 +307,7 @@ function App() {
                 minConstraints={[50, 50]}
                 maxConstraints={[1000, 1000]}
                 onResize={(e, data) => onResize(e, data, card)}
-                lockAspectRatio={true}
+                lockAspectRatio={card.kind !== "quill"}
                 // @ts-ignore
                 style={{
                   zIndex: (cardLayering.indexOf(card.id) + 1) * 10,

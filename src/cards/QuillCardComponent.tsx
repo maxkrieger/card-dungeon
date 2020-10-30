@@ -9,6 +9,7 @@ import QuillLibIcon from "../assets/quilllibicon.png";
 import { PickerProps, CardPickerData } from "../CardPicker";
 import QuillCursors from "quill-cursors";
 import { Quill } from "react-quill";
+import TextBorder from "../assets/textborder.png";
 
 Quill.register("modules/cursors", QuillCursors);
 
@@ -55,7 +56,8 @@ const QuillCardComponent: React.FC<{ card: QuillCard }> = ({ card }) => {
         overflow: "hidden",
         flexGrow: 1,
         position: "relative",
-        backgroundColor: "#FFFFFF",
+        backgroundImage: `url(${TextBorder})`,
+        backgroundRepeat: "repeat",
       }}
     >
       <ReactQuill
