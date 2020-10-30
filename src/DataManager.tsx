@@ -369,7 +369,9 @@ class DataManager {
   updateCard = (card: Card) => {
     this.cardsY.set(card.id, card);
     const idx = this.cardLayeringY.toArray().indexOf(card.id);
-    if (idx !== this.cardLayeringY.length - 1) {
+    if (card.trashed && idx > -1) {
+      this.cardLayeringY.delete(idx, 1);
+    } else if (idx !== this.cardLayeringY.length - 1) {
       this.cardLayeringY.push([card.id]);
       this.cardLayeringY.delete(idx, 1);
     }
@@ -392,7 +394,7 @@ class DataManager {
   addFromBackpack = (card: Card) => {
     if (this.dispatch) {
       this.dispatch({ kind: "add_from_backpack", cardID: card.id });
-      this.cardsY.set(card.id, card);
+      this.addCard(card);
       if (card.kind === "quill") {
         this.ydoc.getText(card.textID).insert(0, card.initialText, {});
       }
