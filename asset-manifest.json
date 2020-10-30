@@ -1,22 +1,19 @@
 {
   "files": {
     "main.css": "/card-dungeon/static/css/main.26267dc1.chunk.css",
-    "main.js": "/card-dungeon/static/js/main.30c59125.chunk.js",
-    "main.js.map": "/card-dungeon/static/js/main.30c59125.chunk.js.map",
-    "runtime-main.js": "/card-dungeon/static/js/runtime-main.24ab1ebf.js",
-    "runtime-main.js.map": "/card-dungeon/static/js/runtime-main.24ab1ebf.js.map",
+    "main.js": "/card-dungeon/static/js/main.a0c3a2ed.chunk.js",
+    "main.js.map": "/card-dungeon/static/js/main.a0c3a2ed.chunk.js.map",
+    "runtime-main.js": "/card-dungeon/static/js/runtime-main.b40dd721.js",
+    "runtime-main.js.map": "/card-dungeon/static/js/runtime-main.b40dd721.js.map",
     "static/css/2.f7ea424f.chunk.css": "/card-dungeon/static/css/2.f7ea424f.chunk.css",
-    "static/js/2.b3411c6e.chunk.js": "/card-dungeon/static/js/2.b3411c6e.chunk.js",
-    "static/js/2.b3411c6e.chunk.js.map": "/card-dungeon/static/js/2.b3411c6e.chunk.js.map",
-    "static/js/3.280e843f.chunk.js": "/card-dungeon/static/js/3.280e843f.chunk.js",
-    "static/js/3.280e843f.chunk.js.map": "/card-dungeon/static/js/3.280e843f.chunk.js.map",
+    "static/js/2.8749d601.chunk.js": "/card-dungeon/static/js/2.8749d601.chunk.js",
+    "static/js/2.8749d601.chunk.js.map": "/card-dungeon/static/js/2.8749d601.chunk.js.map",
     "index.html": "/card-dungeon/index.html",
-    "precache-manifest.05e71b2f63703cee6a2d5d4f4af8eacb.js": "/card-dungeon/precache-manifest.05e71b2f63703cee6a2d5d4f4af8eacb.js",
+    "precache-manifest.b2e8679e69e444c68bd0e1e02b8a9724.js": "/card-dungeon/precache-manifest.b2e8679e69e444c68bd0e1e02b8a9724.js",
     "service-worker.js": "/card-dungeon/service-worker.js",
     "static/css/2.f7ea424f.chunk.css.map": "/card-dungeon/static/css/2.f7ea424f.chunk.css.map",
     "static/css/main.26267dc1.chunk.css.map": "/card-dungeon/static/css/main.26267dc1.chunk.css.map",
-    "static/js/2.b3411c6e.chunk.js.LICENSE.txt": "/card-dungeon/static/js/2.b3411c6e.chunk.js.LICENSE.txt",
-    "static/js/3.280e843f.chunk.js.LICENSE.txt": "/card-dungeon/static/js/3.280e843f.chunk.js.LICENSE.txt",
+    "static/js/2.8749d601.chunk.js.LICENSE.txt": "/card-dungeon/static/js/2.8749d601.chunk.js.LICENSE.txt",
     "static/media/index.css": "/card-dungeon/static/media/alagard.6faad178.ttf",
     "static/media/board.png": "/card-dungeon/static/media/board.59d6e030.png",
     "static/media/cameracard.gif": "/card-dungeon/static/media/cameracard.47326e57.gif",
@@ -34,10 +31,10 @@
     "static/media/youtubecard.gif": "/card-dungeon/static/media/youtubecard.791cb0fd.gif"
   },
   "entrypoints": [
-    "static/js/runtime-main.24ab1ebf.js",
+    "static/js/runtime-main.b40dd721.js",
     "static/css/2.f7ea424f.chunk.css",
-    "static/js/2.b3411c6e.chunk.js",
+    "static/js/2.8749d601.chunk.js",
     "static/css/main.26267dc1.chunk.css",
-    "static/js/main.30c59125.chunk.js"
+    "static/js/main.a0c3a2ed.chunk.js"
   ]
 }
