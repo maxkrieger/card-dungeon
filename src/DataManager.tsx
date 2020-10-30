@@ -381,6 +381,7 @@ class DataManager {
       card.kind === "avatar"
     ) {
       if (this.provider && this.provider.room) {
+        console.log("removing stream");
         // this.provider.room.webrtcConns.forEach((conn) => {
         //   conn.peer.removeStream(this.myStream);
         // });

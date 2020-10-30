@@ -13,9 +13,32 @@ import pet1 from "../assets/pet/pet1.gif";
 import pet2 from "../assets/pet/pet2.gif";
 import pet3 from "../assets/pet/pet3.gif";
 import pet4 from "../assets/pet/pet4.gif";
+import grey_right from "../assets/pet/dog-grey-right.gif";
+import grey_left from "../assets/pet/dog-grey-left.gif";
+import grey_down from "../assets/pet/dog-grey-down.gif";
+import black_right from "../assets/pet/dog-black-right.gif";
+import black_left from "../assets/pet/dog-black-left.gif";
+import black_down from "../assets/pet/dog-black-down.gif";
+import yellow_right from "../assets/pet/dog-yellow-right.gif";
+import yellow_left from "../assets/pet/dog-yellow-left.gif";
+import yellow_down from "../assets/pet/dog-yellow-down.gif";
 import { random, truncate } from "lodash";
 
-const PETS = [pet1, pet2, pet3, pet4];
+const PETS = [
+  pet1,
+  pet2,
+  pet3,
+  pet4,
+  grey_right,
+  grey_left,
+  grey_down,
+  black_right,
+  black_left,
+  black_down,
+  yellow_right,
+  yellow_left,
+  yellow_down,
+];
 
 interface ChatMessage {
   author: string;

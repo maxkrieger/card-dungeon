@@ -22,13 +22,14 @@ export interface QuillCard extends AbstractCard {
 export const QuillCardData: CardPickerData = {
   icon: QuillCardIcon,
   onPick: () => {
+    const { id, name } = dataManager.getMe();
     dataManager.addCard({
       kind: "quill",
       textID: gordonId(),
       initialText: "",
-      author: dataManager.getMe().id,
-      manager: dataManager.getMe().id,
-      title: "text",
+      author: id,
+      manager: id,
+      title: `${name}'s text`,
       icon: QuillLibIcon,
       x: 0,
       y: 0,
