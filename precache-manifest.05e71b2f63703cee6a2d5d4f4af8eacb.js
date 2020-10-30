@@ -1,39 +1,39 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "6ee3b33e3202728299c9d33518bf6737",
+    "revision": "c991efc1a32265e1f46887b337940c3c",
     "url": "/card-dungeon/index.html"
   },
   {
-    "revision": "466fab4a5f8c36a21e65",
+    "revision": "1b36c284c58d8abac411",
     "url": "/card-dungeon/static/css/2.f7ea424f.chunk.css"
   },
   {
-    "revision": "db8108c13c94ae0f08fd",
+    "revision": "7afa2b0f3adaf484807e",
     "url": "/card-dungeon/static/css/main.26267dc1.chunk.css"
   },
   {
-    "revision": "466fab4a5f8c36a21e65",
-    "url": "/card-dungeon/static/js/2.26fdd827.chunk.js"
+    "revision": "1b36c284c58d8abac411",
+    "url": "/card-dungeon/static/js/2.b3411c6e.chunk.js"
   },
   {
     "revision": "24fef0872d983b2ae58d3321e8a780bb",
-    "url": "/card-dungeon/static/js/2.26fdd827.chunk.js.LICENSE.txt"
+    "url": "/card-dungeon/static/js/2.b3411c6e.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "cfc626af6aef5814e0b1",
-    "url": "/card-dungeon/static/js/3.d6e2b7bd.chunk.js"
+    "revision": "7ff03579412c33f063be",
+    "url": "/card-dungeon/static/js/3.280e843f.chunk.js"
   },
   {
     "revision": "196f31064c641ef86b22f34244b7ad03",
-    "url": "/card-dungeon/static/js/3.d6e2b7bd.chunk.js.LICENSE.txt"
+    "url": "/card-dungeon/static/js/3.280e843f.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "db8108c13c94ae0f08fd",
-    "url": "/card-dungeon/static/js/main.4f8d50e2.chunk.js"
+    "revision": "7afa2b0f3adaf484807e",
+    "url": "/card-dungeon/static/js/main.30c59125.chunk.js"
   },
   {
-    "revision": "f7843496269a70f7ed46",
-    "url": "/card-dungeon/static/js/runtime-main.2c28b516.js"
+    "revision": "3bfeaa287ebc25122c17",
+    "url": "/card-dungeon/static/js/runtime-main.24ab1ebf.js"
   },
   {
     "revision": "6faad1789bcbd321a458c14d0735d976",
@@ -62,6 +62,18 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "b804ebb4c24be3e0573a1537a6549e20",
     "url": "/card-dungeon/static/media/crumple-1.b804ebb4.mp3"
+  },
+  {
+    "revision": "64d3428a6374ccb395e7e5a34c9d4253",
+    "url": "/card-dungeon/static/media/glass-1.64d3428a.mp3"
+  },
+  {
+    "revision": "18b5399aebcf32f59a97a92e59715226",
+    "url": "/card-dungeon/static/media/glass-2.18b5399a.mp3"
+  },
+  {
+    "revision": "36d68b5bb3b607476b699c6e9a2af9ca",
+    "url": "/card-dungeon/static/media/glass-3.36d68b5b.mp3"
   },
   {
     "revision": "346513a8fe448e3cee7cd29adf001a06",
