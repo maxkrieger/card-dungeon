@@ -1,31 +1,39 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "0faf94f12e27d19497e4a85e06321ee9",
+    "revision": "398090e93d9355f295a4b09a542b8735",
     "url": "/card-dungeon/index.html"
   },
   {
-    "revision": "ec93e5d8f20aab7efdf2",
+    "revision": "d73c29d01d7766ed7f70",
     "url": "/card-dungeon/static/css/2.f7ea424f.chunk.css"
   },
   {
-    "revision": "ef420dd421b1d83c29e9",
+    "revision": "628b8d352f7f6355886f",
     "url": "/card-dungeon/static/css/main.26267dc1.chunk.css"
   },
   {
-    "revision": "ec93e5d8f20aab7efdf2",
-    "url": "/card-dungeon/static/js/2.55daa12c.chunk.js"
+    "revision": "d73c29d01d7766ed7f70",
+    "url": "/card-dungeon/static/js/2.2b5c59d5.chunk.js"
   },
   {
     "revision": "24fef0872d983b2ae58d3321e8a780bb",
-    "url": "/card-dungeon/static/js/2.55daa12c.chunk.js.LICENSE.txt"
+    "url": "/card-dungeon/static/js/2.2b5c59d5.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "ef420dd421b1d83c29e9",
-    "url": "/card-dungeon/static/js/main.1d248afb.chunk.js"
+    "revision": "e38364cf96eda60858e8",
+    "url": "/card-dungeon/static/js/3.cc31cc44.chunk.js"
   },
   {
-    "revision": "5c7743d6d2f856949ca9",
-    "url": "/card-dungeon/static/js/runtime-main.b40dd721.js"
+    "revision": "196f31064c641ef86b22f34244b7ad03",
+    "url": "/card-dungeon/static/js/3.cc31cc44.chunk.js.LICENSE.txt"
+  },
+  {
+    "revision": "628b8d352f7f6355886f",
+    "url": "/card-dungeon/static/js/main.0aae2f0c.chunk.js"
+  },
+  {
+    "revision": "1ab9ec67d92839dcce56",
+    "url": "/card-dungeon/static/js/runtime-main.d1ee77d3.js"
   },
   {
     "revision": "6faad1789bcbd321a458c14d0735d976",
@@ -40,12 +48,20 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/card-dungeon/static/media/cameracard.47326e57.gif"
   },
   {
+    "revision": "58170c99f7809d3a3bf07f3857ed3a3b",
+    "url": "/card-dungeon/static/media/card.58170c99.mp3"
+  },
+  {
     "revision": "4fe30d05a15dae00681bba4628546235",
     "url": "/card-dungeon/static/media/cardseye.4fe30d05.png"
   },
   {
     "revision": "56227d9dd71f55c8d90b437a44b1d8ba",
     "url": "/card-dungeon/static/media/chatcard.56227d9d.gif"
+  },
+  {
+    "revision": "b804ebb4c24be3e0573a1537a6549e20",
+    "url": "/card-dungeon/static/media/crumple-1.b804ebb4.mp3"
   },
   {
     "revision": "346513a8fe448e3cee7cd29adf001a06",
