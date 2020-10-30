@@ -1,34 +1,35 @@
 {
   "files": {
     "main.css": "/card-dungeon/static/css/main.26267dc1.chunk.css",
-    "main.js": "/card-dungeon/static/js/main.8197624a.chunk.js",
-    "main.js.map": "/card-dungeon/static/js/main.8197624a.chunk.js.map",
+    "main.js": "/card-dungeon/static/js/main.a134f96f.chunk.js",
+    "main.js.map": "/card-dungeon/static/js/main.a134f96f.chunk.js.map",
     "runtime-main.js": "/card-dungeon/static/js/runtime-main.b40dd721.js",
     "runtime-main.js.map": "/card-dungeon/static/js/runtime-main.b40dd721.js.map",
     "static/css/2.f7ea424f.chunk.css": "/card-dungeon/static/css/2.f7ea424f.chunk.css",
-    "static/js/2.f2553acc.chunk.js": "/card-dungeon/static/js/2.f2553acc.chunk.js",
-    "static/js/2.f2553acc.chunk.js.map": "/card-dungeon/static/js/2.f2553acc.chunk.js.map",
+    "static/js/2.409a6bc2.chunk.js": "/card-dungeon/static/js/2.409a6bc2.chunk.js",
+    "static/js/2.409a6bc2.chunk.js.map": "/card-dungeon/static/js/2.409a6bc2.chunk.js.map",
     "index.html": "/card-dungeon/index.html",
-    "precache-manifest.5027e310944d39b2ccf7be854f5bfc83.js": "/card-dungeon/precache-manifest.5027e310944d39b2ccf7be854f5bfc83.js",
+    "precache-manifest.54c04d3ed65718e2df8848f059ad5993.js": "/card-dungeon/precache-manifest.54c04d3ed65718e2df8848f059ad5993.js",
     "service-worker.js": "/card-dungeon/service-worker.js",
     "static/css/2.f7ea424f.chunk.css.map": "/card-dungeon/static/css/2.f7ea424f.chunk.css.map",
     "static/css/main.26267dc1.chunk.css.map": "/card-dungeon/static/css/main.26267dc1.chunk.css.map",
-    "static/js/2.f2553acc.chunk.js.LICENSE.txt": "/card-dungeon/static/js/2.f2553acc.chunk.js.LICENSE.txt",
+    "static/js/2.409a6bc2.chunk.js.LICENSE.txt": "/card-dungeon/static/js/2.409a6bc2.chunk.js.LICENSE.txt",
     "static/media/index.css": "/card-dungeon/static/media/alagard.6faad178.ttf",
     "static/media/board.png": "/card-dungeon/static/media/board.59d6e030.png",
-    "static/media/camera_0000.png": "/card-dungeon/static/media/camera_0000.116e2294.png",
+    "static/media/cameracard.gif": "/card-dungeon/static/media/cameracard.47326e57.gif",
     "static/media/cardseye.png": "/card-dungeon/static/media/cardseye.4fe30d05.png",
+    "static/media/chatcard.gif": "/card-dungeon/static/media/chatcard.56227d9d.gif",
     "static/media/greeter.gif": "/card-dungeon/static/media/greeter.346513a8.gif",
-    "static/media/image_0000.png": "/card-dungeon/static/media/image_0000.ef37e9e7.png",
+    "static/media/imagecard.gif": "/card-dungeon/static/media/imagecard.a390ad55.gif",
     "static/media/logo.png": "/card-dungeon/static/media/logo.09fd484c.png",
-    "static/media/text_0000.png": "/card-dungeon/static/media/text_0000.c2ab39f5.png",
-    "static/media/youtube_0000.png": "/card-dungeon/static/media/youtube_0000.2f8b9717.png"
+    "static/media/textcard.gif": "/card-dungeon/static/media/textcard.9f491e8d.gif",
+    "static/media/youtubecard.gif": "/card-dungeon/static/media/youtubecard.791cb0fd.gif"
   },
   "entrypoints": [
     "static/js/runtime-main.b40dd721.js",
     "static/css/2.f7ea424f.chunk.css",
-    "static/js/2.f2553acc.chunk.js",
+    "static/js/2.409a6bc2.chunk.js",
     "static/css/main.26267dc1.chunk.css",
-    "static/js/main.8197624a.chunk.js"
+    "static/js/main.a134f96f.chunk.js"
   ]
 }

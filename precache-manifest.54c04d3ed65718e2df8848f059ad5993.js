@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "04b2f33e8fb1f7fa7c8be80fc519036e",
+    "revision": "29756365c154af83de94b56139275cbb",
     "url": "/card-dungeon/index.html"
   },
   {
-    "revision": "d9266b9887d4fa25886e",
+    "revision": "43821bf322e00a74f244",
     "url": "/card-dungeon/static/css/2.f7ea424f.chunk.css"
   },
   {
-    "revision": "996f90d4af587f8aa57c",
+    "revision": "928b2997b091bd2800eb",
     "url": "/card-dungeon/static/css/main.26267dc1.chunk.css"
   },
   {
-    "revision": "d9266b9887d4fa25886e",
-    "url": "/card-dungeon/static/js/2.f2553acc.chunk.js"
+    "revision": "43821bf322e00a74f244",
+    "url": "/card-dungeon/static/js/2.409a6bc2.chunk.js"
   },
   {
     "revision": "24fef0872d983b2ae58d3321e8a780bb",
-    "url": "/card-dungeon/static/js/2.f2553acc.chunk.js.LICENSE.txt"
+    "url": "/card-dungeon/static/js/2.409a6bc2.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "996f90d4af587f8aa57c",
-    "url": "/card-dungeon/static/js/main.8197624a.chunk.js"
+    "revision": "928b2997b091bd2800eb",
+    "url": "/card-dungeon/static/js/main.a134f96f.chunk.js"
   },
   {
     "revision": "5c7743d6d2f856949ca9",
@@ -36,31 +36,35 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/card-dungeon/static/media/board.59d6e030.png"
   },
   {
-    "revision": "116e229427fe677e88b1349156c1fb81",
-    "url": "/card-dungeon/static/media/camera_0000.116e2294.png"
+    "revision": "47326e57c249aa68afdbd257baa4932f",
+    "url": "/card-dungeon/static/media/cameracard.47326e57.gif"
   },
   {
     "revision": "4fe30d05a15dae00681bba4628546235",
     "url": "/card-dungeon/static/media/cardseye.4fe30d05.png"
   },
   {
+    "revision": "56227d9dd71f55c8d90b437a44b1d8ba",
+    "url": "/card-dungeon/static/media/chatcard.56227d9d.gif"
+  },
+  {
     "revision": "346513a8fe448e3cee7cd29adf001a06",
     "url": "/card-dungeon/static/media/greeter.346513a8.gif"
   },
   {
-    "revision": "ef37e9e78f1fb4286503e1f521ee10bb",
-    "url": "/card-dungeon/static/media/image_0000.ef37e9e7.png"
+    "revision": "a390ad5554c81ad6032762fd20ece1cb",
+    "url": "/card-dungeon/static/media/imagecard.a390ad55.gif"
   },
   {
     "revision": "09fd484c7dee703ca9bbe907924e94bf",
     "url": "/card-dungeon/static/media/logo.09fd484c.png"
   },
   {
-    "revision": "c2ab39f5a61458a3c3144d6fd3be8019",
-    "url": "/card-dungeon/static/media/text_0000.c2ab39f5.png"
+    "revision": "9f491e8deb31aa26dcd5b516b68e178e",
+    "url": "/card-dungeon/static/media/textcard.9f491e8d.gif"
   },
   {
-    "revision": "2f8b9717db3f68f1359d491fc7f7cc79",
-    "url": "/card-dungeon/static/media/youtube_0000.2f8b9717.png"
+    "revision": "791cb0fdbf7659156ecb4c8ff07782a0",
+    "url": "/card-dungeon/static/media/youtubecard.791cb0fd.gif"
   }
 ]);
