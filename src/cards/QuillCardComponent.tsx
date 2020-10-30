@@ -3,7 +3,7 @@ import { dataManager } from "../App";
 import { AbstractCard, gordonId } from "../DataManager";
 import ReactQuill from "react-quill";
 import { QuillBinding } from "y-quill";
-import "react-quill/dist/quill.snow.css";
+import "react-quill/dist/quill.bubble.css";
 import QuillCardIcon from "../assets/textimages/text_0000.png";
 import QuillLibIcon from "../assets/quilllibicon.png";
 import { PickerProps, CardPickerData } from "../CardPicker";
@@ -59,7 +59,7 @@ const QuillCardComponent: React.FC<{ card: QuillCard }> = ({ card }) => {
       }}
     >
       <ReactQuill
-        theme="snow"
+        theme={"bubble"}
         ref={quillRef}
         modules={{
           cursors: true,
@@ -68,7 +68,7 @@ const QuillCardComponent: React.FC<{ card: QuillCard }> = ({ card }) => {
           },
         }}
         placeholder={"begin your incantations"}
-        style={{ height: "100%", overflow: "auto" }}
+        style={{ height: "100%", overflow: "hidden" }}
       />
     </div>
   );

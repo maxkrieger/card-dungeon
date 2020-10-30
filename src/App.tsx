@@ -396,7 +396,7 @@ function App() {
                       </button>
                     </div>
                   </div>
-                  <div style={{ flexGrow: 1 }}>
+                  <div style={{ flexGrow: 1, overflow: "hidden" }}>
                     {CardSwitcher(card, ticker, dispatch)}
                   </div>
                 </div>
