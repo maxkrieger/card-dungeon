@@ -104,7 +104,12 @@ function App() {
     []
   );
   const remove = useCallback((card: Card) => {
-    dataManager.updateCard({ ...card, trashed: true });
+    const confirmed = window.confirm(
+      `are you sure you want to delete "${card.title}"?`
+    );
+    if (confirmed) {
+      dataManager.updateCard({ ...card, trashed: true });
+    }
   }, []);
   if (!state.ready) {
     return (
@@ -375,7 +380,18 @@ function App() {
                           />
                         </button>
                       )}
-                      <button onClick={() => remove(card)}>x</button>
+                      <button
+                        onClick={() => remove(card)}
+                        style={{
+                          fontFamily: "Alagard",
+                          color: "#FFFFFF",
+                          backgroundColor: BORDER_SECONDARY_COLOR,
+                          border: `0.8px solid ${BORDER_PRIMARY_COLOR}`,
+                          borderRadius: "5px",
+                        }}
+                      >
+                        x
+                      </button>
                     </div>
                   </div>
                   <div style={{ flexGrow: 1 }}>

@@ -21,7 +21,8 @@ export const ImagePicker: React.FC<PickerProps> = ({ dispatch, onClose }) => {
         console.error(err);
       };
       img.onload = () => {
-        const ratio = img.height / img.width;
+        // https://stackoverflow.com/a/14731922
+        const ratio = Math.min(300 / img.width, 200 / img.height);
         dataManager.addCard({
           kind: "image",
           title: "photo",
@@ -29,8 +30,8 @@ export const ImagePicker: React.FC<PickerProps> = ({ dispatch, onClose }) => {
           uri: url,
           x: 0,
           y: 0,
-          w: 200,
-          h: ratio * 200,
+          w: img.width * ratio,
+          h: img.height * ratio + 20,
           id: gordonId(),
           author: dataManager.getMe().id,
           manager: dataManager.getMe().id,
