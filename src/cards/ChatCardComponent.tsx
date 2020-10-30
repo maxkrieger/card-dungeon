@@ -7,12 +7,22 @@ import { dataManager } from "../App";
 import TextInputForm from "../TextInputForm";
 import { BORDER_PRIMARY_COLOR, BORDER_SECONDARY_COLOR } from "../colors";
 import BG from "../assets/sandy.png";
+import OrbIcon from "../assets/orb.png";
+
+import pet1 from "../assets/pet/pet1.gif";
+import pet2 from "../assets/pet/pet2.gif";
+import pet3 from "../assets/pet/pet3.gif";
+import pet4 from "../assets/pet/pet4.gif";
+import { random } from "lodash";
+
+const PETS = [pet1, pet2, pet3, pet4];
 
 interface ChatMessage {
   author: string;
   authorName: string;
   time: number;
   text: string;
+  pet: number;
 }
 
 export interface ChatCard extends AbstractCard {
@@ -44,11 +54,14 @@ const ChatCardComponent: React.FC<{ card: ChatCard }> = ({ card }) => {
   const chatRef = useRef<HTMLDivElement>(null);
   const onSend = useCallback(
     (message: string) => {
+      if (message.match("pet")) {
+      }
       const msg: ChatMessage = {
         author: dataManager.getMe().id,
         authorName: dataManager.getMe().name,
         time: new Date().getTime(),
         text: message,
+        pet: message.match("pet") ? random(0, PETS.length - 1) : -1,
       };
       dataManager.updateCard({ ...card, chats: [...card.chats, msg] });
     },
@@ -86,14 +99,29 @@ const ChatCardComponent: React.FC<{ card: ChatCard }> = ({ card }) => {
         {card.chats.map((chat: ChatMessage, key: number) => (
           <div
             key={key}
-            style={{ width: "100%", wordWrap: "break-word", margin: "3px" }}
+            style={{
+              width: "100%",
+              wordWrap: "break-word",
+              margin: "3px",
+              verticalAlign: "middle",
+            }}
           >
             <span
-              style={{ color: chat.author === id ? "darkblue" : "darkgreen" }}
+              style={{
+                color: chat.author === id ? "darkblue" : "darkgreen",
+              }}
             >
+              {chat.author === id && <img src={OrbIcon} width={"15px"} />}{" "}
               {chat.authorName}:
             </span>{" "}
-            <span style={{ color: BORDER_SECONDARY_COLOR }}>{chat.text}</span>
+            <span
+              style={{
+                color: BORDER_SECONDARY_COLOR,
+              }}
+            >
+              {chat.text}{" "}
+              {chat.pet !== -1 && <img src={PETS[chat.pet]} width={"20px"} />}
+            </span>
           </div>
         ))}
       </div>
