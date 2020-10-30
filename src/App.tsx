@@ -14,6 +14,7 @@ import BackpackIcon from "./assets/backpack.png";
 import SubmitButton from "./assets/submit-button.png";
 import OrbIcon from "./assets/orb.png";
 import Greeter from "./assets/greeter.gif";
+import Board from "./assets/board.png";
 import GrabbyCursor from "./assets/grabby_cursor.png";
 import DataManager, { action, Card } from "./DataManager";
 import QuillCardComponent from "./cards/QuillCardComponent";
@@ -25,7 +26,7 @@ import { ResizableBox, ResizeCallbackData } from "react-resizable";
 import "react-resizable/css/styles.css";
 import styled from "styled-components";
 import ImageCardComponent from "./cards/ImageCardComponent";
-// import FrameBorder from "./assets/frame-border.png";
+import FrameBorder from "./assets/border.png";
 
 Quill.register("modules/cursors", QuillCursors);
 
@@ -246,7 +247,7 @@ function App() {
           </div>
         </nav>
         <nav>
-          <div style={{ display: "inline" }}>
+          <div style={{ display: "inline", overflow: "hidden" }}>
             {state.peers.map((peer) => (
               <div
                 style={{
@@ -261,7 +262,7 @@ function App() {
               </div>
             ))}
           </div>
-          <span>Tavern Cards</span>
+          <span>Tavern Card</span>
         </nav>
       </header>
       <div style={{ position: "absolute" }}>
@@ -310,7 +311,9 @@ function App() {
           flexGrow: 1,
           zIndex: 0,
           boxShadow: "inset 0 0 100px black",
-          background: "radial-gradient(#cc975c, #8f4b33)",
+          backgroundColor: "radial-gradient(#cc975c, #8f4b33)",
+          backgroundImage: `url(${Board})`,
+          backgroundSize: "cover",
         }}
         className="cardBody"
       >
@@ -359,10 +362,13 @@ function App() {
                       fontFamily: `"Alagard"`,
                       fontSize: "18px",
                       backgroundColor: "#C39B77",
+                      backgroundImage: `url(${FrameBorder})`,
+                      backgroundRepeat: "repeat",
                       userSelect: "none",
                       display: "flex",
                       justifyContent: "space-between",
                       cursor: `url(${GrabbyCursor}), auto`,
+                      color: BORDER_PRIMARY_COLOR,
                     }}
                     className="handle"
                   >

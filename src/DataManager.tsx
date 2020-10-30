@@ -227,7 +227,7 @@ class DataManager {
     }
     const CardId = Math.random().toString();
     this.myAvatarID = id;
-    // TODO: prevent from adding it twice
+    // TODO: prevent from adding this card twice
     this.addCard({
       kind: "avatar",
       title: name,
