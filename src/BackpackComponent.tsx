@@ -111,6 +111,7 @@ const BackpackComponent: React.FC<{
                 margin: "5px",
                 display: "inline-block",
               }}
+              key={key}
             >
               <button
                 style={{

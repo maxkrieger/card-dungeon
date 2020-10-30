@@ -308,6 +308,7 @@ function App() {
           backgroundColor: "radial-gradient(#cc975c, #8f4b33)",
           backgroundImage: `url(${Board})`,
           backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
         className="cardBody"
       >
@@ -326,6 +327,7 @@ function App() {
                 width={card.w}
                 height={card.h}
                 minConstraints={[50, 50]}
+                maxConstraints={[1000, 1000]}
                 onResize={(e, data) => onResize(e, data, card)}
                 lockAspectRatio={true}
                 // @ts-ignore
