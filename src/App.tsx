@@ -29,6 +29,9 @@ import { BORDER_PRIMARY_COLOR, BORDER_SECONDARY_COLOR } from "./colors";
 import ChatCardComponent from "./cards/ChatCardComponent";
 import CrumpleSfx1 from "./assets/crumple-1.mp3";
 import CardSfx from "./assets/card.mp3";
+import GlassFx1 from "./assets/glass-1.mp3";
+import GlassFx2 from "./assets/glass-2.mp3";
+import GlassFx3 from "./assets/glass-3.mp3";
 import useSound from "use-sound";
 
 export type dispatcher = React.Dispatch<action>;
@@ -120,6 +123,19 @@ function App() {
   const playCard = useCallback(() => {
     playCardSound({ id: random(1, 5).toString() });
   }, [playCardSound]);
+  const glassSounds: any = [
+    useSound(GlassFx1)[0],
+    useSound(GlassFx2)[0],
+    useSound(GlassFx3)[0],
+  ];
+  const onBgClicked = useCallback(
+    (e: any) => {
+      if (e.target.className === "cardBody") {
+        glassSounds[random(0, 2)]();
+      }
+    },
+    [glassSounds]
+  );
   if (!state.ready) {
     return (
       <div
@@ -326,6 +342,7 @@ function App() {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
+        onClick={onBgClicked}
         className="cardBody"
       >
         {cards.map((card: Card, key: number) => {
